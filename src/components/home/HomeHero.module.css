@@ -1,0 +1,362 @@
+.hero {
+  position: relative;
+  height: 400vh;
+  background: var(--deeper);
+}
+
+@media (max-width: 699.98px) {
+  .hero {
+    height: 330vh;
+  }
+}
+
+.stage {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+  background: var(--deeper);
+}
+
+@supports (height: 100svh) {
+  .stage {
+    height: 100svh;
+  }
+}
+
+.layer {
+  position: absolute;
+  inset: 0;
+  transform-origin: center;
+}
+
+.shadeExterior,
+.shadeLobby,
+.shadeSuite,
+.shadeView {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.shadeExterior {
+  background: linear-gradient(180deg, rgba(15, 10, 6, 0.52) 0%, rgba(15, 10, 6, 0.24) 42%, rgba(15, 10, 6, 0.66) 100%);
+}
+
+.shadeLobby {
+  background: linear-gradient(180deg, rgba(20, 14, 9, 0.2), rgba(20, 14, 9, 0.5));
+}
+
+.shadeSuite {
+  background: linear-gradient(180deg, rgba(20, 14, 9, 0.18), rgba(20, 14, 9, 0.5));
+}
+
+.shadeView {
+  background: linear-gradient(180deg, rgba(20, 14, 9, 0.1), rgba(20, 14, 9, 0.34));
+}
+
+/* ---------- snowfall ---------- */
+
+.snow {
+  position: absolute;
+  inset: 0;
+  z-index: 8;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.flake {
+  position: absolute;
+  top: 0;
+  border-radius: 50%;
+  animation-name: snow, sway;
+  animation-timing-function: linear, ease-in-out;
+  animation-iteration-count: infinite;
+}
+
+@keyframes snow {
+  0% {
+    transform: translate(0, -6vh);
+    opacity: 0;
+  }
+  8% {
+    opacity: 0.9;
+  }
+  90% {
+    opacity: 0.7;
+  }
+  100% {
+    transform: translate(4vw, 106vh);
+    opacity: 0;
+  }
+}
+
+@keyframes sway {
+  0%,
+  100% {
+    margin-left: 0;
+  }
+  50% {
+    margin-left: 18px;
+  }
+}
+
+/* ---------- suite overlay ---------- */
+
+.suiteOverlay {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 16%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: clamp(18px, 4vw, 60px);
+  padding: 0 20px;
+  pointer-events: none;
+}
+
+.suiteOverlay span {
+  font: 500 11px/1 var(--font-text);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: #e9d9bc;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(233, 217, 188, 0.4);
+}
+
+/* ---------- text overlays ---------- */
+
+.textCenter,
+.textBottom,
+.textBottomView {
+  position: absolute;
+  inset: 0;
+  z-index: 9;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 0 24px;
+  pointer-events: none;
+}
+
+.textCenter {
+  justify-content: center;
+}
+
+.textBottom {
+  justify-content: flex-end;
+  padding-bottom: 11vh;
+}
+
+.textBottomView {
+  justify-content: flex-end;
+  padding-bottom: 8vh;
+}
+
+.kicker,
+.kickerSmall {
+  font: 500 12px/1 var(--font-text);
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  color: var(--highlight);
+}
+
+.kicker {
+  margin-bottom: 28px;
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.5);
+}
+
+.kickerSmall {
+  margin-bottom: 22px;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
+}
+
+.title {
+  margin: 0;
+  font: 400 clamp(38px, 7vw, 96px) / 1.02 var(--font-display);
+  letter-spacing: -0.01em;
+  color: var(--cream-2);
+  text-shadow: 0 3px 40px rgba(0, 0, 0, 0.5);
+}
+
+.title em {
+  font-style: italic;
+  color: var(--highlight);
+}
+
+.titleRule {
+  width: 1px;
+  height: 64px;
+  margin-top: 40px;
+  background: linear-gradient(rgba(247, 241, 231, 0.7), rgba(247, 241, 231, 0));
+}
+
+.actTitle {
+  margin: 0;
+  font: 400 clamp(32px, 5.6vw, 76px) / 1.06 var(--font-display);
+  color: var(--cream-2);
+  text-shadow: 0 2px 30px rgba(0, 0, 0, 0.5);
+}
+
+.viewTitle {
+  margin: 0 0 34px;
+  font: 400 clamp(34px, 6vw, 84px) / 1.04 var(--font-display);
+  color: var(--cream-2);
+  text-shadow: 0 2px 30px rgba(0, 0, 0, 0.5);
+}
+
+.viewCta {
+  pointer-events: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 17px 34px;
+  background: var(--cream-2);
+  color: var(--on-gold);
+  font: 600 12px/1 var(--font-text);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  border-radius: 2px;
+  transition: background-color 0.3s;
+}
+
+.viewCta:hover {
+  background: #fff;
+  color: var(--on-gold);
+}
+
+.vignette {
+  position: absolute;
+  inset: 0;
+  z-index: 8;
+  pointer-events: none;
+  background: radial-gradient(120% 92% at 50% 44%, transparent 54%, rgba(12, 8, 4, 0.42));
+}
+
+/* ---------- chapter markers ---------- */
+
+.chapters {
+  position: absolute;
+  right: clamp(14px, 2.4vw, 34px);
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 9;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+}
+
+@media (max-width: 759.98px) {
+  .chapters {
+    display: none;
+  }
+}
+
+.chapter {
+  position: relative;
+  display: block;
+  width: 3px;
+  height: 16px;
+  padding: 0;
+  border: 0;
+  border-radius: 2px;
+  background: rgba(247, 241, 231, 0.38);
+  transition: all 0.4s ease;
+}
+
+/* Larger hit area than the 3px bar. */
+.chapter::before {
+  content: "";
+  position: absolute;
+  inset: -5px -12px;
+}
+
+.chapter[data-active] {
+  height: 38px;
+  background: var(--highlight);
+}
+
+/* ---------- cue, stage name, progress ---------- */
+
+.cue {
+  position: absolute;
+  left: 50%;
+  bottom: 34px;
+  transform: translateX(-50%);
+  z-index: 9;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  color: rgba(247, 241, 231, 0.85);
+  font: 500 11px/1 var(--font-text);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+}
+
+.cueLine {
+  display: block;
+  width: 1px;
+  height: 44px;
+  background: linear-gradient(rgba(247, 241, 231, 0.9), transparent);
+  animation: cue 2.4s ease-in-out infinite;
+}
+
+@keyframes cue {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.55;
+  }
+  50% {
+    transform: translateY(9px);
+    opacity: 1;
+  }
+}
+
+.stageName {
+  position: absolute;
+  left: clamp(20px, 5vw, 72px);
+  bottom: 34px;
+  z-index: 9;
+  font: 500 11px/1 var(--font-text);
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: rgba(247, 241, 231, 0.72);
+}
+
+@media (max-width: 479.98px) {
+  .stageName {
+    display: none;
+  }
+}
+
+.progressTrack {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  z-index: 9;
+  background: rgba(247, 241, 231, 0.16);
+}
+
+.progressFill {
+  height: 100%;
+  background: var(--gold);
+  transform: scaleX(0);
+  transform-origin: left;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .snow {
+    display: none;
+  }
+
+  .cueLine {
+    animation: none;
+  }
+}

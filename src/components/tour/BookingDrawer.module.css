@@ -1,0 +1,204 @@
+/* Full-viewer layer that parks the panel bottom-right; clicks pass through
+   everywhere but the panel. */
+.layer {
+  position: absolute;
+  inset: 0;
+  z-index: 8;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  padding: clamp(12px, 2vw, 24px);
+  pointer-events: none;
+}
+
+.panel {
+  width: 100%;
+  max-width: 430px;
+  /* Scrolls rather than losing its top edge in a short (landscape) viewer. */
+  max-height: 100%;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: clamp(20px, 2.4vw, 26px);
+  background: rgba(20, 14, 9, 0.93);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(247, 241, 231, 0.18);
+  border-radius: 4px;
+  box-shadow: 0 26px 60px rgba(0, 0, 0, 0.45);
+  color: var(--cream);
+  /* The viewer shows a grab cursor; the panel is not draggable. */
+  cursor: default;
+  pointer-events: auto;
+}
+
+.head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.kicker {
+  margin-bottom: 11px;
+  font: 500 10px/1 var(--font-text);
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--gold-light);
+}
+
+.name {
+  margin: 0;
+  font: 400 25px/1.15 var(--font-display);
+  color: var(--cream-2);
+}
+
+.close {
+  flex: 0 0 auto;
+  width: 44px;
+  height: 44px;
+  background: transparent;
+  border: 1px solid rgba(247, 241, 231, 0.24);
+  border-radius: 50%;
+  color: var(--cream);
+  font-size: 19px;
+}
+
+.meta {
+  margin: 10px 0 20px;
+  font: 400 12px/1.5 var(--font-text);
+  letter-spacing: 0.04em;
+  color: rgba(245, 238, 225, 0.6);
+}
+
+/* ---------- nights ---------- */
+
+.nights {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 14px 0;
+  border-top: 1px solid rgba(247, 241, 231, 0.14);
+  border-bottom: 1px solid rgba(247, 241, 231, 0.14);
+}
+
+.nightsLabel {
+  font: 500 11px/1 var(--font-text);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(245, 238, 225, 0.68);
+}
+
+.stepper {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.step {
+  width: 44px;
+  height: 44px;
+  background: transparent;
+  border: 1px solid rgba(247, 241, 231, 0.24);
+  border-radius: 2px;
+  color: var(--cream);
+  font-size: 18px;
+}
+
+.count {
+  min-width: 42px;
+  text-align: center;
+  font: 400 21px/1 var(--font-display);
+  color: var(--cream-2);
+}
+
+/* ---------- price ---------- */
+
+.total {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 16px 0 6px;
+}
+
+.totalLabel {
+  font: 600 11px/1 var(--font-text);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold-light);
+}
+
+.totalValue {
+  font: 400 30px/1 var(--font-display);
+  color: var(--cream-2);
+}
+
+.row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 14px;
+  font: 300 13px/1.6 var(--font-text);
+  color: rgba(245, 238, 225, 0.6);
+}
+
+.keep {
+  margin-bottom: 20px;
+  color: var(--gold-light);
+}
+
+/* ---------- actions ---------- */
+
+.confirm {
+  width: 100%;
+  min-height: 54px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 17px 26px;
+  background: var(--gold);
+  border: none;
+  border-radius: 2px;
+  color: var(--on-gold);
+  font: 600 12px/1 var(--font-text);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  transition: background-color 0.3s;
+}
+
+.confirm:hover:not(:disabled) {
+  background: var(--gold-hover);
+  color: var(--on-gold);
+}
+
+.confirm:disabled {
+  opacity: 0.7;
+  cursor: wait;
+}
+
+.error {
+  margin: 12px 0 0;
+  font: 300 13px/1.6 var(--font-text);
+  color: var(--highlight);
+  text-align: center;
+}
+
+.note {
+  margin: 12px 0 0;
+  font: 300 12px/1.6 var(--font-text);
+  color: rgba(245, 238, 225, 0.5);
+  text-align: center;
+}
+
+.done {
+  margin: 16px 0 22px;
+  font: 300 15px/1.7 var(--font-text);
+  color: rgba(245, 238, 225, 0.86);
+  text-wrap: pretty;
+}
+
+/* Focused only so screen readers read the confirmation. */
+.done:focus {
+  outline: none;
+}

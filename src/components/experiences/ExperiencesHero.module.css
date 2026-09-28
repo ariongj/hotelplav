@@ -1,0 +1,48 @@
+.hero {
+  position: relative;
+  height: clamp(420px, 64vh, 680px);
+  background: var(--deeper);
+  overflow: hidden;
+}
+
+.shade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(15, 10, 6, 0.5) 0%,
+    rgba(15, 10, 6, 0.18) 45%,
+    rgba(15, 10, 6, 0.6) 100%
+  );
+  pointer-events: none;
+}
+
+.content {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: clamp(36px, 7vh, 70px);
+  padding: 0 24px;
+  text-align: center;
+}
+
+.eyebrow {
+  margin-bottom: 20px;
+  font: 500 12px/1 var(--font-text);
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  color: var(--highlight);
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
+}
+
+.title {
+  margin: 0;
+  font: 400 clamp(36px, 6vw, 80px) / 1.05 var(--font-display);
+  color: var(--cream-2);
+  text-shadow: 0 3px 30px rgba(0, 0, 0, 0.5);
+}
+
+.title em {
+  font-style: italic;
+  color: var(--highlight);
+}

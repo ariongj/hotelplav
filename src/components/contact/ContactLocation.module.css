@@ -1,0 +1,108 @@
+.section {
+  padding: clamp(60px, 8vw, 110px) var(--gutter);
+  background: var(--light);
+}
+
+.grid {
+  max-width: var(--max);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr));
+  gap: clamp(40px, 5vw, 80px);
+  align-items: center;
+}
+
+.eyebrow {
+  margin-bottom: 24px;
+}
+
+.title {
+  margin: 0 0 26px;
+  font: 400 clamp(30px, 4.2vw, 56px) / 1.05 var(--font-display);
+  color: var(--ink);
+}
+
+.facts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 26px 30px;
+  margin: 0;
+}
+
+.factLabel {
+  margin-bottom: 8px;
+  font: 500 11px/1 var(--font-text);
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.factValue {
+  margin: 0;
+  font: 400 16px/1.55 var(--font-text);
+  color: var(--text);
+}
+
+/* ---------- stylised map ---------- */
+
+.map {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  border-radius: 4px;
+  overflow: hidden;
+  background: var(--sand);
+}
+
+.mapGrid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(120, 92, 50, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(120, 92, 50, 0.1) 1px, transparent 1px);
+  background-size: 38px 38px;
+}
+
+.roadA {
+  position: absolute;
+  left: 12%;
+  top: 20%;
+  right: 30%;
+  height: 3px;
+  background: #cbb99a;
+  transform: rotate(8deg);
+}
+
+.roadB {
+  position: absolute;
+  left: 26%;
+  top: 30%;
+  bottom: 14%;
+  width: 3px;
+  background: #cbb99a;
+  transform: rotate(-6deg);
+}
+
+.pin {
+  position: absolute;
+  left: 56%;
+  top: 44%;
+  width: 22px;
+  height: 22px;
+  background: var(--gold);
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+  box-shadow: 0 8px 20px rgba(120, 92, 50, 0.3);
+}
+
+.pinLabel {
+  position: absolute;
+  left: 54%;
+  top: 52%;
+  padding: 6px 10px;
+  background: rgba(251, 248, 241, 0.85);
+  border-radius: 2px;
+  font: 500 11px/1 var(--font-text);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--bronze);
+}

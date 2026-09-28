@@ -1,0 +1,107 @@
+.section {
+  padding: clamp(60px, 8vw, 110px) var(--gutter);
+  background: var(--paper);
+}
+
+.grid {
+  max-width: var(--max);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr));
+  gap: clamp(40px, 5vw, 90px);
+  align-items: start;
+}
+
+/* ---------- details ---------- */
+
+.details {
+  margin: 0;
+  border-top: 1px solid var(--line);
+}
+
+/* Label left, value right. On very narrow screens a long value (an email
+   address) drops below its label instead of overflowing. */
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px 20px;
+  padding: 20px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.label {
+  font: 500 11px/1 var(--font-text);
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.value,
+.address {
+  min-width: 0;
+  margin: 0 0 0 auto;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.value {
+  font: 400 19px var(--font-display);
+}
+
+.address {
+  font: 400 17px/1.5 var(--font-display);
+  text-align: right;
+}
+
+.link {
+  color: var(--ink);
+}
+
+.link:hover {
+  color: var(--bronze);
+}
+
+.note {
+  margin-top: 36px;
+  padding: 26px 26px 28px;
+  background: var(--sand);
+  border-radius: 4px;
+}
+
+.noteTitle {
+  margin-bottom: 12px;
+  font: 500 11px/1 var(--font-text);
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--gold-dark);
+}
+
+.noteText {
+  margin: 0;
+  font: 300 15px/1.75 var(--font-text);
+  color: var(--text-2);
+}
+
+/* ---------- form card ---------- */
+
+.card {
+  padding: clamp(26px, 3.4vw, 44px);
+  background: var(--light);
+  border: 1px solid var(--line-2);
+  border-radius: 4px;
+  box-shadow: 0 40px 90px rgba(70, 46, 22, 0.1);
+}
+
+.title {
+  margin: 0 0 8px;
+  font: 400 clamp(26px, 3vw, 38px) / 1.1 var(--font-display);
+  color: var(--ink);
+}
+
+.subtitle {
+  margin: 0 0 26px;
+  font: 400 14px/1.6 var(--font-text);
+  color: var(--muted);
+}

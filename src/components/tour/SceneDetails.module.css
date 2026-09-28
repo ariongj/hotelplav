@@ -1,0 +1,72 @@
+.section {
+  padding: clamp(56px, 7vw, 100px) var(--gutter);
+  background: var(--paper);
+}
+
+.inner {
+  max-width: var(--max);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
+  gap: clamp(36px, 5vw, 90px);
+  align-items: start;
+}
+
+/* Spacing for the shared eyebrow / lead / gold button. */
+.kicker {
+  margin-bottom: 20px;
+  min-height: 12px;
+}
+
+.description {
+  max-width: 52ch;
+  min-height: 3em;
+}
+
+.cta {
+  margin-top: 32px;
+}
+
+.title {
+  margin: 0 0 22px;
+  min-height: 1.1em;
+  font: 400 clamp(32px, 4.4vw, 58px) / 1.06 var(--font-display);
+  color: var(--ink);
+}
+
+.aside {
+  border-top: 1px solid var(--line);
+}
+
+.facts {
+  margin: 0;
+}
+
+.fact {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 20px;
+  padding: 18px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.factLabel {
+  font: 500 11px/1 var(--font-text);
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.factValue {
+  margin: 0;
+  font: 400 19px var(--font-display);
+  color: var(--ink);
+  text-align: right;
+}
+
+.credit {
+  margin: 20px 0 0;
+  font: 400 12.5px/1.6 var(--font-text);
+  color: var(--faint);
+}

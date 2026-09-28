@@ -1,0 +1,45 @@
+.intro {
+  padding: clamp(140px, 18vh, 190px) var(--gutter) clamp(40px, 5vw, 64px);
+  background: var(--deeper);
+  color: var(--cream);
+}
+
+.inner {
+  max-width: var(--max);
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 26px;
+}
+
+.heading {
+  max-width: 720px;
+}
+
+.eyebrow {
+  margin-bottom: 24px;
+  font: 500 12px/1 var(--font-text);
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  color: var(--highlight);
+}
+
+.title {
+  margin: 0;
+  font: 400 clamp(36px, 5.6vw, 76px) / 1.05 var(--font-display);
+  color: var(--cream-2);
+}
+
+.title em {
+  font-style: italic;
+  color: var(--highlight);
+}
+
+.lead {
+  margin: 0;
+  max-width: 380px;
+  font: 300 clamp(15px, 1.15vw, 17px) / 1.75 var(--font-text);
+  color: rgba(245, 238, 225, 0.72);
+}

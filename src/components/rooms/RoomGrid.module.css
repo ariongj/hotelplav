@@ -1,0 +1,48 @@
+.section {
+  padding: clamp(30px, 4vw, 52px) var(--gutter-tight) clamp(70px, 9vw, 130px);
+  background: var(--paper);
+}
+
+.grid {
+  display: grid;
+  /* min() keeps a single column inside the gutters on phones. */
+  grid-template-columns: repeat(auto-fit, minmax(min(360px, 100%), 1fr));
+  gap: 30px 28px;
+  max-width: var(--max);
+  margin: 0 auto;
+}
+
+.empty {
+  grid-column: 1 / -1;
+  padding: 80px 20px;
+  text-align: center;
+}
+
+.emptyTitle {
+  margin: 0 0 8px;
+  font: 400 26px var(--font-display);
+  color: var(--ink);
+}
+
+.emptyText {
+  margin: 0 0 22px;
+  font: 300 15px var(--font-text);
+  color: var(--muted);
+}
+
+.emptyButton {
+  padding: 13px 28px;
+  background: var(--gold);
+  color: var(--on-gold);
+  border: none;
+  border-radius: 2px;
+  font: 600 11px/1 var(--font-text);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.emptyButton:hover {
+  background: var(--gold-hover);
+}

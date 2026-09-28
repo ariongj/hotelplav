@@ -1,0 +1,80 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.row .field {
+  flex: 1 1 180px;
+}
+
+.input,
+.select,
+.textarea {
+  width: 100%;
+  padding: 14px 15px;
+  /* background-color only: the select keeps its chevron image from globals.css. */
+  background-color: var(--lighter);
+  border: 1px solid var(--line-3);
+  border-radius: 2px;
+  color: var(--ink);
+  font: 400 15px var(--font-text);
+}
+
+/* Room on the right for the chevron from globals.css. */
+.select {
+  padding-right: 34px;
+  cursor: pointer;
+}
+
+.textarea {
+  font: 400 15px/1.6 var(--font-text);
+  resize: vertical;
+}
+
+.submit {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 34px;
+  background: var(--gold);
+  color: var(--on-gold);
+  font: 600 12px/1 var(--font-text);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  border: none;
+  border-radius: 2px;
+  transition: background-color 0.3s;
+}
+
+.submit:hover {
+  background: var(--gold-hover);
+}
+
+.submit:disabled {
+  opacity: 0.7;
+  cursor: wait;
+}
+
+/* Confirmation and error note under the button. */
+.message {
+  margin: 16px 0 0;
+  padding: 16px 20px;
+  background: var(--note);
+  border-left: 2px solid var(--gold);
+  color: var(--text-2);
+  font: 400 15px/1.6 var(--font-text);
+}

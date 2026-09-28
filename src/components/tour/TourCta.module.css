@@ -1,0 +1,99 @@
+.cta {
+  position: relative;
+  overflow: hidden;
+  padding: clamp(70px, 9vw, 130px) var(--gutter);
+  background: #1c140d;
+  color: var(--cream);
+  text-align: center;
+}
+
+.glow {
+  position: absolute;
+  left: 50%;
+  top: -20%;
+  width: min(80vw, 900px);
+  height: min(80vw, 900px);
+  transform: translateX(-50%);
+  background: radial-gradient(closest-side, rgba(176, 142, 85, 0.2), transparent 70%);
+  pointer-events: none;
+  animation: glow 7s ease-in-out infinite;
+}
+
+@keyframes glow {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 0.95;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .glow {
+    animation: none;
+    opacity: 0.75;
+  }
+}
+
+.inner {
+  position: relative;
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.eyebrow {
+  margin-bottom: 26px;
+  font: 500 12px/1 var(--font-text);
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  color: var(--gold-light);
+}
+
+.title {
+  margin: 0 0 38px;
+  font: 400 clamp(32px, 4.8vw, 64px) / 1.08 var(--font-display);
+  color: var(--cream-2);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 14px;
+}
+
+.primary,
+.secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 18px 38px;
+  font: 600 12px/1 var(--font-text);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  border-radius: 2px;
+  transition:
+    background-color 0.3s,
+    border-color 0.3s;
+}
+
+.primary {
+  background: var(--gold);
+  color: var(--on-gold);
+}
+
+.primary:hover {
+  background: var(--gold-hover);
+  color: var(--on-gold);
+}
+
+.secondary {
+  border: 1px solid rgba(245, 238, 225, 0.4);
+  color: var(--cream);
+}
+
+.secondary:hover {
+  border-color: var(--cream);
+  color: var(--cream);
+}

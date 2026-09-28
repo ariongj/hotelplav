@@ -1,0 +1,59 @@
+"use client";
+
+import { useCallback, useState, useSyncExternalStore } from "react";
+
+import { addDays, localTodayIso } from "./pricing";
+import type { AvailabilityQuery, AvailabilityResult } from "./types";
+
+/** Browser-side call to /api/availability. */
+export async function fetchAvailability(query: AvailabilityQuery): Promise<AvailabilityResult> {
+  const params = new URLSearchParams({
+    checkin: query.checkin,
+    checkout: query.checkout,
+    guests: String(query.guests),
+  });
+  if (query.promo?.trim()) params.set("promo", query.promo.trim());
+  try {
+    const res = await fetch(`/api/availability?${params}`, { cache: "no-store" });
+    return (await res.json()) as AvailabilityResult;
+  } catch {
+    return {
+      ok: false,
+      error: "We couldn't reach our reservations system just now — please try again, or call us and we'll price your stay.",
+    };
+  }
+}
+
+const subscribeNoop = () => () => {};
+
+/** False during SSR and hydration, true afterwards. */
+export function useHydrated(): boolean {
+  return useSyncExternalStore(
+    subscribeNoop,
+    () => true,
+    () => false,
+  );
+}
+
+/**
+ * Check-in / check-out state for the booking bars. Defaults (today + 30,
+ * two nights) are computed in the browser after hydration so a statically
+ * built page never shows stale dates.
+ */
+export function useStayDates(leadDays = 30, defaultNights = 2) {
+  const hydrated = useHydrated();
+  const [checkinInput, setCheckin] = useState<string | null>(null);
+  const [checkoutInput, setCheckout] = useState<string | null>(null);
+
+  const today = hydrated ? localTodayIso() : "";
+  const defaultCheckin = hydrated ? addDays(today, leadDays) : "";
+  const checkin = checkinInput ?? defaultCheckin;
+  const checkout = checkoutInput ?? (checkin ? addDays(checkin, defaultNights) : "");
+
+  const reset = useCallback(() => {
+    setCheckin(null);
+    setCheckout(null);
+  }, []);
+
+  return { checkin, checkout, setCheckin, setCheckout, reset, today };
+}

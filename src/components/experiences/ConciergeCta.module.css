@@ -1,0 +1,73 @@
+.section {
+  padding: clamp(64px, 8vw, 110px) var(--gutter);
+  background: var(--sand);
+  text-align: center;
+}
+
+.inner {
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.eyebrow {
+  margin-bottom: 22px;
+  font: 500 12px/1 var(--font-text);
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--gold-dark);
+}
+
+.title {
+  margin: 0 0 20px;
+  font: 400 clamp(30px, 4.2vw, 56px) / 1.08 var(--font-display);
+  color: var(--ink);
+}
+
+.lead {
+  margin: 0 0 36px;
+  font: 300 clamp(15px, 1.2vw, 18px) / 1.8 var(--font-text);
+  color: var(--text-soft);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 14px;
+}
+
+/* Larger than the shared buttons: 17px × 36px. */
+.ctaGold,
+.ctaOutline {
+  display: inline-flex;
+  align-items: center;
+  gap: 11px;
+  padding: 17px 36px;
+  font: 600 12px/1 var(--font-text);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  border-radius: 2px;
+  transition:
+    background-color 0.3s,
+    color 0.3s;
+}
+
+.ctaGold {
+  background: var(--gold);
+  color: var(--on-gold);
+}
+
+.ctaGold:hover {
+  background: var(--gold-hover);
+  color: var(--on-gold);
+}
+
+.ctaOutline {
+  border: 1px solid var(--ink);
+  color: var(--ink);
+}
+
+.ctaOutline:hover {
+  background: var(--ink);
+  color: var(--paper);
+}

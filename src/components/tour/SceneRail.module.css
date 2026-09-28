@@ -1,0 +1,54 @@
+.rail {
+  padding: 0 clamp(16px, 4vw, 60px);
+  background: #1c140d;
+}
+
+.inner {
+  max-width: var(--max);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 0;
+}
+
+.arrow {
+  flex: 0 0 auto;
+  width: 44px;
+  min-height: 44px;
+  background: transparent;
+  border: 1px solid rgba(233, 223, 203, 0.22);
+  border-radius: 2px;
+  color: var(--footer-text);
+  font-size: 16px;
+}
+
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.tab {
+  padding: 14px 20px;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 2px;
+  font: 500 11px/1 var(--font-text);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(233, 223, 203, 0.62);
+  transition:
+    color 0.3s,
+    background-color 0.3s,
+    border-color 0.3s;
+}
+
+.active {
+  background: var(--gold);
+  border-color: var(--gold);
+  color: var(--on-gold);
+}

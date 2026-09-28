@@ -1,0 +1,155 @@
+/* Shared primitives for the patterns repeated on every page.
+   Margins are only ever reset (at zero specificity) — add spacing with a page
+   class alongside.
+   If a usage differs in size or colour, write a full class in the page's own
+   module instead of overriding one of these. */
+
+/* ---------- layout ---------- */
+
+.section {
+  padding: var(--section-y) var(--gutter);
+}
+
+.container {
+  max-width: var(--max);
+  margin: 0 auto;
+}
+
+.containerNarrow {
+  max-width: var(--max-narrow);
+  margin: 0 auto;
+}
+
+/* ---------- type ---------- */
+
+/* Small uppercase kicker above headings. */
+.eyebrow {
+  font: 500 12px/1 var(--font-text);
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.eyebrowLight {
+  font: 500 12px/1 var(--font-text);
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--gold-light);
+}
+
+/* Reset heading/paragraph margins without out-ranking page classes. */
+:where(.h2, .h2Light, .lead, .leadLight) {
+  margin: 0;
+}
+
+/* Section heading (h2). */
+.h2 {
+  font: 400 clamp(32px, 4.4vw, 62px) / 1.05 var(--font-display);
+  color: var(--ink);
+}
+
+.h2Light {
+  font: 400 clamp(32px, 4.4vw, 62px) / 1.05 var(--font-display);
+  color: var(--cream);
+}
+
+/* Intro paragraph under a section heading. */
+.lead {
+  font: 300 clamp(15px, 1.2vw, 18px) / 1.8 var(--font-text);
+  color: var(--text-soft);
+}
+
+.leadLight {
+  font: 300 clamp(15px, 1.2vw, 18px) / 1.8 var(--font-text);
+  color: rgba(245, 238, 225, 0.72);
+}
+
+/* Small uppercase field label (booking bars, forms). */
+.label {
+  font: 500 11px/1 var(--font-text);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* ---------- actions ---------- */
+
+.btnGold,
+.btnOutline,
+.btnOutlineLight,
+.btnCream {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 11px;
+  padding: 16px 32px;
+  font: 600 12px/1 var(--font-text);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  border-radius: 2px;
+  transition:
+    background-color 0.3s,
+    color 0.3s,
+    border-color 0.3s;
+}
+
+.btnGold {
+  background: var(--gold);
+  color: var(--on-gold);
+  border: none;
+}
+
+.btnGold:hover {
+  background: var(--gold-hover);
+  color: var(--on-gold);
+}
+
+.btnOutline {
+  background: transparent;
+  border: 1px solid var(--ink);
+  color: var(--ink);
+}
+
+.btnOutline:hover {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.btnOutlineLight {
+  background: transparent;
+  border: 1px solid rgba(245, 238, 225, 0.5);
+  color: var(--cream);
+}
+
+.btnOutlineLight:hover {
+  border-color: var(--cream);
+  color: var(--cream);
+}
+
+.btnCream {
+  background: var(--cream-2);
+  color: var(--on-gold);
+  border: none;
+}
+
+.btnCream:hover {
+  background: #fff;
+  color: var(--on-gold);
+}
+
+/* Text link with a gold underline: "View all rooms →", "Discover". */
+.linkUnderline {
+  font: 500 11px/1 var(--font-text);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink);
+  border-bottom: 1px solid var(--gold);
+  padding-bottom: 5px;
+  transition:
+    color 0.3s,
+    border-color 0.3s;
+}
+
+.linkUnderline:hover {
+  color: var(--bronze);
+}

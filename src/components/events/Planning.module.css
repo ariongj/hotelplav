@@ -1,0 +1,107 @@
+.section {
+  padding: clamp(64px, 8vw, 110px) var(--gutter);
+  background: var(--sand);
+}
+
+.container {
+  max-width: var(--max);
+  margin: 0 auto;
+}
+
+.header {
+  max-width: 720px;
+  margin: 0 auto 54px;
+  text-align: center;
+}
+
+.eyebrow {
+  margin-bottom: 22px;
+  font: 500 12px/1 var(--font-text);
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--gold-dark);
+}
+
+.title {
+  margin: 0;
+  font: 400 clamp(30px, 4.2vw, 56px) / 1.08 var(--font-display);
+  color: var(--ink);
+}
+
+.steps {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr));
+  gap: 26px;
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 0;
+  list-style: none;
+}
+
+.step {
+  padding: 34px 30px;
+  background: rgba(251, 248, 241, 0.75);
+  border-radius: 4px;
+}
+
+.number {
+  margin-bottom: 14px;
+  font: 400 30px var(--font-display);
+  color: var(--gold);
+}
+
+.stepTitle {
+  margin: 0 0 10px;
+  font: 400 22px var(--font-display);
+  color: var(--ink);
+}
+
+.stepText {
+  margin: 0;
+  font: 300 15px/1.7 var(--font-text);
+  color: var(--text-soft);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 14px;
+  margin-top: 46px;
+}
+
+/* Larger than the shared buttons: 17px × 36px. */
+.ctaGold,
+.ctaOutline {
+  display: inline-flex;
+  align-items: center;
+  gap: 11px;
+  padding: 17px 36px;
+  font: 600 12px/1 var(--font-text);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  border-radius: 2px;
+  transition:
+    background-color 0.3s,
+    color 0.3s;
+}
+
+.ctaGold {
+  background: var(--gold);
+  color: var(--on-gold);
+}
+
+.ctaGold:hover {
+  background: var(--gold-hover);
+  color: var(--on-gold);
+}
+
+.ctaOutline {
+  border: 1px solid var(--ink);
+  color: var(--ink);
+}
+
+.ctaOutline:hover {
+  background: var(--ink);
+  color: var(--paper);
+}

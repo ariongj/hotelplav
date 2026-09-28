@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<template id="__bundler_thumbnail"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#241a12"/><path d="M20 68 L42 36 L56 54 L66 42 L82 68 Z" fill="none" stroke="#B08E55" stroke-width="4" stroke-linejoin="round"/></svg></template>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;0,6..96,600;0,6..96,700;1,6..96,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  html{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;scroll-behavior:smooth}
+  body{margin:0;background:#F3ECE0;color:#2B2721;font-family:'Jost',system-ui,sans-serif}
+  a{color:#B08E55;text-decoration:none;transition:color .3s}
+  a:hover{color:#8f7040}
+  ::selection{background:#E7DBC8;color:#2B2721}
+  input,select,button,textarea{font-family:'Jost',sans-serif}
+</style>
+<script src="./image-slot.js"></script>
+</helmet>
+
+<div id="top" style="position:relative;background:#F3ECE0">
+
+<header data-anim="nav" ref="{{ registerRef }}" style="position:fixed;top:0;left:0;right:0;z-index:60;display:flex;align-items:center;justify-content:space-between;padding:20px clamp(20px,5vw,72px);color:#F7F1E7;background:linear-gradient(180deg,rgba(26,18,12,.5),rgba(26,18,12,0));border-bottom:1px solid transparent;transition:background .55s ease,color .55s ease,box-shadow .55s ease,border-color .55s ease">
+  <a href="Aurelia.dc.html" style="font:600 21px/1 'Bodoni Moda',serif;letter-spacing:.36em;color:inherit;padding-left:.36em">BREZOVICA</a>
+  <nav style="display:flex;align-items:center;gap:clamp(16px,2.4vw,38px)">
+    <sc-if value="{{ isDesktopNav }}" hint-placeholder-val="{{ true }}">
+      <a href="Rooms.dc.html" style="font:500 12px/1 'Jost';letter-spacing:.18em;text-transform:uppercase;color:inherit">Rooms</a>
+      <a href="Dining.dc.html" style="font:500 12px/1 'Jost';letter-spacing:.18em;text-transform:uppercase;color:inherit">Dining</a>
+      <a href="Spa.dc.html" style="font:500 12px/1 'Jost';letter-spacing:.18em;text-transform:uppercase;color:inherit">Spa</a>
+      <a href="Experiences.dc.html" style="font:500 12px/1 'Jost';letter-spacing:.18em;text-transform:uppercase;color:inherit;border-bottom:1px solid currentColor;padding-bottom:3px">Experiences</a>
+      <a href="Tour.dc.html" style="font:500 12px/1 'Jost';letter-spacing:.18em;text-transform:uppercase;color:inherit">360&deg; Tour</a>
+      <a href="Events.dc.html" style="font:500 12px/1 'Jost';letter-spacing:.18em;text-transform:uppercase;color:inherit">Events</a>
+      <a href="Contact.dc.html" style="font:500 12px/1 'Jost';letter-spacing:.18em;text-transform:uppercase;color:inherit">Contact</a>
+      <a href="Aurelia.dc.html#book" style="display:inline-flex;align-items:center;gap:9px;padding:12px 24px;background:#B08E55;color:#231a10;font:600 11px/1 'Jost';letter-spacing:.2em;text-transform:uppercase;border-radius:2px">Book</a>
+    </sc-if>
+    <sc-if value="{{ isMobileNav }}" hint-placeholder-val="{{ false }}">
+      <a href="Aurelia.dc.html#book" style="display:inline-flex;align-items:center;padding:11px 20px;background:#B08E55;color:#231a10;font:600 11px/1 'Jost';letter-spacing:.16em;text-transform:uppercase;border-radius:2px">Book</a>
+      <button onClick="{{ toggleMenu }}" aria-label="Menu" style="display:flex;flex-direction:column;gap:5px;width:34px;height:34px;align-items:center;justify-content:center;background:transparent;border:none;cursor:pointer;color:inherit">
+        <span style="display:block;width:22px;height:1.5px;background:currentColor"></span>
+        <span style="display:block;width:22px;height:1.5px;background:currentColor"></span>
+        <span style="display:block;width:22px;height:1.5px;background:currentColor"></span>
+      </button>
+    </sc-if>
+  </nav>
+</header>
+
+<sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;inset:0;z-index:80;background:#F3ECE0;display:flex;flex-direction:column;padding:26px clamp(24px,7vw,60px)">
+    <div style="display:flex;align-items:center;justify-content:space-between">
+      <a href="Aurelia.dc.html" style="font:600 21px/1 'Bodoni Moda',serif;letter-spacing:.36em;color:#2B2721;padding-left:.36em">BREZOVICA</a>
+      <button onClick="{{ closeMenu }}" aria-label="Close" style="width:40px;height:40px;background:transparent;border:1px solid #D3C6AE;border-radius:50%;color:#2B2721;font-size:20px;cursor:pointer">&times;</button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:6px;margin-top:44px;overflow-y:auto">
+      <a href="Rooms.dc.html" style="font:400 30px/1.4 'Bodoni Moda',serif;color:#2B2721;border-bottom:1px solid #E4D9C4;padding:12px 0">Rooms &amp; Suites</a>
+      <a href="Dining.dc.html" style="font:400 30px/1.4 'Bodoni Moda',serif;color:#2B2721;border-bottom:1px solid #E4D9C4;padding:12px 0">Dining</a>
+      <a href="Spa.dc.html" style="font:400 30px/1.4 'Bodoni Moda',serif;color:#2B2721;border-bottom:1px solid #E4D9C4;padding:12px 0">Spa &amp; Wellness</a>
+      <a href="Experiences.dc.html" onClick="{{ closeMenu }}" style="font:400 30px/1.4 'Bodoni Moda',serif;color:#7a5c2f;border-bottom:1px solid #E4D9C4;padding:12px 0">Experiences</a>
+      <a href="Tour.dc.html" style="font:400 30px/1.4 'Bodoni Moda',serif;color:#2B2721;border-bottom:1px solid #E4D9C4;padding:12px 0">360&deg; Virtual Tour</a>
+      <a href="Events.dc.html" style="font:400 30px/1.4 'Bodoni Moda',serif;color:#2B2721;border-bottom:1px solid #E4D9C4;padding:12px 0">Events &amp; Weddings</a>
+      <a href="Contact.dc.html" style="font:400 30px/1.4 'Bodoni Moda',serif;color:#2B2721;border-bottom:1px solid #E4D9C4;padding:12px 0">Contact</a>
+    </div>
+    <a href="Aurelia.dc.html#book" style="margin-top:auto;display:flex;align-items:center;justify-content:center;padding:20px;background:#B08E55;color:#231a10;font:600 13px/1 'Jost';letter-spacing:.22em;text-transform:uppercase;border-radius:2px">Reserve your stay</a>
+  </div>
+</sc-if>
+
+<section data-anim="hero" ref="{{ registerRef }}" data-screen-label="Experiences — hero" style="position:relative;height:clamp(420px,64vh,680px);background:#17110B;overflow:hidden">
+  <image-slot id="ex-hero" src="https://static.wixstatic.com/media/1de95c_0a26973775ff4331865112ee0b1b6ff7~mv2.jpg/v1/fill/w_1920,h_1080,al_c,q_85,enc_avif,quality_auto/1de95c_0a26973775ff4331865112ee0b1b6ff7~mv2.jpg" shape="rect" fit="cover" placeholder="HERO — mountain activity, guests outdoors"></image-slot>
+  <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(15,10,6,.5) 0%,rgba(15,10,6,.18) 45%,rgba(15,10,6,.6) 100%);pointer-events:none"></div>
+  <div style="position:absolute;left:0;right:0;bottom:clamp(36px,7vh,70px);text-align:center;padding:0 24px">
+    <div data-reveal="up" style="font:500 12px/1 'Jost';letter-spacing:.42em;text-transform:uppercase;color:#E7C98F;margin-bottom:20px;text-shadow:0 2px 12px rgba(0,0,0,.5)">Experiences</div>
+    <h1 data-reveal="up" data-delay="80" style="margin:0;font:400 clamp(36px,6vw,80px)/1.05 'Bodoni Moda',serif;color:#F7F1E7;text-shadow:0 3px 30px rgba(0,0,0,.5)">The mountain,<br><em style="font-style:italic;color:#E7C98F">in every season.</em></h1>
+  </div>
+</section>
+
+<section data-screen-label="Experiences — winter" style="background:#F3ECE0;padding:clamp(70px,9vw,130px) clamp(24px,6vw,120px)">
+  <div style="max-width:1280px;margin:0 auto">
+    <div data-reveal="up" style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:18px;margin-bottom:50px">
+      <div>
+        <div style="font:500 12px/1 'Jost';letter-spacing:.4em;text-transform:uppercase;color:#B08E55;margin-bottom:18px">Winter &middot; December &mdash; March</div>
+        <h2 style="margin:0;font:400 clamp(30px,4.2vw,58px)/1.05 'Bodoni Moda',serif;color:#2B2721">Snow days, made effortless</h2>
+      </div>
+      <span style="font:400 14px 'Jost';color:#8f8272">Lift pass &amp; equipment arranged by the concierge</span>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:26px">
+      <article data-reveal="up" style="background:#FBF8F1;border-radius:4px;overflow:hidden">
+        <div style="aspect-ratio:4/3;position:relative"><image-slot id="ex-w1" src="https://static.wixstatic.com/media/1de95c_da6dacf180bd433788972c2d0b719bcf~mv2.jpg/v1/fill/w_900,h_675,al_c,q_85,enc_avif,quality_auto/1de95c_da6dacf180bd433788972c2d0b719bcf~mv2.jpg" shape="rect" placeholder="Skier leaving the hotel door"></image-slot></div>
+        <div style="padding:26px 24px 30px">
+          <h3 style="margin:0 0 10px;font:400 24px 'Bodoni Moda',serif;color:#2B2721">Ski-in, ski-out</h3>
+          <p style="margin:0 0 16px;font:300 15px/1.7 'Jost';color:#6B6357">150 metres from lobby to lift. Boots warmed overnight, skis waiting at the door, first tracks before breakfast.</p>
+          <div style="font:500 11px/1 'Jost';letter-spacing:.2em;text-transform:uppercase;color:#8f8272">Private ski room &middot; Valet</div>
+        </div>
+      </article>
+      <article data-reveal="up" data-delay="80" style="background:#FBF8F1;border-radius:4px;overflow:hidden">
+        <div style="aspect-ratio:4/3;position:relative"><image-slot id="ex-w2" shape="rect" placeholder="SKI SCHOOL — instructor with child on gentle slope"></image-slot></div>
+        <div style="padding:26px 24px 30px">
+          <h3 style="margin:0 0 10px;font:400 24px 'Bodoni Moda',serif;color:#2B2721">School &amp; mountain guides</h3>
+          <p style="margin:0 0 16px;font:300 15px/1.7 'Jost';color:#6B6357">Licensed instructors for first turns, IFMGA guides for the high ridges &mdash; both booked through reception.</p>
+          <div style="font:500 11px/1 'Jost';letter-spacing:.2em;text-transform:uppercase;color:#8f8272">All levels &middot; From age 4</div>
+        </div>
+      </article>
+      <article data-reveal="up" data-delay="160" style="background:#FBF8F1;border-radius:4px;overflow:hidden">
+        <div style="aspect-ratio:4/3;position:relative"><image-slot id="ex-w3" src="https://static.wixstatic.com/media/1de95c_90f60c968da246dd9b5fdba3210919d7~mv2.jpg/v1/fill/w_900,h_675,al_c,q_85,enc_avif,quality_auto/1de95c_90f60c968da246dd9b5fdba3210919d7~mv2.jpg" shape="rect" placeholder="Terrace at dusk, lanterns and snow"></image-slot></div>
+        <div style="padding:26px 24px 30px">
+          <h3 style="margin:0 0 10px;font:400 24px 'Bodoni Moda',serif;color:#2B2721">Nights at altitude</h3>
+          <p style="margin:0 0 16px;font:300 15px/1.7 'Jost';color:#6B6357">Torch-lit snowshoe walks, sledding under the stars, and mulled wine on the terrace when you return.</p>
+          <div style="font:500 11px/1 'Jost';letter-spacing:.2em;text-transform:uppercase;color:#8f8272">Evenings &middot; Weather permitting</div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section data-screen-label="Experiences — summer" style="background:#241a12;color:#F5EEE1;padding:clamp(70px,9vw,130px) clamp(24px,6vw,120px)">
+  <div style="max-width:1280px;margin:0 auto">
+    <div data-reveal="up" style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:18px;margin-bottom:50px">
+      <div>
+        <div style="font:500 12px/1 'Jost';letter-spacing:.4em;text-transform:uppercase;color:#C9B48A;margin-bottom:18px">Summer &middot; June &mdash; September</div>
+        <h2 style="margin:0;font:400 clamp(30px,4.2vw,58px)/1.05 'Bodoni Moda',serif;color:#F5EEE1">Green season, golden light</h2>
+      </div>
+      <span style="font:400 14px 'Jost';color:rgba(245,238,225,.6)">Trail maps &amp; picnics packed on request</span>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:26px">
+      <article data-reveal="up" style="background:#2d2117;border-radius:4px;overflow:hidden">
+        <div style="aspect-ratio:4/3;position:relative"><image-slot id="ex-s1" src="https://static.wixstatic.com/media/1de95c_aa8eaafdd55b4978a19a78a2cd03506d~mv2.jpg/v1/fill/w_900,h_675,al_c,q_85,enc_avif,quality_auto/1de95c_aa8eaafdd55b4978a19a78a2cd03506d~mv2.jpg" shape="rect" placeholder="Ridgeline hike at golden hour"></image-slot></div>
+        <div style="padding:26px 24px 30px">
+          <h3 style="margin:0 0 10px;font:400 24px 'Bodoni Moda',serif;color:#F5EEE1">Guided peak hikes</h3>
+          <p style="margin:0 0 16px;font:300 15px/1.7 'Jost';color:rgba(245,238,225,.7)">Dawn ascents of the Sharr ridgeline with a mountain guide &mdash; and breakfast waiting at the summit.</p>
+          <div style="font:500 11px/1 'Jost';letter-spacing:.2em;text-transform:uppercase;color:#C9B48A">3&ndash;7 hrs &middot; All levels</div>
+        </div>
+      </article>
+      <article data-reveal="up" data-delay="80" style="background:#2d2117;border-radius:4px;overflow:hidden">
+        <div style="aspect-ratio:4/3;position:relative"><image-slot id="ex-s2" shape="rect" placeholder="ALPINE LAKE — glacial lake, wildflowers, e-bikes"></image-slot></div>
+        <div style="padding:26px 24px 30px">
+          <h3 style="margin:0 0 10px;font:400 24px 'Bodoni Moda',serif;color:#F5EEE1">Lakes &amp; trails</h3>
+          <p style="margin:0 0 16px;font:300 15px/1.7 'Jost';color:rgba(245,238,225,.7)">E-bikes to glacial lakes, wildflower meadows and shepherd villages &mdash; routes drawn to your appetite.</p>
+          <div style="font:500 11px/1 'Jost';letter-spacing:.2em;text-transform:uppercase;color:#C9B48A">Self-guided &middot; GPS routes</div>
+        </div>
+      </article>
+      <article data-reveal="up" data-delay="160" style="background:#2d2117;border-radius:4px;overflow:hidden">
+        <div style="aspect-ratio:4/3;position:relative"><image-slot id="ex-s3" shape="rect" placeholder="PICNIC — linen, basket, mountain meadow table"></image-slot></div>
+        <div style="padding:26px 24px 30px">
+          <h3 style="margin:0 0 10px;font:400 24px 'Bodoni Moda',serif;color:#F5EEE1">The shepherd&rsquo;s table</h3>
+          <p style="margin:0 0 16px;font:300 15px/1.7 'Jost';color:rgba(245,238,225,.7)">A private lunch laid in a high meadow &mdash; cheeses from the village, bread still warm, nothing but bells and wind.</p>
+          <div style="font:500 11px/1 'Jost';letter-spacing:.2em;text-transform:uppercase;color:#C9B48A">Private &middot; By reservation</div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section data-screen-label="Experiences — concierge CTA" style="background:#E7DBC8;padding:clamp(64px,8vw,110px) clamp(24px,6vw,120px);text-align:center">
+  <div style="max-width:720px;margin:0 auto">
+    <div data-reveal="up" style="font:500 12px/1 'Jost';letter-spacing:.4em;text-transform:uppercase;color:#8f7040;margin-bottom:22px">Concierge</div>
+    <h2 data-reveal="up" data-delay="80" style="margin:0 0 20px;font:400 clamp(30px,4.2vw,56px)/1.08 'Bodoni Moda',serif;color:#2B2721">One call plans it all.</h2>
+    <p data-reveal="up" data-delay="140" style="margin:0 0 36px;font:300 clamp(15px,1.2vw,18px)/1.8 'Jost';color:#6B6357">Tell us the season, the pace and who&rsquo;s coming &mdash; we&rsquo;ll shape the days around you.</p>
+    <div data-reveal="up" data-delay="200" style="display:flex;flex-wrap:wrap;justify-content:center;gap:14px">
+      <a href="Contact.dc.html" style="display:inline-flex;align-items:center;gap:11px;padding:17px 36px;background:#B08E55;color:#231a10;font:600 12px/1 'Jost';letter-spacing:.2em;text-transform:uppercase;border-radius:2px">Speak to the concierge</a>
+      <a href="Tour.dc.html" style="display:inline-flex;align-items:center;gap:11px;padding:17px 36px;border:1px solid #2B2721;color:#2B2721;font:600 12px/1 'Jost';letter-spacing:.2em;text-transform:uppercase;border-radius:2px">Take the 360&deg; tour</a>
+    </div>
+  </div>
+</section>
+
+<footer style="background:#241a12;color:#E9DFCB;padding:clamp(64px,7vw,110px) clamp(24px,6vw,120px) 40px">
+  <div style="max-width:1280px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:48px 40px">
+    <div style="grid-column:1/-1;max-width:520px">
+      <a href="Aurelia.dc.html" style="font:600 24px/1 'Bodoni Moda',serif;letter-spacing:.36em;padding-left:.36em;color:#E9DFCB;display:inline-block;margin-bottom:20px">BREZOVICA</a>
+      <p style="margin:0;font:300 15px/1.75 'Jost';color:rgba(233,223,203,.7)">An alpine sanctuary in the Sharr Mountains &mdash; where mountain grandeur meets a warmth that feels like your own.</p>
+    </div>
+    <div>
+      <div style="font:500 11px/1 'Jost';letter-spacing:.24em;text-transform:uppercase;color:#C9B48A;margin-bottom:20px">Explore</div>
+      <div style="display:flex;flex-direction:column;gap:12px;font:300 15px 'Jost'"><a href="Rooms.dc.html" style="color:rgba(233,223,203,.8)">Rooms &amp; Suites</a><a href="Dining.dc.html" style="color:rgba(233,223,203,.8)">Dining</a><a href="Spa.dc.html" style="color:rgba(233,223,203,.8)">Spa &amp; Wellness</a><a href="Experiences.dc.html" style="color:rgba(233,223,203,.8)">Experiences</a><a href="Tour.dc.html" style="color:rgba(233,223,203,.8)">360&deg; Virtual Tour</a><a href="Events.dc.html" style="color:rgba(233,223,203,.8)">Events &amp; Weddings</a><a href="Contact.dc.html" style="color:rgba(233,223,203,.8)">Contact</a></div>
+    </div>
+    <div>
+      <div style="font:500 11px/1 'Jost';letter-spacing:.24em;text-transform:uppercase;color:#C9B48A;margin-bottom:20px">Contact</div>
+      <div style="display:flex;flex-direction:column;gap:12px;font:300 15px/1.5 'Jost';color:rgba(233,223,203,.8)"><span>Brezovica Ski Resort<br>&Scaron;trpce, Kosovo</span><a href="tel:+38349301030" style="color:rgba(233,223,203,.8)">+383 49 30 10 30</a><a href="mailto:stay@brezovicahotel.com" style="color:rgba(233,223,203,.8)">stay@brezovicahotel.com</a></div>
+    </div>
+    <div>
+      <div style="font:500 11px/1 'Jost';letter-spacing:.24em;text-transform:uppercase;color:#C9B48A;margin-bottom:20px">Seasons</div>
+      <div style="display:flex;flex-direction:column;gap:12px;font:300 15px/1.5 'Jost';color:rgba(233,223,203,.8)"><span>Winter &middot; Dec &mdash; Mar</span><span>Green season &middot; Jun &mdash; Sep</span><span>Spa &amp; dining &middot; Year-round</span></div>
+    </div>
+  </div>
+  <div style="max-width:1280px;margin:60px auto 0;padding-top:28px;border-top:1px solid rgba(233,223,203,.16);display:flex;flex-wrap:wrap;justify-content:space-between;gap:16px;font:400 12px/1.6 'Jost';color:rgba(233,223,203,.55)">
+    <span>&copy; 2026 Brezovica Hotel &amp; SPA. All rights reserved.</span>
+    <div style="display:flex;flex-wrap:wrap;gap:22px"><a href="#" style="color:rgba(233,223,203,.55)">Privacy</a><a href="#" style="color:rgba(233,223,203,.55)">Terms</a><a href="#" style="color:rgba(233,223,203,.55)">Cancellation</a><a href="#" style="color:rgba(233,223,203,.55)">FAQ</a></div>
+  </div>
+</footer>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { vw: (typeof window !== 'undefined' ? window.innerWidth : 1200), menuOpen: false };
+  els = {};
+  registerRef = (el) => { if (el && el.dataset && el.dataset.anim) this.els[el.dataset.anim] = el; };
+
+  componentDidMount() {
+    this._raf = null;
+    this._onScroll = () => {
+      if (this._raf) return;
+      this._raf = requestAnimationFrame(() => { this._raf = null; this._update(); });
+    };
+    this._onResize = () => { this.setState({ vw: window.innerWidth }); this._onScroll(); };
+    window.addEventListener('scroll', this._onScroll, { passive: true, capture: true });
+    window.addEventListener('resize', this._onResize);
+    this._initReveals();
+    this._slotNudges = [300, 1200, 3000].map((ms) => setTimeout(() => {
+      [].slice.call(document.querySelectorAll('image-slot')).forEach((s) => { try { if (s._render) s._render(); } catch (e) {} });
+    }, ms));
+    this._update();
+  }
+
+  componentDidUpdate() { this._update(); }
+
+  componentWillUnmount() {
+    window.removeEventListener('scroll', this._onScroll, { capture: true });
+    window.removeEventListener('resize', this._onResize);
+    clearTimeout(this._revealFallback);
+    (this._slotNudges || []).forEach(clearTimeout);
+  }
+
+  _initReveals() {
+    const nodes = [].slice.call(document.querySelectorAll('[data-reveal]'));
+    this._reveals = [];
+    nodes.forEach((n) => {
+      n.style.opacity = '0';
+      n.style.transform = 'translateY(40px)';
+      n.style.transition = 'opacity 1.2s cubic-bezier(.22,.68,.2,1), transform 1.2s cubic-bezier(.22,.68,.2,1)';
+      n.style.transitionDelay = (n.getAttribute('data-delay') || '0') + 'ms';
+      this._reveals.push(n);
+    });
+    this._checkReveals();
+    this._revealFallback = setTimeout(() => {
+      (this._reveals || []).forEach((n) => { n.style.opacity = '1'; n.style.transform = 'none'; });
+      this._reveals = [];
+    }, 4000);
+  }
+
+  _checkReveals() {
+    if (!this._reveals || !this._reveals.length) return;
+    const vh = window.innerHeight || 800;
+    const rest = [];
+    this._reveals.forEach((n) => {
+      if (n.getBoundingClientRect().top < vh * 0.9) { n.style.opacity = '1'; n.style.transform = 'none'; }
+      else rest.push(n);
+    });
+    this._reveals = rest;
+  }
+
+  _update() {
+    this._checkReveals();
+    const nav = this.els.nav, h = this.els.hero;
+    const solid = h ? (window.scrollY > h.offsetHeight - 90) : (window.scrollY > 380);
+    if (nav) {
+      if (solid) Object.assign(nav.style, { background: 'rgba(247,243,236,.92)', color: '#2B2721', boxShadow: '0 10px 40px rgba(70,46,22,.09)', borderBottomColor: '#E7DBC4', backdropFilter: 'saturate(140%) blur(12px)', webkitBackdropFilter: 'saturate(140%) blur(12px)' });
+      else Object.assign(nav.style, { background: 'linear-gradient(180deg,rgba(26,18,12,.5),rgba(26,18,12,0))', color: '#F7F1E7', boxShadow: 'none', borderBottomColor: 'transparent', backdropFilter: 'none', webkitBackdropFilter: 'none' });
+    }
+  }
+
+  renderVals() {
+    const s = this.state;
+    return {
+      registerRef: this.registerRef,
+      isDesktopNav: s.vw >= 980,
+      isMobileNav: s.vw < 980,
+      menuOpen: s.menuOpen,
+      toggleMenu: () => this.setState((st) => ({ menuOpen: !st.menuOpen })),
+      closeMenu: () => this.setState({ menuOpen: false })
+    };
+  }
+}
+</script>
+</body>
+</html>

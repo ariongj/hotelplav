@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<template id="__bundler_thumbnail"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#241a12"/><text x="50" y="56" font-family="Georgia,serif" font-size="30" fill="#B08E55" text-anchor="middle">B</text></svg></template>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;0,6..96,600;0,6..96,700;1,6..96,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  html{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;scroll-behavior:smooth}
+  body{margin:0;background:#F3ECE0;color:#2B2721;font-family:'Jost',system-ui,sans-serif}
+  a{color:#B08E55;text-decoration:none;transition:color .3s}
+  a:hover{color:#8f7040}
+  ::selection{background:#E7DBC8;color:#2B2721}
+  input,select,button{font-family:'Jost',sans-serif}
+  input:focus,select:focus{outline:none;border-color:#B08E55}
+  select{-webkit-appearance:none;appearance:none;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path d='M1 1l4 4 4-4' stroke='%238f8272' fill='none' stroke-width='1.3'/></svg>");background-repeat:no-repeat;background-position:right 14px center}
+</style>
+<script src="./image-slot.js"></script>
+</helmet>
+
+<div id="top" style="position:relative;background:#F3ECE0">
+
+<!-- ============ NAV ============ -->
+<header data-anim="nav" ref="{{ registerRef }}" style="position:fixed;top:0;left:0;right:0;z-index:60;display:flex;align-items:center;justify-content:space-between;padding:20px clamp(20px,5vw,72px);color:#F7F1E7;background:linear-gradient(180deg,rgba(26,18,12,.5),rgba(26,18,12,0));border-bottom:1px solid transparent;transition:background .55s ease,color .55s ease,box-shadow .55s ease,border-color .55s ease">
+  <a href="Aurelia.dc.html" style="font:600 21px/1 'Bodoni Moda',serif;letter-spacing:.36em;color:inherit;padding-left:.36em">BREZOVICA</a>
+  <nav style="display:flex;align-items:center;gap:clamp(16px,2.4vw,38px)">
+    <sc-if value="{{ isDesktopNav }}" hint-placeholder-val="{{ true }}">
+      <a href="Rooms.dc.html" style="font:500 12px/1 'Jost';letter-spacing:.18em;text-transform:uppercase;color:inherit">Rooms</a>
+      <a href="Dining.dc.html" style="font:500 12px/1 'Jost';letter-spacing:.18em;text-transform:uppercase;color:inherit">Dining</a>
+      <a href="Spa.dc.html" style="font:500 12px/1 'Jost';letter-spacing:.18em;text-transform:uppercase;color:inherit;border-bottom:1px solid currentColor;padding-bottom:3px">Spa</a>
+      <a href="Experiences.dc.html" style="font:500 12px/1 'Jost';letter-spacing:.18em;text-transform:uppercase;color:inherit">Experiences</a>
+      <a href="Tour.dc.html" style="font:500 12px/1 'Jost';letter-spacing:.18em;text-transform:uppercase;color:inherit">360&deg; Tour</a>
+      <a href="Events.dc.html" style="font:500 12px/1 'Jost';letter-spacing:.18em;text-transform:uppercase;color:inherit">Events</a>
+      <a href="Contact.dc.html" style="font:500 12px/1 'Jost';letter-spacing:.18em;text-transform:uppercase;color:inherit">Contact</a>
+      <a href="#book" style="display:inline-flex;align-items:center;gap:9px;padding:12px 24px;background:#B08E55;color:#231a10;font:600 11px/1 'Jost';letter-spacing:.2em;text-transform:uppercase;border-radius:2px">Book</a>
+    </sc-if>
+    <sc-if value="{{ isMobileNav }}" hint-placeholder-val="{{ false }}">
+      <a href="#book" style="display:inline-flex;align-items:center;padding:11px 20px;background:#B08E55;color:#231a10;font:600 11px/1 'Jost';letter-spacing:.16em;text-transform:uppercase;border-radius:2px">Book</a>
+      <button onClick="{{ toggleMenu }}" aria-label="Menu" style="display:flex;flex-direction:column;gap:5px;width:34px;height:34px;align-items:center;justify-content:center;background:transparent;border:none;cursor:pointer;color:inherit">
+        <span style="display:block;width:22px;height:1.5px;background:currentColor"></span>
+        <span style="display:block;width:22px;height:1.5px;background:currentColor"></span>
+        <span style="display:block;width:22px;height:1.5px;background:currentColor"></span>
+      </button>
+    </sc-if>
+  </nav>
+</header>
+
+<sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;inset:0;z-index:80;background:#F3ECE0;display:flex;flex-direction:column;padding:26px clamp(24px,7vw,60px)">
+    <div style="display:flex;align-items:center;justify-content:space-between">
+      <a href="Aurelia.dc.html" style="font:600 21px/1 'Bodoni Moda',serif;letter-spacing:.36em;color:#2B2721;padding-left:.36em">BREZOVICA</a>
+      <button onClick="{{ closeMenu }}" aria-label="Close" style="width:40px;height:40px;background:transparent;border:1px solid #D3C6AE;border-radius:50%;color:#2B2721;font-size:20px;cursor:pointer">&times;</button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:6px;margin-top:56px;overflow-y:auto">
+      <a href="Rooms.dc.html" onClick="{{ closeMenu }}" style="font:400 34px/1.4 'Bodoni Moda',serif;color:#2B2721;border-bottom:1px solid #E4D9C4;padding:14px 0">Rooms &amp; Suites</a>
+      <a href="Dining.dc.html" onClick="{{ closeMenu }}" style="font:400 34px/1.4 'Bodoni Moda',serif;color:#2B2721;border-bottom:1px solid #E4D9C4;padding:14px 0">Dining</a>
+      <a href="Spa.dc.html" onClick="{{ closeMenu }}" style="font:400 34px/1.4 'Bodoni Moda',serif;color:#2B2721;border-bottom:1px solid #E4D9C4;padding:14px 0">Spa &amp; Wellness</a>
+      <a href="Experiences.dc.html" onClick="{{ closeMenu }}" style="font:400 34px/1.4 'Bodoni Moda',serif;color:#2B2721;border-bottom:1px solid #E4D9C4;padding:14px 0">Experiences</a>
+      <a href="Tour.dc.html" onClick="{{ closeMenu }}" style="font:400 34px/1.4 'Bodoni Moda',serif;color:#2B2721;border-bottom:1px solid #E4D9C4;padding:14px 0">360&deg; Virtual Tour</a>
+      <a href="Events.dc.html" onClick="{{ closeMenu }}" style="font:400 34px/1.4 'Bodoni Moda',serif;color:#2B2721;border-bottom:1px solid #E4D9C4;padding:14px 0">Events &amp; Weddings</a>
+      <a href="Aurelia.dc.html#gallery" onClick="{{ closeMenu }}" style="font:400 34px/1.4 'Bodoni Moda',serif;color:#2B2721;border-bottom:1px solid #E4D9C4;padding:14px 0">Gallery</a>
+      <a href="Contact.dc.html" onClick="{{ closeMenu }}" style="font:400 34px/1.4 'Bodoni Moda',serif;color:#2B2721;border-bottom:1px solid #E4D9C4;padding:14px 0">Contact</a>
+    </div>
+    <a href="#book" onClick="{{ closeMenu }}" style="margin-top:auto;display:flex;align-items:center;justify-content:center;padding:20px;background:#B08E55;color:#231a10;font:600 13px/1 'Jost';letter-spacing:.22em;text-transform:uppercase;border-radius:2px">Book a treatment</a>
+  </div>
+</sc-if>
+
+<!-- ============ HERO ============ -->
+<section data-anim="header" ref="{{ registerRef }}" style="position:relative;height:clamp(460px,66vh,760px);overflow:hidden;background:#241a12">
+  <image-slot id="au-spa-hero" src="https://static.wixstatic.com/media/1de95c_424350ad23d241d988255f926572dd10~mv2.jpg/v1/fill/w_1920,h_1080,al_c,q_85,enc_avif,quality_auto/1de95c_424350ad23d241d988255f926572dd10~mv2.jpg" shape="rect" fit="cover" placeholder="Spa — thermal pool by candlelight, steam, mountain window"></image-slot>
+  <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(26,18,12,.5) 0%,rgba(26,18,12,.2) 40%,rgba(26,18,12,.64));pointer-events:none"></div>
+  <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:90px 24px 0;pointer-events:none">
+    <div style="font:500 12px/1 'Jost';letter-spacing:.42em;text-transform:uppercase;color:#e7c98f;margin-bottom:26px;text-shadow:0 2px 14px rgba(0,0,0,.5)">Wellness</div>
+    <h1 style="margin:0 0 22px;font:400 clamp(38px,6.4vw,90px)/1.02 'Bodoni Moda',serif;color:#F7F1E7;text-shadow:0 2px 34px rgba(0,0,0,.45)">Spa &amp; Wellness</h1>
+    <p style="margin:0;max-width:580px;font:300 clamp(15px,1.3vw,18px)/1.7 'Jost';color:rgba(247,241,231,.86);text-shadow:0 1px 14px rgba(0,0,0,.5)">Pools, Finnish sauna, alpine steam and quiet hands at 1,100 metres — an oasis of calm at the heart of the hotel.</p>
+  </div>
+</section>
+
+<!-- ============ BOOKING BAR ============ -->
+<section id="book" style="position:relative;z-index:10;background:#F3ECE0;padding:clamp(28px,4vw,44px) clamp(20px,6vw,120px) 0">
+  <div data-anim="bookBar" ref="{{ registerRef }}" style="max-width:1180px;margin:-60px auto 0;position:relative;background:#FBF8F1;border:1px solid #E7DBC4;border-radius:4px;box-shadow:0 30px 70px rgba(70,46,22,.12);padding:clamp(20px,2.6vw,30px)">
+    <div style="display:flex;flex-wrap:wrap;gap:14px;align-items:flex-end">
+      <label style="flex:1 1 150px;display:flex;flex-direction:column;gap:8px">
+        <span style="font:500 11px/1 'Jost';letter-spacing:.22em;text-transform:uppercase;color:#8f8272">Date</span>
+        <input type="date" value="{{ bdate }}" onChange="{{ onBdate }}" style="padding:13px 14px;border:1px solid #D9CDB8;background:#FEFCF8;border-radius:2px;color:#2B2721;font:400 15px 'Jost';width:100%">
+      </label>
+      <label style="flex:1 1 130px;display:flex;flex-direction:column;gap:8px">
+        <span style="font:500 11px/1 'Jost';letter-spacing:.22em;text-transform:uppercase;color:#8f8272">Time</span>
+        <select value="{{ btime }}" onChange="{{ onBtime }}" style="padding:13px 34px 13px 14px;border:1px solid #D9CDB8;background:#FEFCF8;border-radius:2px;color:#2B2721;font:400 15px 'Jost';width:100%;cursor:pointer">
+          <option>09:00</option><option>10:00</option><option>11:00</option><option>12:00</option><option>14:00</option><option>15:00</option><option>16:00</option><option>17:00</option><option>18:00</option>
+        </select>
+      </label>
+      <label style="flex:1 1 180px;display:flex;flex-direction:column;gap:8px">
+        <span style="font:500 11px/1 'Jost';letter-spacing:.22em;text-transform:uppercase;color:#8f8272">Treatment</span>
+        <select value="{{ btreat }}" onChange="{{ onBtreat }}" style="padding:13px 34px 13px 14px;border:1px solid #D9CDB8;background:#FEFCF8;border-radius:2px;color:#2B2721;font:400 15px 'Jost';width:100%;cursor:pointer">
+          <option>Signature Alpine Massage</option><option>Hot Stone Ritual</option><option>Glacial Botanical Facial</option><option>Thermal Sauna Ritual</option><option>Forest Body Wrap</option><option>Two-Day Wellness Retreat</option>
+        </select>
+      </label>
+      <label style="flex:1 1 120px;display:flex;flex-direction:column;gap:8px">
+        <span style="font:500 11px/1 'Jost';letter-spacing:.22em;text-transform:uppercase;color:#8f8272">Guests</span>
+        <select value="{{ bguests }}" onChange="{{ onBguests }}" style="padding:13px 34px 13px 14px;border:1px solid #D9CDB8;background:#FEFCF8;border-radius:2px;color:#2B2721;font:400 15px 'Jost';width:100%;cursor:pointer">
+          <option>1 Guest</option><option>2 Guests</option>
+        </select>
+      </label>
+      <button onClick="{{ onBook }}" style="flex:1 1 170px;display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:15px 28px;background:#B08E55;color:#231a10;font:600 12px/1 'Jost';letter-spacing:.2em;text-transform:uppercase;border:none;border-radius:2px;cursor:pointer;transition:background .3s" style-hover="background:#987839">Book a treatment</button>
+    </div>
+    <sc-if value="{{ booked }}" hint-placeholder-val="{{ false }}">
+      <div style="margin-top:18px;padding:16px 20px;background:#EFE6D3;border-left:2px solid #B08E55;color:#5c5344;font:400 15px/1.6 'Jost'">{{ bookMsg }}</div>
+    </sc-if>
+  </div>
+</section>
+
+<!-- ============ THERMAL BATHS FEATURE ============ -->
+<section style="background:#F3ECE0;padding:clamp(64px,8vw,130px) clamp(24px,6vw,120px)">
+  <div style="max-width:1280px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:clamp(40px,5vw,90px);align-items:center">
+    <div data-reveal="left" style="position:relative;aspect-ratio:5/6;border-radius:4px;overflow:hidden"><image-slot id="au-spa-baths" src="https://static.wixstatic.com/media/f9d3d7_d9f5264f63fb46e8b4fa9c093c43dd22~mv2.jpg/v1/fill/w_1000,h_1200,al_c,q_85,enc_avif,quality_auto/f9d3d7_d9f5264f63fb46e8b4fa9c093c43dd22~mv2.jpg" shape="rect" placeholder="Thermal baths — steam rising, low light"></image-slot></div>
+    <div data-reveal="right">
+      <div style="font:500 12px/1 'Jost';letter-spacing:.4em;text-transform:uppercase;color:#B08E55;margin-bottom:24px">Aquarius Spa Center</div>
+      <h2 style="margin:0 0 26px;font:400 clamp(30px,4.2vw,58px)/1.05 'Bodoni Moda',serif;color:#2B2721">Water, warmth<br>and quiet</h2>
+      <p style="margin:0 0 34px;font:300 clamp(15px,1.2vw,18px)/1.8 'Jost';color:#6B6357;max-width:48ch">Swimming pools for adults and children, a special cold-water plunge, Finnish sauna and steam room — the latest in cosmetics and relaxation, open to all hotel guests daily.</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px 24px;border-top:1px solid #E4D9C4;padding-top:26px">
+        <div style="display:flex;align-items:baseline;gap:10px;font:400 15px 'Jost';color:#4c463d"><span style="color:#B08E55;font-size:8px">&#9670;</span>Pools · Adults &amp; children</div>
+        <div style="display:flex;align-items:baseline;gap:10px;font:400 15px 'Jost';color:#4c463d"><span style="color:#B08E55;font-size:8px">&#9670;</span>Finnish sauna · 90°</div>
+        <div style="display:flex;align-items:baseline;gap:10px;font:400 15px 'Jost';color:#4c463d"><span style="color:#B08E55;font-size:8px">&#9670;</span>Steam room</div>
+        <div style="display:flex;align-items:baseline;gap:10px;font:400 15px 'Jost';color:#4c463d"><span style="color:#B08E55;font-size:8px">&#9670;</span>Cold-water pool</div>
+        <div style="display:flex;align-items:baseline;gap:10px;font:400 15px 'Jost';color:#4c463d"><span style="color:#B08E55;font-size:8px">&#9670;</span>Massage center</div>
+        <div style="display:flex;align-items:baseline;gap:10px;font:400 15px 'Jost';color:#4c463d"><span style="color:#B08E55;font-size:8px">&#9670;</span>Fitness studio</div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:clamp(28px,5vw,60px);margin-top:34px">
+        <div><div style="font:400 40px/1 'Bodoni Moda',serif;color:#7a5c2f">1,100</div><div style="font:500 11px/1 'Jost';letter-spacing:.22em;text-transform:uppercase;color:#8f8272;margin-top:8px">m altitude</div></div>
+        <div><div style="font:400 40px/1 'Bodoni Moda',serif;color:#7a5c2f">3</div><div style="font:500 11px/1 'Jost';letter-spacing:.22em;text-transform:uppercase;color:#8f8272;margin-top:8px">Pools</div></div>
+        <div><div style="font:400 40px/1 'Bodoni Moda',serif;color:#7a5c2f">08–22</div><div style="font:500 11px/1 'Jost';letter-spacing:.22em;text-transform:uppercase;color:#8f8272;margin-top:8px">Open daily</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TREATMENTS (filterable) ============ -->
+<section id="treatments" style="background:#FBF8F1;padding:clamp(50px,6vw,90px) clamp(20px,6vw,120px) 0">
+  <div style="max-width:1280px;margin:0 auto">
+    <div data-reveal="up" style="text-align:center;max-width:720px;margin:0 auto clamp(36px,5vw,56px)">
+      <div style="font:500 12px/1 'Jost';letter-spacing:.4em;text-transform:uppercase;color:#B08E55;margin-bottom:20px">The Treatment Menu</div>
+      <h2 style="margin:0;font:400 clamp(32px,4.6vw,60px)/1.04 'Bodoni Moda',serif;color:#2B2721">Restore what the world takes</h2>
+    </div>
+
+    <!-- toolbar -->
+    <div style="border-top:1px solid #E4D9C4;border-bottom:1px solid #E4D9C4;padding:20px 0;display:flex;flex-wrap:wrap;gap:18px 24px;align-items:center;justify-content:space-between">
+      <div onClick="{{ onCatClick }}" style="display:flex;flex-wrap:wrap;gap:6px;background:#EFE6D3;padding:4px;border-radius:40px">
+        <button data-cat-opt="All" style="padding:9px 18px;border:none;border-radius:40px;background:#2B2721;color:#F3ECE0;font:500 11px/1 'Jost';letter-spacing:.12em;text-transform:uppercase;cursor:pointer">All</button>
+        <button data-cat-opt="Massage" style="padding:9px 18px;border:none;border-radius:40px;background:transparent;color:#6B6357;font:500 11px/1 'Jost';letter-spacing:.12em;text-transform:uppercase;cursor:pointer">Massage</button>
+        <button data-cat-opt="Facial" style="padding:9px 18px;border:none;border-radius:40px;background:transparent;color:#6B6357;font:500 11px/1 'Jost';letter-spacing:.12em;text-transform:uppercase;cursor:pointer">Facial</button>
+        <button data-cat-opt="Body" style="padding:9px 18px;border:none;border-radius:40px;background:transparent;color:#6B6357;font:500 11px/1 'Jost';letter-spacing:.12em;text-transform:uppercase;cursor:pointer">Body</button>
+        <button data-cat-opt="Thermal" style="padding:9px 18px;border:none;border-radius:40px;background:transparent;color:#6B6357;font:500 11px/1 'Jost';letter-spacing:.12em;text-transform:uppercase;cursor:pointer">Thermal</button>
+        <button data-cat-opt="Retreats" style="padding:9px 18px;border:none;border-radius:40px;background:transparent;color:#6B6357;font:500 11px/1 'Jost';letter-spacing:.12em;text-transform:uppercase;cursor:pointer">Retreats</button>
+      </div>
+      <div style="display:flex;align-items:center;gap:16px">
+        <span data-anim="count" ref="{{ registerRef }}" style="font:400 13px/1 'Jost';color:#8f8272">8 treatments</span>
+        <label style="display:flex;align-items:center;gap:10px"><span style="font:500 10px/1 'Jost';letter-spacing:.2em;text-transform:uppercase;color:#a29886">Sort</span>
+          <select value="{{ sort }}" onChange="{{ onSort }}" style="padding:10px 32px 10px 14px;border:1px solid #D9CDB8;background:#F3ECE0;border-radius:2px;color:#2B2721;font:400 14px 'Jost';cursor:pointer"><option>Recommended</option><option>Price ↑</option><option>Price ↓</option><option>Duration</option></select>
+        </label>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="background:#FBF8F1;padding:clamp(30px,4vw,48px) clamp(20px,6vw,120px) clamp(70px,9vw,130px)">
+  <div data-anim="grid" ref="{{ registerRef }}" style="max-width:1280px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:28px">
+
+    <article data-treat data-cat="Massage" data-price="185" data-min="80" data-rank="1" style="background:#F3ECE0;border-radius:4px;overflow:hidden;display:flex;flex-direction:column">
+      <div style="position:relative;aspect-ratio:16/10"><image-slot id="au-spa-t1" src="https://static.wixstatic.com/media/1de95c_4a4d5d4db4cd4e75a9012191010d5218~mv2.jpg/v1/fill/w_800,h_500,al_c,q_85,enc_avif,quality_auto/1de95c_4a4d5d4db4cd4e75a9012191010d5218~mv2.jpg" shape="rect" placeholder="Signature Alpine Massage"></image-slot><span style="position:absolute;top:14px;left:14px;background:#B08E55;color:#231a10;font:600 10px/1 'Jost';letter-spacing:.18em;text-transform:uppercase;padding:7px 11px;border-radius:2px">Signature</span><span style="position:absolute;bottom:14px;right:14px;background:rgba(26,18,12,.55);backdrop-filter:blur(4px);color:#F7F1E7;font:500 10px/1 'Jost';letter-spacing:.1em;padding:7px 11px;border-radius:40px">80 min</span></div>
+      <div style="padding:26px 26px 28px;display:flex;flex-direction:column;flex:1">
+        <div style="font:500 10px/1 'Jost';letter-spacing:.2em;text-transform:uppercase;color:#a29886;margin-bottom:12px">Massage</div>
+        <div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px"><h3 style="margin:0;font:400 24px/1.1 'Bodoni Moda',serif;color:#2B2721">Signature Alpine Massage</h3><span style="font:400 22px 'Bodoni Moda',serif;color:#7a5c2f;white-space:nowrap">€185</span></div>
+        <p style="margin:14px 0 22px;font:300 15px/1.65 'Jost';color:#6B6357;flex:1">Warm alpine oils and long, grounding strokes to release the mountains from your shoulders.</p>
+        <a href="#book" style="align-self:flex-start;display:inline-flex;align-items:center;justify-content:center;padding:13px 26px;background:#2B2721;color:#F3ECE0;font:600 11px/1 'Jost';letter-spacing:.18em;text-transform:uppercase;border-radius:2px">Book</a>
+      </div>
+    </article>
+
+    <article data-treat data-cat="Massage" data-price="150" data-min="60" data-rank="4" style="background:#F3ECE0;border-radius:4px;overflow:hidden;display:flex;flex-direction:column">
+      <div style="position:relative;aspect-ratio:16/10"><image-slot id="au-spa-t2" src="https://static.wixstatic.com/media/f9d3d7_7313371891564ee0acd22c9eecf0e2fc~mv2.jpg/v1/fill/w_800,h_500,al_c,q_85,enc_avif,quality_auto/f9d3d7_7313371891564ee0acd22c9eecf0e2fc~mv2.jpg" shape="rect" placeholder="Deep Tissue Recovery"></image-slot><span style="position:absolute;bottom:14px;right:14px;background:rgba(26,18,12,.55);backdrop-filter:blur(4px);color:#F7F1E7;font:500 10px/1 'Jost';letter-spacing:.1em;padding:7px 11px;border-radius:40px">60 min</span></div>
+      <div style="padding:26px 26px 28px;display:flex;flex-direction:column;flex:1">
+        <div style="font:500 10px/1 'Jost';letter-spacing:.2em;text-transform:uppercase;color:#a29886;margin-bottom:12px">Massage</div>
+        <div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px"><h3 style="margin:0;font:400 24px/1.1 'Bodoni Moda',serif;color:#2B2721">Deep Tissue Recovery</h3><span style="font:400 22px 'Bodoni Moda',serif;color:#7a5c2f;white-space:nowrap">€150</span></div>
+        <p style="margin:14px 0 22px;font:300 15px/1.65 'Jost';color:#6B6357;flex:1">Focused, firm work for tired legs and backs — made for the day after the slopes.</p>
+        <a href="#book" style="align-self:flex-start;display:inline-flex;align-items:center;justify-content:center;padding:13px 26px;background:#2B2721;color:#F3ECE0;font:600 11px/1 'Jost';letter-spacing:.18em;text-transform:uppercase;border-radius:2px">Book</a>
+      </div>
+    </article>
+
+    <article data-treat data-cat="Massage" data-price="210" data-min="90" data-rank="5" style="background:#F3ECE0;border-radius:4px;overflow:hidden;display:flex;flex-direction:column">
+      <div style="position:relative;aspect-ratio:16/10"><image-slot id="au-spa-t3" src="https://static.wixstatic.com/media/1de95c_fe69aecf6c0a4c3e89f1b8d5afc6d93b~mv2.jpg/v1/fill/w_800,h_500,al_c,q_85,enc_avif,quality_auto/1de95c_fe69aecf6c0a4c3e89f1b8d5afc6d93b~mv2.jpg" shape="rect" placeholder="Hot Stone Ritual"></image-slot><span style="position:absolute;bottom:14px;right:14px;background:rgba(26,18,12,.55);backdrop-filter:blur(4px);color:#F7F1E7;font:500 10px/1 'Jost';letter-spacing:.1em;padding:7px 11px;border-radius:40px">90 min</span></div>
+      <div style="padding:26px 26px 28px;display:flex;flex-direction:column;flex:1">
+        <div style="font:500 10px/1 'Jost';letter-spacing:.2em;text-transform:uppercase;color:#a29886;margin-bottom:12px">Massage</div>
+        <div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px"><h3 style="margin:0;font:400 24px/1.1 'Bodoni Moda',serif;color:#2B2721">Hot Stone Ritual</h3><span style="font:400 22px 'Bodoni Moda',serif;color:#7a5c2f;white-space:nowrap">€210</span></div>
+        <p style="margin:14px 0 22px;font:300 15px/1.65 'Jost';color:#6B6357;flex:1">Warmed river stones and slow pressure — the deepest kind of stillness.</p>
+        <a href="#book" style="align-self:flex-start;display:inline-flex;align-items:center;justify-content:center;padding:13px 26px;background:#2B2721;color:#F3ECE0;font:600 11px/1 'Jost';letter-spacing:.18em;text-transform:uppercase;border-radius:2px">Book</a>
+      </div>
+    </article>
+
+    <article data-treat data-cat="Facial" data-price="150" data-min="60" data-rank="3" style="background:#F3ECE0;border-radius:4px;overflow:hidden;display:flex;flex-direction:column">
+      <div style="position:relative;aspect-ratio:16/10"><image-slot id="au-spa-t4" src="https://static.wixstatic.com/media/1de95c_424350ad23d241d988255f926572dd10~mv2.jpg/v1/fill/w_800,h_500,al_c,q_85,enc_avif,quality_auto/1de95c_424350ad23d241d988255f926572dd10~mv2.jpg" shape="rect" placeholder="Glacial Botanical Facial"></image-slot><span style="position:absolute;bottom:14px;right:14px;background:rgba(26,18,12,.55);backdrop-filter:blur(4px);color:#F7F1E7;font:500 10px/1 'Jost';letter-spacing:.1em;padding:7px 11px;border-radius:40px">60 min</span></div>
+      <div style="padding:26px 26px 28px;display:flex;flex-direction:column;flex:1">
+        <div style="font:500 10px/1 'Jost';letter-spacing:.2em;text-transform:uppercase;color:#a29886;margin-bottom:12px">Facial</div>
+        <div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px"><h3 style="margin:0;font:400 24px/1.1 'Bodoni Moda',serif;color:#2B2721">Glacial Botanical Facial</h3><span style="font:400 22px 'Bodoni Moda',serif;color:#7a5c2f;white-space:nowrap">€150</span></div>
+        <p style="margin:14px 0 22px;font:300 15px/1.65 'Jost';color:#6B6357;flex:1">Cool mountain botanicals and glacial water to wake the skin and calm the mind.</p>
+        <a href="#book" style="align-self:flex-start;display:inline-flex;align-items:center;justify-content:center;padding:13px 26px;background:#2B2721;color:#F3ECE0;font:600 11px/1 'Jost';letter-spacing:.18em;text-transform:uppercase;border-radius:2px">Book</a>
+      </div>
+    </article>
+
+    <article data-treat data-cat="Facial" data-price="175" data-min="75" data-rank="6" style="background:#F3ECE0;border-radius:4px;overflow:hidden;display:flex;flex-direction:column">
+      <div style="position:relative;aspect-ratio:16/10"><image-slot id="au-spa-t5" src="https://static.wixstatic.com/media/f9d3d7_d9f5264f63fb46e8b4fa9c093c43dd22~mv2.jpg/v1/fill/w_800,h_500,al_c,q_85,enc_avif,quality_auto/f9d3d7_d9f5264f63fb46e8b4fa9c093c43dd22~mv2.jpg" shape="rect" placeholder="Radiance Alpine Facial"></image-slot><span style="position:absolute;bottom:14px;right:14px;background:rgba(26,18,12,.55);backdrop-filter:blur(4px);color:#F7F1E7;font:500 10px/1 'Jost';letter-spacing:.1em;padding:7px 11px;border-radius:40px">75 min</span></div>
+      <div style="padding:26px 26px 28px;display:flex;flex-direction:column;flex:1">
+        <div style="font:500 10px/1 'Jost';letter-spacing:.2em;text-transform:uppercase;color:#a29886;margin-bottom:12px">Facial</div>
+        <div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px"><h3 style="margin:0;font:400 24px/1.1 'Bodoni Moda',serif;color:#2B2721">Radiance Alpine Facial</h3><span style="font:400 22px 'Bodoni Moda',serif;color:#7a5c2f;white-space:nowrap">€175</span></div>
+        <p style="margin:14px 0 22px;font:300 15px/1.65 'Jost';color:#6B6357;flex:1">A lifting, brightening ritual with mountain-herb serums and a lymphatic massage.</p>
+        <a href="#book" style="align-self:flex-start;display:inline-flex;align-items:center;justify-content:center;padding:13px 26px;background:#2B2721;color:#F3ECE0;font:600 11px/1 'Jost';letter-spacing:.18em;text-transform:uppercase;border-radius:2px">Book</a>
+      </div>
+    </article>
+
+    <article data-treat data-cat="Body" data-price="165" data-min="70" data-rank="7" style="background:#F3ECE0;border-radius:4px;overflow:hidden;display:flex;flex-direction:column">
+      <div style="position:relative;aspect-ratio:16/10"><image-slot id="au-spa-t6" src="https://static.wixstatic.com/media/1de95c_4a4d5d4db4cd4e75a9012191010d5218~mv2.jpg/v1/fill/w_800,h_500,al_c,q_85,enc_avif,quality_auto/1de95c_4a4d5d4db4cd4e75a9012191010d5218~mv2.jpg" shape="rect" placeholder="Forest Body Wrap"></image-slot><span style="position:absolute;bottom:14px;right:14px;background:rgba(26,18,12,.55);backdrop-filter:blur(4px);color:#F7F1E7;font:500 10px/1 'Jost';letter-spacing:.1em;padding:7px 11px;border-radius:40px">70 min</span></div>
+      <div style="padding:26px 26px 28px;display:flex;flex-direction:column;flex:1">
+        <div style="font:500 10px/1 'Jost';letter-spacing:.2em;text-transform:uppercase;color:#a29886;margin-bottom:12px">Body</div>
+        <div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px"><h3 style="margin:0;font:400 24px/1.1 'Bodoni Moda',serif;color:#2B2721">Forest Body Wrap</h3><span style="font:400 22px 'Bodoni Moda',serif;color:#7a5c2f;white-space:nowrap">€165</span></div>
+        <p style="margin:14px 0 22px;font:300 15px/1.65 'Jost';color:#6B6357;flex:1">A warm pine-and-spruce cocoon that softens the skin and quiets the whole body.</p>
+        <a href="#book" style="align-self:flex-start;display:inline-flex;align-items:center;justify-content:center;padding:13px 26px;background:#2B2721;color:#F3ECE0;font:600 11px/1 'Jost';letter-spacing:.18em;text-transform:uppercase;border-radius:2px">Book</a>
+      </div>
+    </article>
+
+    <article data-treat data-cat="Thermal" data-price="90" data-min="45" data-rank="2" style="background:#F3ECE0;border-radius:4px;overflow:hidden;display:flex;flex-direction:column">
+      <div style="position:relative;aspect-ratio:16/10"><image-slot id="au-spa-t7" src="https://static.wixstatic.com/media/1de95c_03adb94268124caf858cfba9e9710b7b~mv2.jpg/v1/fill/w_800,h_500,al_c,q_85,enc_avif,quality_auto/1de95c_03adb94268124caf858cfba9e9710b7b~mv2.jpg" shape="rect" placeholder="Thermal Sauna Ritual"></image-slot><span style="position:absolute;bottom:14px;right:14px;background:rgba(26,18,12,.55);backdrop-filter:blur(4px);color:#F7F1E7;font:500 10px/1 'Jost';letter-spacing:.1em;padding:7px 11px;border-radius:40px">45 min</span></div>
+      <div style="padding:26px 26px 28px;display:flex;flex-direction:column;flex:1">
+        <div style="font:500 10px/1 'Jost';letter-spacing:.2em;text-transform:uppercase;color:#a29886;margin-bottom:12px">Thermal</div>
+        <div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px"><h3 style="margin:0;font:400 24px/1.1 'Bodoni Moda',serif;color:#2B2721">Thermal Sauna Ritual</h3><span style="font:400 22px 'Bodoni Moda',serif;color:#7a5c2f;white-space:nowrap">€90</span></div>
+        <p style="margin:14px 0 22px;font:300 15px/1.65 'Jost';color:#6B6357;flex:1">A guided löyly circuit — sauna, herbal steam and cold plunge, led by our bath master.</p>
+        <a href="#book" style="align-self:flex-start;display:inline-flex;align-items:center;justify-content:center;padding:13px 26px;background:#2B2721;color:#F3ECE0;font:600 11px/1 'Jost';letter-spacing:.18em;text-transform:uppercase;border-radius:2px">Book</a>
+      </div>
+    </article>
+
+    <article data-treat data-cat="Retreats" data-price="620" data-min="2880" data-rank="8" style="background:#241a12;color:#F5EEE1;border-radius:4px;overflow:hidden;display:flex;flex-direction:column">
+      <div style="position:relative;aspect-ratio:16/10"><image-slot id="au-spa-t8" src="https://static.wixstatic.com/media/f9d3d7_8e43ab231f06460bb4c777f660a4ef54~mv2.jpg/v1/fill/w_800,h_500,al_c,q_85,enc_avif,quality_auto/f9d3d7_8e43ab231f06460bb4c777f660a4ef54~mv2.jpg" shape="rect" placeholder="Two-Day Wellness Retreat"></image-slot><span style="position:absolute;top:14px;left:14px;background:#B08E55;color:#231a10;font:600 10px/1 'Jost';letter-spacing:.18em;text-transform:uppercase;padding:7px 11px;border-radius:2px">Retreat</span><span style="position:absolute;bottom:14px;right:14px;background:rgba(0,0,0,.4);backdrop-filter:blur(4px);color:#F7F1E7;font:500 10px/1 'Jost';letter-spacing:.1em;padding:7px 11px;border-radius:40px">2 days</span></div>
+      <div style="padding:26px 26px 28px;display:flex;flex-direction:column;flex:1">
+        <div style="font:500 10px/1 'Jost';letter-spacing:.2em;text-transform:uppercase;color:rgba(201,180,138,.8);margin-bottom:12px">Retreat</div>
+        <div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px"><h3 style="margin:0;font:400 24px/1.1 'Bodoni Moda',serif;color:#F7F1E7">Two-Day Wellness Retreat</h3><span style="font:400 22px 'Bodoni Moda',serif;color:#C9B48A;white-space:nowrap">€620</span></div>
+        <p style="margin:14px 0 22px;font:300 15px/1.65 'Jost';color:rgba(245,238,225,.72);flex:1">Two massages, a facial, daily thermal access and a private movement session — reset, completely.</p>
+        <a href="#book" style="align-self:flex-start;display:inline-flex;align-items:center;justify-content:center;padding:13px 26px;background:#B08E55;color:#231a10;font:600 11px/1 'Jost';letter-spacing:.18em;text-transform:uppercase;border-radius:2px">Book</a>
+      </div>
+    </article>
+
+    <div data-anim="noResults" ref="{{ registerRef }}" style="display:none;grid-column:1/-1;text-align:center;padding:80px 20px">
+      <p style="margin:0 0 8px;font:400 26px 'Bodoni Moda',serif;color:#2B2721">No treatments in that category</p>
+      <p style="margin:0 0 22px;font:300 15px 'Jost';color:#8f8272">Try another category, or view them all.</p>
+      <button onClick="{{ clearCat }}" style="padding:13px 28px;background:#B08E55;color:#231a10;border:none;border-radius:2px;font:600 11px/1 'Jost';letter-spacing:.2em;text-transform:uppercase;cursor:pointer">View all</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ BATHING RITUAL (dark) ============ -->
+<section style="background:#241a12;color:#F5EEE1;padding:clamp(70px,9vw,140px) clamp(24px,6vw,120px)">
+  <div style="max-width:1080px;margin:0 auto">
+    <div data-reveal="up" style="text-align:center;margin-bottom:clamp(46px,6vw,72px)">
+      <div style="font:500 12px/1 'Jost';letter-spacing:.4em;text-transform:uppercase;color:#C9B48A;margin-bottom:22px">The Alpine Bathing Ritual</div>
+      <h2 style="margin:0 0 14px;font:400 clamp(30px,4.2vw,56px)/1.06 'Bodoni Moda',serif;color:#F7F1E7">Four steps, an hour,<br>and complete stillness</h2>
+      <p style="margin:0 auto;max-width:52ch;font:300 clamp(15px,1.2vw,17px)/1.8 'Jost';color:rgba(245,238,225,.66)">A circuit our bath master swears by. Follow it slowly, in order, twice.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:20px">
+      <div data-reveal="up" style="border-top:1px solid rgba(201,180,138,.4);padding-top:22px"><div style="font:400 34px/1 'Bodoni Moda',serif;color:#C9B48A;margin-bottom:16px">01</div><h3 style="margin:0 0 8px;font:400 21px 'Bodoni Moda',serif;color:#F5EEE1">Warm</h3><p style="margin:0;font:300 14px/1.7 'Jost';color:rgba(245,238,225,.66)">Ten minutes in the Finnish sauna to open and soften.</p></div>
+      <div data-reveal="up" data-delay="80" style="border-top:1px solid rgba(201,180,138,.4);padding-top:22px"><div style="font:400 34px/1 'Bodoni Moda',serif;color:#C9B48A;margin-bottom:16px">02</div><h3 style="margin:0 0 8px;font:400 21px 'Bodoni Moda',serif;color:#F5EEE1">Steam</h3><p style="margin:0;font:300 14px/1.7 'Jost';color:rgba(245,238,225,.66)">Move to the herbal steam room and breathe the mountain in.</p></div>
+      <div data-reveal="up" data-delay="160" style="border-top:1px solid rgba(201,180,138,.4);padding-top:22px"><div style="font:400 34px/1 'Bodoni Moda',serif;color:#C9B48A;margin-bottom:16px">03</div><h3 style="margin:0 0 8px;font:400 21px 'Bodoni Moda',serif;color:#F5EEE1">Plunge</h3><p style="margin:0;font:300 14px/1.7 'Jost';color:rgba(245,238,225,.66)">A brief, bright dip in the cold-water pool to wake the blood.</p></div>
+      <div data-reveal="up" data-delay="240" style="border-top:1px solid rgba(201,180,138,.4);padding-top:22px"><div style="font:400 34px/1 'Bodoni Moda',serif;color:#C9B48A;margin-bottom:16px">04</div><h3 style="margin:0 0 8px;font:400 21px 'Bodoni Moda',serif;color:#F5EEE1">Rest</h3><p style="margin:0;font:300 14px/1.7 'Jost';color:rgba(245,238,225,.66)">Wrap up in the relaxation loft with alpine tea. Then begin again.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CONCIERGE STRIP ============ -->
+<section style="background:#F3ECE0;padding:clamp(60px,7vw,110px) clamp(24px,6vw,120px);text-align:center">
+  <div style="max-width:720px;margin:0 auto">
+    <div style="font:500 12px/1 'Jost';letter-spacing:.4em;text-transform:uppercase;color:#B08E55;margin-bottom:24px">Not sure where to start?</div>
+    <h2 style="margin:0 0 30px;font:400 clamp(28px,4vw,52px)/1.1 'Bodoni Moda',serif;color:#2B2721">Let our therapists<br>design your day.</h2>
+    <a href="Aurelia.dc.html#contact" style="display:inline-flex;align-items:center;gap:11px;padding:17px 36px;background:#B08E55;color:#231a10;font:600 12px/1 'Jost';letter-spacing:.2em;text-transform:uppercase;border-radius:2px">Speak with the spa</a>
+  </div>
+</section>
+
+<!-- ============ 360 TOUR STRIP ============ -->
+<section data-screen-label="Spa — 360 links" style="background:#E7DBC8;padding:clamp(56px,7vw,100px) clamp(24px,6vw,120px)">
+  <div style="max-width:1080px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:28px 40px">
+    <div data-reveal="up" style="max-width:460px">
+      <div style="font:500 12px/1 'Jost';letter-spacing:.4em;text-transform:uppercase;color:#8f7040;margin-bottom:18px">360&deg; Virtual Tour</div>
+      <h2 style="margin:0 0 12px;font:400 clamp(26px,3.6vw,44px)/1.1 'Bodoni Moda',serif;color:#2B2721">Arrive already<br>at ease.</h2>
+      <p style="margin:0;font:300 15px/1.75 'Jost';color:#6B6357">Walk the hotel in full 360&deg; before you book your treatment &mdash; drag to look around each space.</p>
+    </div>
+    <div data-reveal="up" data-delay="100" style="display:flex;flex-direction:column;gap:10px;flex:1 1 320px;max-width:440px">
+      <a href="Tour.dc.html#hall" style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px 20px;background:rgba(251,248,241,.75);border:1px solid #D3C6AE;border-radius:2px;color:#2B2721"><span style="font:400 18px 'Bodoni Moda',serif">The Grand Hall</span><span style="font:600 10px/1 'Jost';letter-spacing:.18em;text-transform:uppercase;color:#8f7040">Enter 360&deg; &rarr;</span></a>
+      <a href="Tour.dc.html#room" style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px 20px;background:rgba(251,248,241,.75);border:1px solid #D3C6AE;border-radius:2px;color:#2B2721"><span style="font:400 18px 'Bodoni Moda',serif">The Alpine Room</span><span style="font:600 10px/1 'Jost';letter-spacing:.18em;text-transform:uppercase;color:#8f7040">Enter 360&deg; &rarr;</span></a>
+      <a href="Tour.dc.html#valley" style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px 20px;background:rgba(251,248,241,.75);border:1px solid #D3C6AE;border-radius:2px;color:#2B2721"><span style="font:400 18px 'Bodoni Moda',serif">The Sharr Valley</span><span style="font:600 10px/1 'Jost';letter-spacing:.18em;text-transform:uppercase;color:#8f7040">Enter 360&deg; &rarr;</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer style="background:#241a12;color:#E9DFCB;padding:clamp(56px,7vw,96px) clamp(24px,6vw,120px) 40px;border-top:1px solid rgba(233,223,203,.1)">
+  <div style="max-width:1280px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:48px 40px">
+    <div style="grid-column:1/-1;max-width:520px">
+      <a href="Aurelia.dc.html" style="font:600 24px/1 'Bodoni Moda',serif;letter-spacing:.36em;padding-left:.36em;color:#E9DFCB;display:inline-block;margin-bottom:20px">BREZOVICA</a>
+      <p style="margin:0 0 24px;font:300 15px/1.75 'Jost';color:rgba(233,223,203,.7)">An alpine sanctuary in the Sharr Mountains — where mountain grandeur meets a warmth that feels like your own.</p>
+      <div style="display:flex;gap:14px">
+        <a href="#" style="width:40px;height:40px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(233,223,203,.28);border-radius:50%;color:#C9B48A;font:400 13px 'Jost'">in</a>
+        <a href="#" style="width:40px;height:40px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(233,223,203,.28);border-radius:50%;color:#C9B48A;font:400 13px 'Jost'">ig</a>
+        <a href="#" style="width:40px;height:40px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(233,223,203,.28);border-radius:50%;color:#C9B48A;font:400 13px 'Jost'">fb</a>
+      </div>
+    </div>
+    <div>
+      <div style="font:500 11px/1 'Jost';letter-spacing:.24em;text-transform:uppercase;color:#C9B48A;margin-bottom:20px">Explore</div>
+      <div style="display:flex;flex-direction:column;gap:12px;font:300 15px 'Jost'"><a href="Rooms.dc.html" style="color:rgba(233,223,203,.8)">Rooms &amp; Suites</a><a href="Dining.dc.html" style="color:rgba(233,223,203,.8)">Dining</a><a href="Spa.dc.html" style="color:rgba(233,223,203,.8)">Spa &amp; Wellness</a><a href="Experiences.dc.html" style="color:rgba(233,223,203,.8)">Experiences</a><a href="Tour.dc.html" style="color:rgba(233,223,203,.8)">360&deg; Virtual Tour</a><a href="Events.dc.html" style="color:rgba(233,223,203,.8)">Events &amp; Weddings</a><a href="Events.dc.html" style="color:rgba(233,223,203,.8)">Events</a><a href="Aurelia.dc.html#gallery" style="color:rgba(233,223,203,.8)">Gallery</a><a href="Contact.dc.html" style="color:rgba(233,223,203,.8)">Contact</a></div>
+    </div>
+    <div>
+      <div style="font:500 11px/1 'Jost';letter-spacing:.24em;text-transform:uppercase;color:#C9B48A;margin-bottom:20px">Contact</div>
+      <div style="display:flex;flex-direction:column;gap:12px;font:300 15px/1.5 'Jost';color:rgba(233,223,203,.8)"><span>Brezovica Ski Resort<br>Štrpce, Kosovo</span><a href="tel:+38349301030" style="color:rgba(233,223,203,.8)">+383 49 30 10 30</a><a href="mailto:spa@brezovicahotel.com" style="color:rgba(233,223,203,.8)">spa@brezovicahotel.com</a></div>
+    </div>
+    <div>
+      <div style="font:500 11px/1 'Jost';letter-spacing:.24em;text-transform:uppercase;color:#C9B48A;margin-bottom:20px">Newsletter</div>
+      <p style="margin:0 0 16px;font:300 14px/1.6 'Jost';color:rgba(233,223,203,.7)">Quiet notes from the mountains, a few times a year.</p>
+      <div style="display:flex;border:1px solid rgba(233,223,203,.28);border-radius:2px;overflow:hidden"><input type="email" placeholder="Email address" style="flex:1;min-width:0;padding:13px 14px;background:transparent;border:none;color:#E9DFCB;font:300 14px 'Jost'"><button style="padding:13px 18px;background:#B08E55;color:#231a10;border:none;font:600 11px 'Jost';letter-spacing:.16em;text-transform:uppercase;cursor:pointer">Join</button></div>
+    </div>
+  </div>
+  <div style="max-width:1280px;margin:60px auto 0;padding-top:28px;border-top:1px solid rgba(233,223,203,.16);display:flex;flex-wrap:wrap;justify-content:space-between;gap:16px;font:400 12px/1.6 'Jost';color:rgba(233,223,203,.55)">
+    <span>© 2026 Brezovica Hotel &amp; SPA. All rights reserved.</span>
+    <div style="display:flex;flex-wrap:wrap;gap:22px"><a href="#" style="color:rgba(233,223,203,.55)">Privacy</a><a href="#" style="color:rgba(233,223,203,.55)">Terms</a><a href="#" style="color:rgba(233,223,203,.55)">Cancellation</a><a href="#" style="color:rgba(233,223,203,.55)">FAQ</a></div>
+  </div>
+</footer>
+
+<!-- ============ STICKY BOOK ============ -->
+<div data-anim="stickyBook" ref="{{ registerRef }}" style="position:fixed;left:0;right:0;bottom:0;z-index:55;transform:translateY(130%);opacity:0;transition:transform .6s cubic-bezier(.2,.7,.2,1),opacity .5s ease;pointer-events:none;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:16px;padding:14px clamp(16px,4vw,40px);background:rgba(36,26,18,.96);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);color:#F5EEE1;box-shadow:0 -14px 44px rgba(0,0,0,.24)">
+  <div style="font:400 14px/1.3 'Jost';color:#E9DFCB">Treatments <span style="color:#C9B48A">from €90</span></div>
+  <a href="#book" style="display:inline-flex;align-items:center;gap:9px;padding:13px 28px;background:#B08E55;color:#231a10;font:600 11px/1 'Jost';letter-spacing:.2em;text-transform:uppercase;border-radius:2px">Book a treatment</a>
+</div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;columns&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Two&quot;,&quot;Three&quot;],&quot;default&quot;:&quot;Two&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Layout&quot;},&quot;showBookingBar&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Layout&quot;},&quot;stickyBar&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Booking&quot;}}">
+class Component extends DCLogic {
+  state = {
+    vw: (typeof window !== 'undefined' ? window.innerWidth : 1200),
+    menuOpen: false,
+    bdate: '', btime: '15:00', btreat: 'Signature Alpine Massage', bguests: '1 Guest',
+    cat: 'All', sort: 'Recommended',
+    booked: false, bookMsg: ''
+  };
+
+  els = {};
+  registerRef = (el) => { if (el && el.dataset && el.dataset.anim) this.els[el.dataset.anim] = el; };
+
+  componentDidMount() {
+    this._raf = null;
+    this._onScroll = () => { if (this._raf) return; this._raf = requestAnimationFrame(() => { this._raf = null; this._update(); }); };
+    this._onResize = () => { this.setState({ vw: window.innerWidth }); this._onScroll(); };
+    window.addEventListener('scroll', this._onScroll, { passive: true, capture: true });
+    window.addEventListener('resize', this._onResize);
+    this._initReveals();
+    // Post-hydration nudge: the DC runtime re-patches template attributes after
+    // mount, stripping <image-slot>'s self-managed data-filled/data-editable —
+    // re-render each slot so filled slots hide their placeholder ring.
+    this._slotNudges = [300, 1200, 3000].map((ms) => setTimeout(() => {
+      [].slice.call(document.querySelectorAll('image-slot')).forEach((s) => { try { if (s._render) s._render(); } catch (e) {} });
+    }, ms));
+    this._applyLayout();
+    this._applyFilters();
+    this._update();
+  }
+  componentDidUpdate() { this._applyLayout(); this._applyFilters(); this._update(); }
+  componentWillUnmount() {
+    window.removeEventListener('scroll', this._onScroll, { capture: true });
+    window.removeEventListener('resize', this._onResize);
+    clearTimeout(this._revealFallback);
+    (this._slotNudges || []).forEach(clearTimeout);
+  }
+
+  _initReveals() {
+    const nodes = [].slice.call(document.querySelectorAll('[data-reveal]'));
+    this._reveals = [];
+    nodes.forEach((n) => {
+      const dir = n.getAttribute('data-reveal');
+      n.style.opacity = '0';
+      n.style.transform = dir === 'left' ? 'translateX(-46px)' : dir === 'right' ? 'translateX(46px)' : dir === 'scale' ? 'scale(.94)' : 'translateY(40px)';
+      n.style.transition = 'opacity 1.2s cubic-bezier(.22,.68,.2,1), transform 1.2s cubic-bezier(.22,.68,.2,1)';
+      n.style.transitionDelay = (n.getAttribute('data-delay') || '0') + 'ms';
+      n.style.willChange = 'opacity, transform';
+      this._reveals.push(n);
+    });
+    this._checkReveals();
+    this._revealFallback = setTimeout(() => this._revealAll(), 4000);
+  }
+  _checkReveals() {
+    if (!this._reveals || !this._reveals.length) return;
+    const vh = window.innerHeight || 800;
+    const rest = [];
+    this._reveals.forEach((n) => {
+      if (n.getBoundingClientRect().top < vh * 0.9) { n.style.opacity = '1'; n.style.transform = 'none'; }
+      else rest.push(n);
+    });
+    this._reveals = rest;
+  }
+  _revealAll() { if (this._reveals) { this._reveals.forEach((n) => { n.style.opacity = '1'; n.style.transform = 'none'; }); this._reveals = []; } }
+
+  _applyLayout() {
+    const g = this.els.grid;
+    if (g) g.style.gridTemplateColumns = (this.props.columns === 'Three') ? 'repeat(auto-fit,minmax(280px,1fr))' : 'repeat(auto-fit,minmax(340px,1fr))';
+    const bb = this.els.bookBar; if (bb) bb.style.display = (this.props.showBookingBar === false) ? 'none' : 'block';
+  }
+
+  _applyFilters() {
+    const grid = this.els.grid; if (!grid) return;
+    const s = this.state;
+    const cards = [].slice.call(grid.querySelectorAll('[data-treat]'));
+    let count = 0;
+    cards.forEach((c) => {
+      const cat = c.getAttribute('data-cat');
+      const ok = (s.cat === 'All' || cat === s.cat);
+      c.style.display = ok ? '' : 'none';
+      if (ok) count++;
+    });
+    const vis = cards.filter((c) => c.style.display !== 'none');
+    const key = s.sort;
+    vis.sort((a, b) => {
+      const pa = +a.getAttribute('data-price'), pb = +b.getAttribute('data-price');
+      const ma = +a.getAttribute('data-min'), mb = +b.getAttribute('data-min');
+      if (key === 'Price ↑') return pa - pb;
+      if (key === 'Price ↓') return pb - pa;
+      if (key === 'Duration') return mb - ma;
+      return (+a.getAttribute('data-rank')) - (+b.getAttribute('data-rank'));
+    });
+    vis.forEach((c) => grid.appendChild(c));
+    if (this.els.noResults) { grid.appendChild(this.els.noResults); this.els.noResults.style.display = count === 0 ? '' : 'none'; }
+    if (this.els.count) this.els.count.textContent = count + (count === 1 ? ' treatment' : ' treatments');
+    [].slice.call(document.querySelectorAll('[data-cat-opt]')).forEach((b) => {
+      const on = b.getAttribute('data-cat-opt') === s.cat;
+      b.style.background = on ? '#2B2721' : 'transparent';
+      b.style.color = on ? '#F3ECE0' : '#6B6357';
+    });
+  }
+
+  _setNav(solid) {
+    const nav = this.els.nav;
+    if (nav) {
+      if (solid) Object.assign(nav.style, { background: 'rgba(247,243,236,.94)', color: '#2B2721', boxShadow: '0 10px 40px rgba(70,46,22,.09)', borderBottomColor: '#E7DBC4', backdropFilter: 'saturate(140%) blur(12px)', webkitBackdropFilter: 'saturate(140%) blur(12px)' });
+      else Object.assign(nav.style, { background: 'linear-gradient(180deg,rgba(26,18,12,.5),rgba(26,18,12,0))', color: '#F7F1E7', boxShadow: 'none', borderBottomColor: 'transparent', backdropFilter: 'none', webkitBackdropFilter: 'none' });
+    }
+    const sb = this.els.stickyBook;
+    if (sb) { const show = solid && (this.props.stickyBar !== false); Object.assign(sb.style, { transform: show ? 'translateY(0)' : 'translateY(130%)', opacity: show ? '1' : '0', pointerEvents: show ? 'auto' : 'none' }); }
+  }
+
+  _update() {
+    this._checkReveals();
+    const header = this.els.header;
+    const vh = window.innerHeight || 800;
+    const solid = header ? (window.scrollY > header.offsetHeight - 90) : (window.scrollY > vh * 0.6);
+    this._setNav(solid);
+  }
+
+  toggleMenu = () => this.setState((s) => ({ menuOpen: !s.menuOpen }));
+  closeMenu = () => this.setState({ menuOpen: false });
+  onCatClick = (ev) => { const b = ev.target.closest && ev.target.closest('[data-cat-opt]'); if (b) this.setState({ cat: b.getAttribute('data-cat-opt') }); };
+  clearCat = () => this.setState({ cat: 'All' });
+
+  onBook = () => {
+    const { bdate, btime, btreat, bguests } = this.state;
+    let when = 'at ' + btime;
+    if (bdate) { try { const d = new Date(bdate + 'T00:00'); when = d.toLocaleDateString(undefined, { weekday: 'long', day: 'numeric', month: 'long' }) + ' at ' + btime; } catch (e) {} }
+    const who = bguests === '2 Guests' ? ' for two' : '';
+    this.setState({ booked: true, bookMsg: 'Your ' + btreat + when.replace('at', ', ') + who + ' is requested. Our spa team will confirm your appointment shortly.' });
+  };
+
+  renderVals() {
+    const s = this.state;
+    return {
+      registerRef: this.registerRef,
+      isDesktopNav: s.vw >= 980, isMobileNav: s.vw < 980,
+      menuOpen: s.menuOpen, toggleMenu: this.toggleMenu, closeMenu: this.closeMenu,
+      bdate: s.bdate, btime: s.btime, btreat: s.btreat, bguests: s.bguests,
+      onBdate: (e) => this.setState({ bdate: e.target.value }),
+      onBtime: (e) => this.setState({ btime: e.target.value }),
+      onBtreat: (e) => this.setState({ btreat: e.target.value }),
+      onBguests: (e) => this.setState({ bguests: e.target.value }),
+      cat: s.cat, sort: s.sort,
+      onCatClick: this.onCatClick, clearCat: this.clearCat,
+      onSort: (e) => this.setState({ sort: e.target.value }),
+      onBook: this.onBook, booked: s.booked, bookMsg: s.bookMsg
+    };
+  }
+}
+</script>
+</body>
+</html>

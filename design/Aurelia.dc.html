@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<template id="__bundler_thumbnail"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#241a12"/><text x="50" y="56" font-family="Georgia,serif" font-size="30" fill="#B08E55" text-anchor="middle">B</text></svg></template>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;0,6..96,600;0,6..96,700;1,6..96,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  html{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;scroll-behavior:smooth}
+  body{margin:0;background:#F3ECE0;color:#2B2721;font-family:'Jost',system-ui,sans-serif}
+  a{color:#B08E55;text-decoration:none;transition:color .3s}
+  a:hover{color:#8f7040}
+  ::selection{background:#E7DBC8;color:#2B2721}
+  input,select,button,textarea{font-family:'Jost',sans-serif}
+  input:focus,select:focus,textarea:focus{outline:none;border-color:#B08E55}
+  @keyframes auCue{0%,100%{transform:translateY(0);opacity:.55}50%{transform:translateY(9px);opacity:1}}
+  @keyframes auGlow{0%,100%{opacity:.55}50%{opacity:.95}}
+  @keyframes auSmoke{0%{transform:translate(0,0) scale(.6);opacity:0}25%{opacity:.5}100%{transform:translate(14px,-46px) scale(1.6);opacity:0}}
+  @keyframes auCloud{0%{transform:translateX(0)}100%{transform:translateX(60px)}}
+  @keyframes auBird{0%,100%{transform:translateY(0) scaleY(1)}50%{transform:translateY(-3px) scaleY(.72)}}
+  @keyframes auFlag{0%,100%{transform:skewY(0deg) scaleX(1)}50%{transform:skewY(-4deg) scaleX(.94)}}
+  @keyframes auSpin{to{transform:rotate(360deg)}}
+  @keyframes auMote{0%{transform:translate(0,0);opacity:0}15%{opacity:.7}80%{opacity:.25}100%{transform:translate(26px,-44vh);opacity:0}}
+  @keyframes auBalloon{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+  @keyframes auSnow{0%{transform:translate(0,-6vh);opacity:0}8%{opacity:.9}90%{opacity:.7}100%{transform:translate(4vw,106vh);opacity:0}}
+  @keyframes auSnowSway{0%,100%{margin-left:0}50%{margin-left:18px}}
+</style>
+<script src="./image-slot.js"></script>
+<script src="./pano-view.js"></script>
+</helmet>
+
+<div id="top" data-anim="root" ref="{{ registerRef }}" style="position:relative;background:#F3ECE0">
+
+<!-- ================= NAV ================= -->
+<header data-anim="nav" ref="{{ registerRef }}" style="position:fixed;top:0;left:0;right:0;z-index:60;display:flex;align-items:center;justify-content:space-between;padding:20px clamp(20px,5vw,72px);color:#F7F1E7;background:linear-gradient(180deg,rgba(26,18,12,.5),rgba(26,18,12,0));border-bottom:1px solid transparent;transition:background .55s ease,color .55s ease,box-shadow .55s ease,border-color .55s ease">
+  <a href="#top" style="font:600 21px/1 'Bodoni Moda',serif;letter-spacing:.36em;color:inherit;padding-left:.36em">BREZOVICA</a>
+  <nav style="display:flex;align-items:center;gap:clamp(16px,2.4vw,38px)">
+    <sc-if value="{{ isDesktopNav }}" hint-placeholder-val="{{ true }}">
+      <a href="Rooms.dc.html" style="font:500 12px/1 'Jost';letter-spacing:.18em;text-transform:uppercase;color:inherit">Rooms</a>
+      <a href="Dining.dc.html" style="font:500 12px/1 'Jost';letter-spacing:.18em;text-transform:uppercase;color:inherit">Dining</a>
+      <a href="Spa.dc.html" style="font:500 12px/1 'Jost';letter-spacing:.18em;text-transform:uppercase;color:inherit">Spa</a>
+      <a href="Experiences.dc.html" style="font:500 12px/1 'Jost';letter-spacing:.18em;text-transform:uppercase;color:inherit">Experiences</a>
+      <a href="Tour.dc.html" style="font:500 12px/1 'Jost';letter-spacing:.18em;text-transform:uppercase;color:inherit">360&deg; Tour</a>
+      <a href="Events.dc.html" style="font:500 12px/1 'Jost';letter-spacing:.18em;text-transform:uppercase;color:inherit">Events</a>
+      <a href="Contact.dc.html" style="font:500 12px/1 'Jost';letter-spacing:.18em;text-transform:uppercase;color:inherit">Contact</a>
+      <a href="#book" style="display:inline-flex;align-items:center;gap:9px;padding:12px 24px;background:#B08E55;color:#231a10;font:600 11px/1 'Jost';letter-spacing:.2em;text-transform:uppercase;border-radius:2px">Book</a>
+    </sc-if>
+    <sc-if value="{{ isMobileNav }}" hint-placeholder-val="{{ false }}">
+      <a href="#book" style="display:inline-flex;align-items:center;padding:11px 20px;background:#B08E55;color:#231a10;font:600 11px/1 'Jost';letter-spacing:.16em;text-transform:uppercase;border-radius:2px">Book</a>
+      <button onClick="{{ toggleMenu }}" aria-label="Menu" style="display:flex;flex-direction:column;gap:5px;width:34px;height:34px;align-items:center;justify-content:center;background:transparent;border:none;cursor:pointer;color:inherit">
+        <span style="display:block;width:22px;height:1.5px;background:currentColor"></span>
+        <span style="display:block;width:22px;height:1.5px;background:currentColor"></span>
+        <span style="display:block;width:22px;height:1.5px;background:currentColor"></span>
+      </button>
+    </sc-if>
+  </nav>
+</header>
+
+<!-- ================= MOBILE MENU ================= -->
+<sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;inset:0;z-index:80;background:#F3ECE0;display:flex;flex-direction:column;padding:26px clamp(24px,7vw,60px)">
+    <div style="display:flex;align-items:center;justify-content:space-between">
+      <span style="font:600 21px/1 'Bodoni Moda',serif;letter-spacing:.36em;color:#2B2721;padding-left:.36em">BREZOVICA</span>
+      <button onClick="{{ closeMenu }}" aria-label="Close" style="width:40px;height:40px;background:transparent;border:1px solid #D3C6AE;border-radius:50%;color:#2B2721;font-size:20px;cursor:pointer">&times;</button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:6px;margin-top:56px;overflow-y:auto">
+      <a href="Rooms.dc.html" onClick="{{ closeMenu }}" style="font:400 34px/1.4 'Bodoni Moda',serif;color:#2B2721;border-bottom:1px solid #E4D9C4;padding:14px 0">Rooms &amp; Suites</a>
+      <a href="Dining.dc.html" onClick="{{ closeMenu }}" style="font:400 34px/1.4 'Bodoni Moda',serif;color:#2B2721;border-bottom:1px solid #E4D9C4;padding:14px 0">Dining</a>
+      <a href="Spa.dc.html" onClick="{{ closeMenu }}" style="font:400 34px/1.4 'Bodoni Moda',serif;color:#2B2721;border-bottom:1px solid #E4D9C4;padding:14px 0">Spa &amp; Wellness</a>
+      <a href="Experiences.dc.html" onClick="{{ closeMenu }}" style="font:400 34px/1.4 'Bodoni Moda',serif;color:#2B2721;border-bottom:1px solid #E4D9C4;padding:14px 0">Experiences</a>
+      <a href="Tour.dc.html" onClick="{{ closeMenu }}" style="font:400 34px/1.4 'Bodoni Moda',serif;color:#2B2721;border-bottom:1px solid #E4D9C4;padding:14px 0">360&deg; Virtual Tour</a>
+      <a href="Events.dc.html" onClick="{{ closeMenu }}" style="font:400 34px/1.4 'Bodoni Moda',serif;color:#2B2721;border-bottom:1px solid #E4D9C4;padding:14px 0">Events &amp; Weddings</a>
+      <a href="#gallery" onClick="{{ closeMenu }}" style="font:400 34px/1.4 'Bodoni Moda',serif;color:#2B2721;border-bottom:1px solid #E4D9C4;padding:14px 0">Gallery</a>
+      <a href="Contact.dc.html" onClick="{{ closeMenu }}" style="font:400 34px/1.4 'Bodoni Moda',serif;color:#2B2721;border-bottom:1px solid #E4D9C4;padding:14px 0">Contact</a>
+    </div>
+    <a href="#book" onClick="{{ closeMenu }}" style="margin-top:auto;display:flex;align-items:center;justify-content:center;padding:20px;background:#B08E55;color:#231a10;font:600 13px/1 'Jost';letter-spacing:.22em;text-transform:uppercase;border-radius:2px">Reserve your stay</a>
+  </div>
+</sc-if>
+
+<!-- ================= CINEMATIC HERO (photographic) ================= -->
+<section data-anim="heroRoot" ref="{{ registerRef }}" style="position:relative;height:400vh;background:#17110B">
+  <div data-anim="stage" ref="{{ registerRef }}" style="position:sticky;top:0;height:100vh;overflow:hidden;background:#17110B">
+
+    <!-- ACT 01 — ARRIVAL (exterior) -->
+    <div data-anim="exterior" ref="{{ registerRef }}" style="position:absolute;inset:0;z-index:3;transform-origin:52% 58%">
+      <image-slot id="au-hero-exterior" src="https://static.wixstatic.com/media/1de95c_da6dacf180bd433788972c2d0b719bcf~mv2.jpg/v1/fill/w_1920,h_1080,al_c,q_85,enc_avif,quality_auto/1de95c_da6dacf180bd433788972c2d0b719bcf~mv2.jpg" shape="rect" fit="cover" placeholder="EXTERIOR — hotel facade at dusk, snow, warm windows"></image-slot>
+      <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(15,10,6,.52) 0%,rgba(15,10,6,.24) 42%,rgba(15,10,6,.66) 100%);pointer-events:none"></div>
+    </div>
+
+    <!-- snowfall -->
+    <div data-anim="snow" ref="{{ registerRef }}" style="position:absolute;inset:0;z-index:8;pointer-events:none;overflow:hidden">
+      <span style="position:absolute;left:4%;top:0;width:4px;height:4px;border-radius:50%;background:rgba(255,253,248,0.7);filter:blur(0.5px);animation:auSnow 13s linear 0s infinite,auSnowSway 3.6s ease-in-out 0s infinite"></span>
+      <span style="position:absolute;left:11%;top:0;width:3px;height:3px;border-radius:50%;background:rgba(255,253,248,0.55);filter:blur(0.5px);animation:auSnow 17s linear 2.4s infinite,auSnowSway 4.2s ease-in-out 0.4s infinite"></span>
+      <span style="position:absolute;left:19%;top:0;width:5px;height:5px;border-radius:50%;background:rgba(255,253,248,0.75);filter:blur(1px);animation:auSnow 11s linear 5s infinite,auSnowSway 3s ease-in-out 0.6s infinite"></span>
+      <span style="position:absolute;left:27%;top:0;width:3px;height:3px;border-radius:50%;background:rgba(255,253,248,0.5);filter:blur(0.5px);animation:auSnow 15s linear 1.2s infinite,auSnowSway 3.9s ease-in-out 0s infinite"></span>
+      <span style="position:absolute;left:35%;top:0;width:4px;height:4px;border-radius:50%;background:rgba(255,253,248,0.6);filter:blur(0.5px);animation:auSnow 18s linear 7s infinite,auSnowSway 4.6s ease-in-out 0.9s infinite"></span>
+      <span style="position:absolute;left:43%;top:0;width:3px;height:3px;border-radius:50%;background:rgba(255,253,248,0.5);filter:blur(0.5px);animation:auSnow 12.5s linear 3.6s infinite,auSnowSway 3.2s ease-in-out 0s infinite"></span>
+      <span style="position:absolute;left:51%;top:0;width:5px;height:5px;border-radius:50%;background:rgba(255,253,248,0.7);filter:blur(1px);animation:auSnow 16s linear 8.4s infinite,auSnowSway 4s ease-in-out 0.4s infinite"></span>
+      <span style="position:absolute;left:59%;top:0;width:4px;height:4px;border-radius:50%;background:rgba(255,253,248,0.6);filter:blur(0.5px);animation:auSnow 10.5s linear 0.8s infinite,auSnowSway 2.9s ease-in-out 0s infinite"></span>
+      <span style="position:absolute;left:67%;top:0;width:3px;height:3px;border-radius:50%;background:rgba(255,253,248,0.5);filter:blur(0.5px);animation:auSnow 17.5s linear 5.8s infinite,auSnowSway 4.4s ease-in-out 1.1s infinite"></span>
+      <span style="position:absolute;left:75%;top:0;width:4px;height:4px;border-radius:50%;background:rgba(255,253,248,0.62);filter:blur(0.5px);animation:auSnow 13.5s linear 2s infinite,auSnowSway 3.5s ease-in-out 0s infinite"></span>
+      <span style="position:absolute;left:83%;top:0;width:3px;height:3px;border-radius:50%;background:rgba(255,253,248,0.5);filter:blur(0.5px);animation:auSnow 14.5s linear 6.6s infinite,auSnowSway 3.3s ease-in-out 0.7s infinite"></span>
+      <span style="position:absolute;left:91%;top:0;width:5px;height:5px;border-radius:50%;background:rgba(255,253,248,0.7);filter:blur(1px);animation:auSnow 11.5s linear 4.4s infinite,auSnowSway 3.1s ease-in-out 0s infinite"></span>
+      <span style="position:absolute;left:96%;top:0;width:3px;height:3px;border-radius:50%;background:rgba(255,253,248,0.5);filter:blur(0.5px);animation:auSnow 15.5s linear 9s infinite,auSnowSway 3.8s ease-in-out 0.3s infinite"></span>
+    </div>
+
+    <!-- PHOTO STAGE: LOBBY -->
+    <div data-anim="lobby" ref="{{ registerRef }}" style="position:absolute;inset:0;opacity:0;z-index:4;transform-origin:center">
+      <image-slot id="au-hero-lobby" src="https://static.wixstatic.com/media/f9d3d7_54128e2300634fb9b8020ce4a8f8103d~mv2.jpg/v1/fill/w_1920,h_1080,al_c,q_85,enc_avif,quality_auto/f9d3d7_54128e2300634fb9b8020ce4a8f8103d~mv2.jpg" shape="rect" fit="cover" placeholder="LOBBY — marble floor, chandelier, reception, warm light"></image-slot>
+      <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(20,14,9,.2),rgba(20,14,9,.5));pointer-events:none"></div>
+    </div>
+
+    <!-- PHOTO STAGE: SUITE -->
+    <div data-anim="suite" ref="{{ registerRef }}" style="position:absolute;inset:0;opacity:0;z-index:5;transform-origin:center">
+      <image-slot id="au-hero-suite" src="https://static.wixstatic.com/media/1de95c_caf15c194f104ecda6e934c4a9f280fa~mv2.jpg/v1/fill/w_1920,h_1080,al_c,q_85,enc_avif,quality_auto/1de95c_caf15c194f104ecda6e934c4a9f280fa~mv2.jpg" shape="rect" fit="cover" placeholder="SUITE — bed, linen, lamps, curtains, desk"></image-slot>
+      <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(20,14,9,.18),rgba(20,14,9,.5));pointer-events:none"></div>
+      <div data-anim="suiteOverlay" ref="{{ registerRef }}" style="position:absolute;left:0;right:0;bottom:16%;display:flex;flex-wrap:wrap;justify-content:center;gap:clamp(18px,4vw,60px);opacity:0;padding:0 20px;pointer-events:none">
+        <span style="font:500 11px/1 'Jost';letter-spacing:.3em;text-transform:uppercase;color:#E9D9BC;padding-bottom:12px;border-bottom:1px solid rgba(233,217,188,.4)">Linen</span>
+        <span style="font:500 11px/1 'Jost';letter-spacing:.3em;text-transform:uppercase;color:#E9D9BC;padding-bottom:12px;border-bottom:1px solid rgba(233,217,188,.4)">Lighting</span>
+        <span style="font:500 11px/1 'Jost';letter-spacing:.3em;text-transform:uppercase;color:#E9D9BC;padding-bottom:12px;border-bottom:1px solid rgba(233,217,188,.4)">Comfort</span>
+      </div>
+    </div>
+
+    <!-- PHOTO STAGE: VIEW + curtains -->
+    <div data-anim="viewStage" ref="{{ registerRef }}" style="position:absolute;inset:0;opacity:0;z-index:6;transform-origin:center">
+      <image-slot id="au-hero-view" src="https://static.wixstatic.com/media/1de95c_0a26973775ff4331865112ee0b1b6ff7~mv2.jpg/v1/fill/w_1920,h_1080,al_c,q_85,enc_avif,quality_auto/1de95c_0a26973775ff4331865112ee0b1b6ff7~mv2.jpg" shape="rect" fit="cover" placeholder="THE VIEW — snow peaks at sunrise, alpine panorama"></image-slot>
+      <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(20,14,9,.1),rgba(20,14,9,.34));pointer-events:none"></div>
+    </div>
+    <!-- TEXT OVERLAYS -->
+    <div data-anim="tArrival" ref="{{ registerRef }}" style="position:absolute;inset:0;z-index:9;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 24px;pointer-events:none">
+      <div style="font:500 12px/1 'Jost';letter-spacing:.42em;text-transform:uppercase;color:#E7C98F;margin-bottom:28px;text-shadow:0 2px 14px rgba(0,0,0,.5)">Brezovica · Sharr Mountains</div>
+      <h1 style="margin:0;font:400 clamp(38px,7vw,96px)/1.02 'Bodoni Moda',serif;letter-spacing:-.01em;color:#F7F1E7;text-shadow:0 3px 40px rgba(0,0,0,.5)">A Five-Star Stay,<br><em style="font-style:italic;color:#E7C98F">Crafted Around You.</em></h1>
+      <div style="width:1px;height:64px;margin-top:40px;background:linear-gradient(rgba(247,241,231,.7),rgba(247,241,231,0))"></div>
+    </div>
+    <div data-anim="tLobby" ref="{{ registerRef }}" style="position:absolute;inset:0;z-index:9;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;text-align:center;padding:0 24px 11vh;opacity:0;pointer-events:none">
+      <div style="font:500 12px/1 'Jost';letter-spacing:.42em;text-transform:uppercase;color:#e7c98f;margin-bottom:22px;text-shadow:0 2px 12px rgba(0,0,0,.5)">The Lobby</div>
+      <h2 style="margin:0;font:400 clamp(32px,5.6vw,76px)/1.06 'Bodoni Moda',serif;color:#F7F1E7;text-shadow:0 2px 30px rgba(0,0,0,.5)">Warmth, the moment<br>you step inside.</h2>
+    </div>
+    <div data-anim="tSuite" ref="{{ registerRef }}" style="position:absolute;inset:0;z-index:9;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;text-align:center;padding:0 24px 11vh;opacity:0;pointer-events:none">
+      <div style="font:500 12px/1 'Jost';letter-spacing:.42em;text-transform:uppercase;color:#e7c98f;margin-bottom:22px;text-shadow:0 2px 12px rgba(0,0,0,.5)">Your Suite</div>
+      <h2 style="margin:0;font:400 clamp(32px,5.6vw,76px)/1.06 'Bodoni Moda',serif;color:#F7F1E7;text-shadow:0 2px 30px rgba(0,0,0,.5)">A room that remembers<br>how you like to wake.</h2>
+    </div>
+    <div data-anim="tView" ref="{{ registerRef }}" style="position:absolute;inset:0;z-index:9;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;text-align:center;padding:0 24px 8vh;opacity:0;pointer-events:none">
+      <div style="font:500 12px/1 'Jost';letter-spacing:.42em;text-transform:uppercase;color:#e7c98f;margin-bottom:22px;text-shadow:0 2px 12px rgba(0,0,0,.5)">The View</div>
+      <h2 style="margin:0 0 34px;font:400 clamp(34px,6vw,84px)/1.04 'Bodoni Moda',serif;color:#F7F1E7;text-shadow:0 2px 30px rgba(0,0,0,.5)">And then,<br>the mountains.</h2>
+      <a href="#book" style="pointer-events:auto;display:inline-flex;align-items:center;gap:12px;padding:17px 34px;background:#F7F1E7;color:#231a10;font:600 12px/1 'Jost';letter-spacing:.2em;text-transform:uppercase;border-radius:2px">Reserve your stay</a>
+    </div>
+
+    <!-- cinematic vignette -->
+    <div style="position:absolute;inset:0;z-index:8;pointer-events:none;background:radial-gradient(120% 92% at 50% 44%,transparent 54%,rgba(12,8,4,.42))"></div>
+
+    <!-- chapter indicator (click to jump) -->
+    <div data-anim="chapters" ref="{{ registerRef }}" style="position:absolute;right:clamp(14px,2.4vw,34px);top:50%;transform:translateY(-50%);z-index:9;display:flex;flex-direction:column;gap:10px;align-items:center">
+      <span title="Arrival" style="width:3px;height:16px;border-radius:2px;background:rgba(247,241,231,.34);transition:all .4s ease;cursor:pointer"></span>
+      <span title="The Lobby" style="width:3px;height:16px;border-radius:2px;background:rgba(247,241,231,.34);transition:all .4s ease;cursor:pointer"></span>
+      <span title="Your Suite" style="width:3px;height:16px;border-radius:2px;background:rgba(247,241,231,.34);transition:all .4s ease;cursor:pointer"></span>
+      <span title="The View" style="width:3px;height:16px;border-radius:2px;background:rgba(247,241,231,.34);transition:all .4s ease;cursor:pointer"></span>
+    </div>
+
+    <!-- scroll cue + stage indicator + progress -->
+    <div data-anim="cue" ref="{{ registerRef }}" style="position:absolute;left:50%;bottom:34px;transform:translateX(-50%);z-index:9;display:flex;flex-direction:column;align-items:center;gap:12px;color:rgba(247,241,231,.85)">
+      <span style="font:500 11px/1 'Jost';letter-spacing:.3em;text-transform:uppercase">Scroll</span>
+      <span style="display:block;width:1px;height:44px;background:linear-gradient(rgba(247,241,231,.9),transparent);animation:auCue 2.4s ease-in-out infinite"></span>
+    </div>
+    <div data-anim="stageName" ref="{{ registerRef }}" style="position:absolute;left:clamp(20px,5vw,72px);bottom:34px;z-index:9;font:500 11px/1 'Jost';letter-spacing:.28em;text-transform:uppercase;color:rgba(247,241,231,.72)">01 — Arrival</div>
+    <div style="position:absolute;left:0;right:0;bottom:0;height:2px;z-index:9;background:rgba(247,241,231,.16)">
+      <div data-anim="progFill" ref="{{ registerRef }}" style="height:100%;background:#B08E55;transform:scaleX(0);transform-origin:left"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= BOOKING BAR ================= -->
+<section id="book" style="position:relative;z-index:10;background:#F3ECE0;padding:clamp(56px,7vw,96px) clamp(20px,6vw,120px)">
+  <div data-reveal="up" style="max-width:1180px;margin:0 auto;background:#FBF8F1;border:1px solid #E7DBC4;border-radius:4px;box-shadow:0 40px 90px rgba(70,46,22,.1);padding:clamp(26px,3.4vw,44px)">
+    <div style="display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:26px">
+      <h2 style="margin:0;font:400 clamp(26px,3vw,40px)/1 'Bodoni Moda',serif;color:#2B2721">Reserve your stay</h2>
+      <span style="display:inline-flex;flex-wrap:wrap;align-items:center;gap:10px 14px;font:400 14px/1 'Jost';color:#8f8272;letter-spacing:.02em">
+        <span style="font:500 10px/1 'Jost';letter-spacing:.18em;text-transform:uppercase;color:#231a10;background:#E7D6B4;padding:8px 12px;border-radius:40px">Best rate guaranteed</span>
+        <span data-anim="seasonChip" ref="{{ registerRef }}">No booking fees</span>
+      </span>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:14px;align-items:flex-end">
+      <label style="flex:1 1 150px;display:flex;flex-direction:column;gap:8px">
+        <span style="font:500 11px/1 'Jost';letter-spacing:.22em;text-transform:uppercase;color:#8f8272">Check-in</span>
+        <input type="date" value="{{ checkin }}" onChange="{{ onCheckin }}" style="padding:14px 15px;border:1px solid #D9CDB8;background:#FEFCF8;border-radius:2px;color:#2B2721;font:400 15px 'Jost';width:100%">
+      </label>
+      <label style="flex:1 1 150px;display:flex;flex-direction:column;gap:8px">
+        <span style="font:500 11px/1 'Jost';letter-spacing:.22em;text-transform:uppercase;color:#8f8272">Check-out</span>
+        <input type="date" value="{{ checkout }}" onChange="{{ onCheckout }}" style="padding:14px 15px;border:1px solid #D9CDB8;background:#FEFCF8;border-radius:2px;color:#2B2721;font:400 15px 'Jost';width:100%">
+      </label>
+      <label style="flex:1 1 150px;display:flex;flex-direction:column;gap:8px">
+        <span style="font:500 11px/1 'Jost';letter-spacing:.22em;text-transform:uppercase;color:#8f8272">Guests</span>
+        <select value="{{ guests }}" onChange="{{ onGuests }}" style="padding:14px 15px;border:1px solid #D9CDB8;background:#FEFCF8;border-radius:2px;color:#2B2721;font:400 15px 'Jost';width:100%;cursor:pointer">
+          <option>1 Guest</option><option>2 Adults</option><option>2 Adults, 1 Child</option><option>2 Adults, 2 Children</option><option>3 Adults</option><option>Family (4+)</option>
+        </select>
+      </label>
+      <label style="flex:1 1 170px;display:flex;flex-direction:column;gap:8px">
+        <span style="font:500 11px/1 'Jost';letter-spacing:.22em;text-transform:uppercase;color:#8f8272">Room type</span>
+        <select value="{{ roomType }}" onChange="{{ onRoomType }}" style="padding:14px 15px;border:1px solid #D9CDB8;background:#FEFCF8;border-radius:2px;color:#2B2721;font:400 15px 'Jost';width:100%;cursor:pointer">
+          <option>Deluxe Alpine Room</option><option>Junior Suite</option><option>Presidential Suite</option><option>Panorama Suite</option><option>Chalet Residence</option>
+        </select>
+      </label>
+      <label style="flex:1 1 140px;display:flex;flex-direction:column;gap:8px">
+        <span style="font:500 11px/1 'Jost';letter-spacing:.22em;text-transform:uppercase;color:#8f8272">Promo code</span>
+        <input type="text" value="{{ promo }}" onChange="{{ onPromo }}" placeholder="Optional" style="padding:14px 15px;border:1px solid #D9CDB8;background:#FEFCF8;border-radius:2px;color:#2B2721;font:400 15px 'Jost';width:100%">
+      </label>
+      <button onClick="{{ onBook }}" style="flex:1 1 170px;display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:16px 28px;min-height:52px;background:#B08E55;color:#231a10;font:600 12px/1 'Jost';letter-spacing:.2em;text-transform:uppercase;border:none;border-radius:2px;cursor:pointer;transition:background .3s" style-hover="background:#987839">Book Now</button>
+    </div>
+    <sc-if value="{{ searchError }}" hint-placeholder-val="{{ false }}">
+      <div style="margin-top:20px;padding:16px 20px;background:#EFE6D3;border-left:2px solid #B08E55;color:#5c5344;font:400 15px/1.6 'Jost'">{{ searchError }}</div>
+    </sc-if>
+
+    <sc-if value="{{ searched }}" hint-placeholder-val="{{ false }}">
+      <div style="margin-top:32px;border-top:1px solid #E7DBC4;padding-top:28px">
+        <div style="display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:20px">
+          <div style="font:400 21px/1.25 'Bodoni Moda',serif;color:#2B2721">{{ resultsHead }}</div>
+          <div style="font:400 13px/1.5 'Jost';color:#8f8272">{{ resultsSub }}</div>
+        </div>
+
+        <div data-anim="resultRows" ref="{{ registerRef }}" style="display:flex;flex-direction:column;gap:10px">
+          <sc-for list="{{ results }}" as="r" hint-placeholder-count="0">
+            <div data-room="{{ $index }}" onClick="{{ onSelectRoom }}" style="display:flex;flex-wrap:wrap;gap:14px 22px;align-items:center;padding:18px 20px;background:#F7F2E7;border:1px solid #E4D9C4;border-radius:3px;cursor:pointer;transition:border-color .3s,background .3s">
+              <div style="flex:1 1 230px;min-width:0">
+                <div style="font:400 21px/1.2 'Bodoni Moda',serif;color:#2B2721">{{ r.name }}</div>
+                <div style="font:400 13px/1.5 'Jost';color:#8f8272;margin-top:6px">{{ r.meta }}</div>
+                <div style="font:500 11px/1 'Jost';letter-spacing:.16em;text-transform:uppercase;color:#8a6b34;margin-top:10px">{{ r.left }}</div>
+              </div>
+              <div style="flex:0 1 auto;min-width:0">
+                <div style="font:400 24px/1 'Bodoni Moda',serif;color:#7a5c2f">{{ r.total }}</div>
+                <div style="font:400 12.5px/1.5 'Jost';color:#8f8272;margin-top:6px">{{ r.nightly }}</div>
+                <div style="font:400 12.5px/1.5 'Jost';color:#a79c88;text-decoration:line-through">{{ r.ota }}</div>
+              </div>
+              <div style="flex:1 1 150px;min-width:0;display:flex;flex-direction:column;align-items:stretch;gap:8px">
+                <button data-room="{{ $index }}" onClick="{{ onSelectRoom }}" style="display:inline-flex;align-items:center;justify-content:center;padding:14px 20px;min-height:48px;background:#B08E55;color:#231a10;font:600 11px/1 'Jost';letter-spacing:.18em;text-transform:uppercase;border:none;border-radius:2px;cursor:pointer">{{ r.action }}</button>
+                <span style="font:400 12px/1.4 'Jost';color:#8a6b34;text-align:center">{{ r.save }}</span>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+
+        <sc-if value="{{ hasSelection }}" hint-placeholder-val="{{ false }}">
+          <div style="margin-top:18px;background:#241a12;color:#F5EEE1;border-radius:3px;padding:clamp(22px,2.6vw,30px);display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:24px 36px;align-items:center">
+            <div>
+              <div style="font:500 10px/1 'Jost';letter-spacing:.26em;text-transform:uppercase;color:#C9B48A;margin-bottom:12px">Your selection</div>
+              <div style="font:400 26px/1.15 'Bodoni Moda',serif;color:#F7F1E7">{{ selName }}</div>
+              <div style="font:400 13px/1.6 'Jost';color:rgba(245,238,225,.66);margin-top:8px">{{ selMeta }}</div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <div style="display:flex;align-items:baseline;justify-content:space-between;gap:14px"><span style="font:500 11px/1 'Jost';letter-spacing:.18em;text-transform:uppercase;color:#C9B48A">Direct total</span><span style="font:400 28px/1 'Bodoni Moda',serif;color:#F7F1E7">{{ selTotal }}</span></div>
+              <div style="display:flex;align-items:baseline;justify-content:space-between;gap:14px;font:300 13px/1.6 'Jost';color:rgba(245,238,225,.6)"><span>Booking sites</span><span style="text-decoration:line-through">{{ selOta }}</span></div>
+              <div style="display:flex;align-items:baseline;justify-content:space-between;gap:14px;font:300 13px/1.6 'Jost';color:#C9B48A"><span>You keep</span><span>{{ selSave }}</span></div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:12px">
+              <sc-if value="{{ notHeld }}" hint-placeholder-val="{{ true }}">
+                <button onClick="{{ onHold }}" style="width:100%;display:inline-flex;align-items:center;justify-content:center;padding:17px 26px;min-height:54px;background:#B08E55;color:#231a10;font:600 12px/1 'Jost';letter-spacing:.2em;text-transform:uppercase;border:none;border-radius:2px;cursor:pointer">Hold this rate</button>
+                <span style="font:300 12px/1.6 'Jost';color:rgba(245,238,225,.55);text-align:center">{{ selTerms }}</span>
+              </sc-if>
+              <sc-if value="{{ held }}" hint-placeholder-val="{{ false }}">
+                <div style="font:300 14px/1.7 'Jost';color:rgba(245,238,225,.86);text-wrap:pretty">{{ heldMsg }}</div>
+                <a href="Contact.dc.html" style="width:100%;display:inline-flex;align-items:center;justify-content:center;padding:17px 26px;min-height:54px;background:#B08E55;color:#231a10;font:600 12px/1 'Jost';letter-spacing:.2em;text-transform:uppercase;border-radius:2px">Complete reservation</a>
+              </sc-if>
+            </div>
+          </div>
+        </sc-if>
+      </div>
+    </sc-if>
+
+    <p style="margin:22px 0 0;font:400 12.5px/1.5 'Jost';color:#a79c88">Live rates shown are direct-booking rates including breakfast, thermal spa and taxes. Booking engine integration-ready — connects to Cloudbeds, SiteMinder, HotelRunner, Opera or Mews via API.</p>
+  </div>
+</section>
+
+<!-- ================= TRUST STRIP ================= -->
+<section style="background:#F3ECE0;padding:0 clamp(20px,6vw,120px) clamp(34px,4vw,56px)">
+  <div style="max-width:1180px;margin:0 auto;border-top:1px solid #E4D9C4;padding-top:28px;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:22px 36px">
+    <div>
+      <div style="font:500 10px/1 'Jost';letter-spacing:.24em;text-transform:uppercase;color:#B08E55;margin-bottom:10px">Guest rating</div>
+      <div style="font:400 17px/1.4 'Jost';color:#4c463d">4.9 out of 5 &middot; 1,240 verified reviews</div>
+    </div>
+    <div>
+      <div style="font:500 10px/1 'Jost';letter-spacing:.24em;text-transform:uppercase;color:#B08E55;margin-bottom:10px">Awarded</div>
+      <div style="font:400 17px/1.4 'Jost';color:#4c463d">World Luxury Hotel Awards &mdash; Alpine Retreat, 2025</div>
+    </div>
+    <div>
+      <div style="font:500 10px/1 'Jost';letter-spacing:.24em;text-transform:uppercase;color:#B08E55;margin-bottom:10px">Recognised</div>
+      <div style="font:400 17px/1.4 'Jost';color:#4c463d">Cond&eacute; Nast Traveller Readers&rsquo; Choice</div>
+    </div>
+    <div>
+      <div style="font:500 10px/1 'Jost';letter-spacing:.24em;text-transform:uppercase;color:#B08E55;margin-bottom:10px">Booking direct</div>
+      <div style="font:400 17px/1.4 'Jost';color:#4c463d">Price matched, no fees, free cancellation to 48h</div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= STATEMENT ================= -->
+<section style="background:#F3ECE0;padding:clamp(70px,10vw,150px) clamp(24px,6vw,120px);text-align:center">
+  <div style="max-width:940px;margin:0 auto">
+    <div data-reveal="up" style="font:500 12px/1 'Jost';letter-spacing:.4em;text-transform:uppercase;color:#B08E55;margin-bottom:30px">Welcome to Brezovica</div>
+    <p data-reveal="up" data-delay="80" style="margin:0;font:400 clamp(26px,3.6vw,50px)/1.32 'Bodoni Moda',serif;color:#2B2721;text-wrap:balance">Cradled beneath the snow-lit peaks of the Sharr Mountains, Brezovica Hotel is a sanctuary where alpine grandeur meets a warmth that feels, unmistakably, like your own.</p>
+    <div data-reveal="up" data-delay="160" style="display:flex;flex-wrap:wrap;justify-content:center;gap:clamp(30px,6vw,90px);margin-top:56px">
+      <div><div style="font:400 44px/1 'Bodoni Moda',serif;color:#7a5c2f">42</div><div style="font:500 11px/1 'Jost';letter-spacing:.24em;text-transform:uppercase;color:#8f8272;margin-top:10px">Rooms &amp; Suites</div></div>
+      <div><div style="font:400 44px/1 'Bodoni Moda',serif;color:#7a5c2f">1,100m</div><div style="font:500 11px/1 'Jost';letter-spacing:.24em;text-transform:uppercase;color:#8f8272;margin-top:10px">Above Sea Level</div></div>
+      <div><div style="font:400 44px/1 'Bodoni Moda',serif;color:#7a5c2f">3</div><div style="font:500 11px/1 'Jost';letter-spacing:.24em;text-transform:uppercase;color:#8f8272;margin-top:10px">Restaurants</div></div>
+      <div><div style="font:400 44px/1 'Bodoni Moda',serif;color:#7a5c2f">8.7</div><div style="font:500 11px/1 'Jost';letter-spacing:.24em;text-transform:uppercase;color:#8f8272;margin-top:10px">Guest Rating</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= ROOMS ================= -->
+<section id="rooms" style="background:#FBF8F1;padding:clamp(70px,9vw,140px) clamp(24px,6vw,120px)">
+  <div style="max-width:1280px;margin:0 auto">
+    <div style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:56px">
+      <div data-reveal="up">
+        <div style="font:500 12px/1 'Jost';letter-spacing:.4em;text-transform:uppercase;color:#B08E55;margin-bottom:20px">Rooms &amp; Suites</div>
+        <h2 style="margin:0;font:400 clamp(32px,4.6vw,64px)/1.04 'Bodoni Moda',serif;color:#2B2721">Where the day begins slowly</h2>
+      </div>
+      <a href="Rooms.dc.html" data-reveal="up" style="font:500 12px/1 'Jost';letter-spacing:.18em;text-transform:uppercase;color:#2B2721;border-bottom:1px solid #B08E55;padding-bottom:6px">View all rooms →</a>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:26px">
+      <article data-reveal="up" style="background:#F3ECE0;border-radius:4px;overflow:hidden">
+        <div style="aspect-ratio:4/5;position:relative"><image-slot id="au-room-1" src="https://static.wixstatic.com/media/1de95c_072bf1db81bd4227b40d79d328c61bcf~mv2.jpg/v1/fill/w_800,h_1000,al_c,q_85,enc_avif,quality_auto/1de95c_072bf1db81bd4227b40d79d328c61bcf~mv2.jpg" shape="rect" placeholder="Deluxe Alpine Room"></image-slot></div>
+        <div style="padding:26px 24px 30px">
+          <h3 style="margin:0;font:400 26px/1.1 'Bodoni Moda',serif;color:#2B2721">Deluxe Alpine Room</h3>
+          <div style="font:400 13px/1 'Jost';color:#8f8272;letter-spacing:.03em;margin:12px 0 18px">42 m² · 2 guests · Valley view</div>
+          <div style="display:flex;align-items:baseline;justify-content:space-between"><span style="font:400 15px 'Jost';color:#6B6357">from <strong style="font:400 24px 'Bodoni Moda',serif;color:#7a5c2f">€420</strong> / night</span><a href="Rooms.dc.html" style="font:500 11px/1 'Jost';letter-spacing:.18em;text-transform:uppercase;color:#2B2721;border-bottom:1px solid #B08E55;padding-bottom:5px">Discover</a></div>
+        </div>
+      </article>
+      <article data-reveal="up" data-delay="80" style="background:#F3ECE0;border-radius:4px;overflow:hidden">
+        <div style="aspect-ratio:4/5;position:relative"><image-slot id="au-room-2" src="https://static.wixstatic.com/media/f9d3d7_b639006d90ee42128eea2062999299ee~mv2.jpg/v1/fill/w_800,h_1000,al_c,q_85,enc_avif,quality_auto/f9d3d7_b639006d90ee42128eea2062999299ee~mv2.jpg" shape="rect" placeholder="Junior Suite"></image-slot></div>
+        <div style="padding:26px 24px 30px">
+          <h3 style="margin:0;font:400 26px/1.1 'Bodoni Moda',serif;color:#2B2721">Junior Suite</h3>
+          <div style="font:400 13px/1 'Jost';color:#8f8272;letter-spacing:.03em;margin:12px 0 18px">58 m² · 2 guests · Lake view</div>
+          <div style="display:flex;align-items:baseline;justify-content:space-between"><span style="font:400 15px 'Jost';color:#6B6357">from <strong style="font:400 24px 'Bodoni Moda',serif;color:#7a5c2f">€560</strong> / night</span><a href="Rooms.dc.html" style="font:500 11px/1 'Jost';letter-spacing:.18em;text-transform:uppercase;color:#2B2721;border-bottom:1px solid #B08E55;padding-bottom:5px">Discover</a></div>
+        </div>
+      </article>
+      <article data-reveal="up" data-delay="160" style="background:#F3ECE0;border-radius:4px;overflow:hidden">
+        <div style="aspect-ratio:4/5;position:relative"><image-slot id="au-room-3" src="https://static.wixstatic.com/media/1de95c_caf15c194f104ecda6e934c4a9f280fa~mv2.jpg/v1/fill/w_800,h_1000,al_c,q_85,enc_avif,quality_auto/1de95c_caf15c194f104ecda6e934c4a9f280fa~mv2.jpg" shape="rect" placeholder="Presidential Suite"></image-slot><span style="position:absolute;top:16px;left:16px;background:#B08E55;color:#231a10;font:600 10px/1 'Jost';letter-spacing:.2em;text-transform:uppercase;padding:8px 12px;border-radius:2px">Signature</span></div>
+        <div style="padding:26px 24px 30px">
+          <h3 style="margin:0;font:400 26px/1.1 'Bodoni Moda',serif;color:#2B2721">Presidential Suite</h3>
+          <div style="font:400 13px/1 'Jost';color:#8f8272;letter-spacing:.03em;margin:12px 0 18px">76 m² · 3 guests · Panorama · Balcony</div>
+          <div style="display:flex;align-items:baseline;justify-content:space-between"><span style="font:400 15px 'Jost';color:#6B6357">from <strong style="font:400 24px 'Bodoni Moda',serif;color:#7a5c2f">€680</strong> / night</span><a href="Rooms.dc.html" style="font:500 11px/1 'Jost';letter-spacing:.18em;text-transform:uppercase;color:#2B2721;border-bottom:1px solid #B08E55;padding-bottom:5px">Discover</a></div>
+        </div>
+      </article>
+      <article data-reveal="up" data-delay="240" style="background:#F3ECE0;border-radius:4px;overflow:hidden">
+        <div style="aspect-ratio:4/5;position:relative"><image-slot id="au-room-4" src="https://static.wixstatic.com/media/1de95c_4e2e9d02251244f4b5809e52393e1e0b~mv2.jpg/v1/fill/w_800,h_1000,al_c,q_85,enc_avif,quality_auto/1de95c_4e2e9d02251244f4b5809e52393e1e0b~mv2.jpg" shape="rect" placeholder="Panorama Suite"></image-slot></div>
+        <div style="padding:26px 24px 30px">
+          <h3 style="margin:0;font:400 26px/1.1 'Bodoni Moda',serif;color:#2B2721">Panorama Suite</h3>
+          <div style="font:400 13px/1 'Jost';color:#8f8272;letter-spacing:.03em;margin:12px 0 18px">110 m² · 4 guests · Terrace · Fireplace</div>
+          <div style="display:flex;align-items:baseline;justify-content:space-between"><span style="font:400 15px 'Jost';color:#6B6357">from <strong style="font:400 24px 'Bodoni Moda',serif;color:#7a5c2f">€980</strong> / night</span><a href="Rooms.dc.html" style="font:500 11px/1 'Jost';letter-spacing:.18em;text-transform:uppercase;color:#2B2721;border-bottom:1px solid #B08E55;padding-bottom:5px">Discover</a></div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ================= DINING (dark) ================= -->
+<section id="dining" style="background:#241a12;color:#F5EEE1;padding:clamp(70px,9vw,140px) clamp(24px,6vw,120px)">
+  <div style="max-width:1280px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:clamp(40px,5vw,90px);align-items:center">
+    <div data-reveal="left">
+      <div style="font:500 12px/1 'Jost';letter-spacing:.4em;text-transform:uppercase;color:#C9B48A;margin-bottom:24px">Dining</div>
+      <h2 style="margin:0 0 26px;font:400 clamp(32px,4.4vw,62px)/1.05 'Bodoni Moda',serif;color:#F5EEE1">A table set by<br>the mountains</h2>
+      <p style="margin:0 0 34px;font:300 clamp(15px,1.2vw,18px)/1.8 'Jost';color:rgba(245,238,225,.72);max-width:46ch">Three restaurants, one philosophy: ingredients gathered within sight of the peaks, plated with quiet precision and served by candlelight. From sunrise breakfast to a chef's tasting under the stars.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:34px;margin-bottom:40px">
+        <div><div style="font:500 11px/1 'Jost';letter-spacing:.26em;text-transform:uppercase;color:#C9B48A;margin-bottom:10px">Breakfast</div><div style="font:400 15px 'Jost';color:rgba(245,238,225,.8)">8 – 10:30 · À la carte &amp; buffet</div></div>
+        <div><div style="font:500 11px/1 'Jost';letter-spacing:.26em;text-transform:uppercase;color:#C9B48A;margin-bottom:10px">Dinner</div><div style="font:400 15px 'Jost';color:rgba(245,238,225,.8)">19 – 22:30 · À la carte &amp; tasting</div></div>
+        <div><div style="font:500 11px/1 'Jost';letter-spacing:.26em;text-transform:uppercase;color:#C9B48A;margin-bottom:10px">Lounge</div><div style="font:400 15px 'Jost';color:rgba(245,238,225,.8)">Opera Bar · Coffee &amp; cocktails</div></div>
+      </div>
+      <a href="#book" style="display:inline-flex;align-items:center;gap:11px;padding:16px 32px;background:#B08E55;color:#231a10;font:600 12px/1 'Jost';letter-spacing:.2em;text-transform:uppercase;border-radius:2px">Reserve a table</a>
+    </div>
+    <div data-reveal="right" style="display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:16px;height:min(80vh,620px)">
+      <div style="grid-row:span 2;position:relative;border-radius:4px;overflow:hidden"><image-slot id="au-dining-1" src="https://static.wixstatic.com/media/1de95c_06446d6ed68a4cf88589eb1783e8988d~mv2.jpg/v1/fill/w_800,h_1200,al_c,q_85,enc_avif,quality_auto/1de95c_06446d6ed68a4cf88589eb1783e8988d~mv2.jpg" shape="rect" placeholder="Signature dish, candlelight"></image-slot></div>
+      <div style="position:relative;border-radius:4px;overflow:hidden"><image-slot id="au-dining-2" src="https://static.wixstatic.com/media/1de95c_7865ec1a5c49485daf024463179d5078~mv2.jpg/v1/fill/w_800,h_600,al_c,q_85,enc_avif,quality_auto/1de95c_7865ec1a5c49485daf024463179d5078~mv2.jpg" shape="rect" placeholder="Restaurant interior"></image-slot></div>
+      <div style="position:relative;border-radius:4px;overflow:hidden"><image-slot id="au-dining-3" src="https://static.wixstatic.com/media/f9d3d7_0b2e8110e64b49ffbb15dc298cf193fb~mv2.jpg/v1/fill/w_800,h_600,al_c,q_85,enc_avif,quality_auto/f9d3d7_0b2e8110e64b49ffbb15dc298cf193fb~mv2.jpg" shape="rect" placeholder="Wine cellar"></image-slot></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SPA ================= -->
+<section id="spa" style="background:#F3ECE0;padding:clamp(70px,9vw,140px) clamp(24px,6vw,120px)">
+  <div style="max-width:1280px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:clamp(40px,5vw,90px);align-items:center">
+    <div data-reveal="left" style="position:relative;aspect-ratio:5/6;border-radius:4px;overflow:hidden;order:2"><image-slot id="au-spa-1" src="https://static.wixstatic.com/media/1de95c_03adb94268124caf858cfba9e9710b7b~mv2.jpg/v1/fill/w_1000,h_1200,al_c,q_85,enc_avif,quality_auto/1de95c_03adb94268124caf858cfba9e9710b7b~mv2.jpg" shape="rect" placeholder="Spa — thermal pool, sauna glow, steam"></image-slot></div>
+    <div data-reveal="right">
+      <div style="font:500 12px/1 'Jost';letter-spacing:.4em;text-transform:uppercase;color:#B08E55;margin-bottom:24px">Spa &amp; Wellness</div>
+      <h2 style="margin:0 0 26px;font:400 clamp(32px,4.4vw,62px)/1.05 'Bodoni Moda',serif;color:#2B2721">The art of<br>letting go</h2>
+      <p style="margin:0 0 34px;font:300 clamp(15px,1.2vw,18px)/1.8 'Jost';color:#6B6357;max-width:48ch">Pools, Finnish sauna and alpine steam at 1,100 metres. Our wellness rituals draw on mountain botanicals to restore what the world takes.</p>
+      <div style="border-top:1px solid #E4D9C4">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;padding:18px 0;border-bottom:1px solid #E4D9C4"><span style="font:400 18px 'Bodoni Moda',serif;color:#2B2721">Signature Alpine Massage · 80 min</span><span style="font:400 16px 'Jost';color:#7a5c2f">€185</span></div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline;padding:18px 0;border-bottom:1px solid #E4D9C4"><span style="font:400 18px 'Bodoni Moda',serif;color:#2B2721">Thermal Sauna Ritual</span><span style="font:400 16px 'Jost';color:#7a5c2f">€90</span></div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline;padding:18px 0;border-bottom:1px solid #E4D9C4"><span style="font:400 18px 'Bodoni Moda',serif;color:#2B2721">Glacial Botanical Facial</span><span style="font:400 16px 'Jost';color:#7a5c2f">€150</span></div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline;padding:18px 0;border-bottom:1px solid #E4D9C4"><span style="font:400 18px 'Bodoni Moda',serif;color:#2B2721">Two-Day Wellness Retreat</span><span style="font:400 16px 'Jost';color:#7a5c2f">€620</span></div>
+      </div>
+      <a href="#book" style="margin-top:34px;display:inline-flex;align-items:center;gap:11px;padding:16px 32px;border:1px solid #2B2721;color:#2B2721;font:600 12px/1 'Jost';letter-spacing:.2em;text-transform:uppercase;border-radius:2px">Book a treatment</a>
+    </div>
+  </div>
+</section>
+
+<!-- ================= VIRTUAL TOUR ================= -->
+<section id="tour" data-screen-label="Virtual tour teaser" style="background:#17110B;color:#F5EEE1;padding:clamp(70px,9vw,140px) clamp(24px,6vw,120px)">
+  <div style="max-width:1280px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:clamp(40px,5vw,90px);align-items:center">
+    <div data-reveal="left">
+      <div style="font:500 12px/1 'Jost';letter-spacing:.4em;text-transform:uppercase;color:#C9B48A;margin-bottom:24px">360&deg; Virtual Tour</div>
+      <h2 style="margin:0 0 26px;font:400 clamp(32px,4.4vw,62px)/1.05 'Bodoni Moda',serif;color:#F5EEE1">Walk the halls<br>before you arrive</h2>
+      <p style="margin:0 0 34px;font:300 clamp(15px,1.2vw,18px)/1.8 'Jost';color:rgba(245,238,225,.72);max-width:46ch">Four spaces of the resort, captured in full 360&deg;. Drag the view beside you &mdash; then step into the valley, the suite and the chapel.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:18px;align-items:center">
+        <a href="Tour.dc.html" style="display:inline-flex;align-items:center;gap:11px;padding:16px 32px;background:#B08E55;color:#231a10;font:600 12px/1 'Jost';letter-spacing:.2em;text-transform:uppercase;border-radius:2px">Launch the full tour</a>
+        <span style="font:400 13px 'Jost';color:rgba(245,238,225,.55)">Drag to look around &middot; double-tap to zoom</span>
+      </div>
+    </div>
+    <div data-reveal="right" style="position:relative;aspect-ratio:16/11;border-radius:4px;overflow:hidden;box-shadow:0 40px 90px rgba(0,0,0,.4)">
+      <pano-view src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/32/Paris,_mairie_du_10e_arrdt,_hall_04.jpg/3840px-Paris,_mairie_du_10e_arrdt,_hall_04.jpg" yaw="0" pitch="4" fov="58" autorotate="1.2" label="The Grand Hall" style="position:absolute;inset:0"></pano-view>
+    </div>
+  </div>
+</section>
+
+<!-- ================= EVENTS ================= -->
+<section id="events" style="background:#FBF8F1;padding:clamp(70px,9vw,140px) clamp(24px,6vw,120px)">
+  <div style="max-width:1280px;margin:0 auto">
+    <div data-reveal="up" style="text-align:center;max-width:760px;margin:0 auto 60px">
+      <div style="font:500 12px/1 'Jost';letter-spacing:.4em;text-transform:uppercase;color:#B08E55;margin-bottom:22px">Events &amp; Weddings</div>
+      <h2 style="margin:0 0 22px;font:400 clamp(32px,4.4vw,62px)/1.05 'Bodoni Moda',serif;color:#2B2721">Occasions held<br>at altitude</h2>
+      <p style="margin:0;font:300 clamp(15px,1.2vw,18px)/1.8 'Jost';color:#6B6357">From intimate mountain weddings to boardrooms with a view — our events team choreographs every detail.</p>
+    </div>
+    <div data-reveal="up" style="position:relative;aspect-ratio:16/7;border-radius:4px;overflow:hidden;margin-bottom:46px"><image-slot id="au-event-1" src="https://static.wixstatic.com/media/1de95c_aa8eaafdd55b4978a19a78a2cd03506d~mv2.jpg/v1/fill/w_1746,h_764,al_c,q_85,enc_avif,quality_auto/1de95c_aa8eaafdd55b4978a19a78a2cd03506d~mv2.jpg" shape="rect" placeholder="Wedding / banquet — mountain terrace at dusk"></image-slot></div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:26px">
+      <div data-reveal="up" style="background:#F3ECE0;padding:34px 30px;border-radius:4px"><h3 style="margin:0 0 12px;font:400 24px 'Bodoni Moda',serif;color:#2B2721">Weddings</h3><p style="margin:0;font:300 15px/1.7 'Jost';color:#6B6357">Ceremonies for up to 220, with a dedicated planner and suites for the party.</p></div>
+      <div data-reveal="up" data-delay="80" style="background:#F3ECE0;padding:34px 30px;border-radius:4px"><h3 style="margin:0 0 12px;font:400 24px 'Bodoni Moda',serif;color:#2B2721">Corporate</h3><p style="margin:0;font:300 15px/1.7 'Jost';color:#6B6357">Three conference rooms, full AV and retreat programmes for teams.</p></div>
+      <div data-reveal="up" data-delay="160" style="background:#241a12;color:#F5EEE1;padding:34px 30px;border-radius:4px;display:flex;flex-direction:column;justify-content:space-between">
+        <div style="display:flex;justify-content:space-between;font:400 15px 'Jost'"><span style="color:rgba(245,238,225,.72)">Banquet</span><span style="color:#C9B48A">220</span></div>
+        <div style="display:flex;justify-content:space-between;font:400 15px 'Jost';margin-top:14px"><span style="color:rgba(245,238,225,.72)">Theatre</span><span style="color:#C9B48A">300</span></div>
+        <div style="display:flex;justify-content:space-between;font:400 15px 'Jost';margin-top:14px"><span style="color:rgba(245,238,225,.72)">Boardroom</span><span style="color:#C9B48A">40</span></div>
+        <a href="#contact" style="margin-top:22px;font:600 11px/1 'Jost';letter-spacing:.2em;text-transform:uppercase;color:#C9B48A;border-bottom:1px solid #B08E55;padding-bottom:6px;align-self:flex-start">Enquire →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= GALLERY ================= -->
+<section id="gallery" style="background:#F3ECE0;padding:clamp(70px,9vw,140px) clamp(24px,6vw,120px)">
+  <div style="max-width:1280px;margin:0 auto">
+    <div data-reveal="up" style="text-align:center;margin-bottom:40px">
+      <div style="font:500 12px/1 'Jost';letter-spacing:.4em;text-transform:uppercase;color:#B08E55;margin-bottom:22px">Gallery</div>
+      <h2 style="margin:0;font:400 clamp(32px,4.4vw,62px)/1.05 'Bodoni Moda',serif;color:#2B2721">A closer look</h2>
+    </div>
+    <div onClick="{{ onGalleryClick }}" style="display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-bottom:44px">
+      <button data-chip="all" style="padding:11px 22px;background:#2B2721;color:#F3ECE0;border:1px solid #2B2721;border-radius:40px;font:500 11px/1 'Jost';letter-spacing:.16em;text-transform:uppercase;cursor:pointer">All</button>
+      <button data-chip="rooms" style="padding:11px 22px;background:transparent;color:#6B6357;border:1px solid #C9BBA0;border-radius:40px;font:500 11px/1 'Jost';letter-spacing:.16em;text-transform:uppercase;cursor:pointer">Rooms</button>
+      <button data-chip="dining" style="padding:11px 22px;background:transparent;color:#6B6357;border:1px solid #C9BBA0;border-radius:40px;font:500 11px/1 'Jost';letter-spacing:.16em;text-transform:uppercase;cursor:pointer">Dining</button>
+      <button data-chip="spa" style="padding:11px 22px;background:transparent;color:#6B6357;border:1px solid #C9BBA0;border-radius:40px;font:500 11px/1 'Jost';letter-spacing:.16em;text-transform:uppercase;cursor:pointer">Spa</button>
+      <button data-chip="pool" style="padding:11px 22px;background:transparent;color:#6B6357;border:1px solid #C9BBA0;border-radius:40px;font:500 11px/1 'Jost';letter-spacing:.16em;text-transform:uppercase;cursor:pointer">Pool</button>
+      <button data-chip="events" style="padding:11px 22px;background:transparent;color:#6B6357;border:1px solid #C9BBA0;border-radius:40px;font:500 11px/1 'Jost';letter-spacing:.16em;text-transform:uppercase;cursor:pointer">Events</button>
+      <button data-chip="exterior" style="padding:11px 22px;background:transparent;color:#6B6357;border:1px solid #C9BBA0;border-radius:40px;font:500 11px/1 'Jost';letter-spacing:.16em;text-transform:uppercase;cursor:pointer">Exterior</button>
+    </div>
+    <div data-anim="galleryGrid" ref="{{ registerRef }}" style="columns:260px;column-gap:16px">
+      <figure data-cat="exterior" style="break-inside:avoid;margin:0 0 16px;position:relative;border-radius:4px;overflow:hidden"><div style="aspect-ratio:3/4"><image-slot id="au-gal-1" src="https://static.wixstatic.com/media/1de95c_da6dacf180bd433788972c2d0b719bcf~mv2.jpg/v1/fill/w_750,h_1000,al_c,q_85,enc_avif,quality_auto/1de95c_da6dacf180bd433788972c2d0b719bcf~mv2.jpg" shape="rect" placeholder="Exterior"></image-slot></div><figcaption style="position:absolute;left:14px;bottom:12px;color:#F7F1E7;font:500 10px/1 'Jost';letter-spacing:.2em;text-transform:uppercase;text-shadow:0 1px 8px rgba(0,0,0,.6);pointer-events:none">Exterior</figcaption></figure>
+      <figure data-cat="rooms" style="break-inside:avoid;margin:0 0 16px;position:relative;border-radius:4px;overflow:hidden"><div style="aspect-ratio:1/1"><image-slot id="au-gal-2" src="https://static.wixstatic.com/media/1de95c_072bf1db81bd4227b40d79d328c61bcf~mv2.jpg/v1/fill/w_800,h_800,al_c,q_85,enc_avif,quality_auto/1de95c_072bf1db81bd4227b40d79d328c61bcf~mv2.jpg" shape="rect" placeholder="Suite"></image-slot></div><figcaption style="position:absolute;left:14px;bottom:12px;color:#F7F1E7;font:500 10px/1 'Jost';letter-spacing:.2em;text-transform:uppercase;text-shadow:0 1px 8px rgba(0,0,0,.6);pointer-events:none">Rooms</figcaption></figure>
+      <figure data-cat="spa" style="break-inside:avoid;margin:0 0 16px;position:relative;border-radius:4px;overflow:hidden"><div style="aspect-ratio:3/4"><image-slot id="au-gal-3" src="https://static.wixstatic.com/media/1de95c_fe69aecf6c0a4c3e89f1b8d5afc6d93b~mv2.jpg/v1/fill/w_750,h_1000,al_c,q_85,enc_avif,quality_auto/1de95c_fe69aecf6c0a4c3e89f1b8d5afc6d93b~mv2.jpg" shape="rect" placeholder="Spa"></image-slot></div><figcaption style="position:absolute;left:14px;bottom:12px;color:#F7F1E7;font:500 10px/1 'Jost';letter-spacing:.2em;text-transform:uppercase;text-shadow:0 1px 8px rgba(0,0,0,.6);pointer-events:none">Spa</figcaption></figure>
+      <figure data-cat="dining" style="break-inside:avoid;margin:0 0 16px;position:relative;border-radius:4px;overflow:hidden"><div style="aspect-ratio:4/5"><image-slot id="au-gal-4" src="https://static.wixstatic.com/media/1de95c_9c4f733331a7445ca87f65e04807725a~mv2.jpg/v1/fill/w_800,h_1000,al_c,q_85,enc_avif,quality_auto/1de95c_9c4f733331a7445ca87f65e04807725a~mv2.jpg" shape="rect" placeholder="Dining"></image-slot></div><figcaption style="position:absolute;left:14px;bottom:12px;color:#F7F1E7;font:500 10px/1 'Jost';letter-spacing:.2em;text-transform:uppercase;text-shadow:0 1px 8px rgba(0,0,0,.6);pointer-events:none">Dining</figcaption></figure>
+      <figure data-cat="pool" style="break-inside:avoid;margin:0 0 16px;position:relative;border-radius:4px;overflow:hidden"><div style="aspect-ratio:1/1"><image-slot id="au-gal-5" src="https://static.wixstatic.com/media/f9d3d7_d9f5264f63fb46e8b4fa9c093c43dd22~mv2.jpg/v1/fill/w_800,h_800,al_c,q_85,enc_avif,quality_auto/f9d3d7_d9f5264f63fb46e8b4fa9c093c43dd22~mv2.jpg" shape="rect" placeholder="Pool"></image-slot></div><figcaption style="position:absolute;left:14px;bottom:12px;color:#F7F1E7;font:500 10px/1 'Jost';letter-spacing:.2em;text-transform:uppercase;text-shadow:0 1px 8px rgba(0,0,0,.6);pointer-events:none">Pool</figcaption></figure>
+      <figure data-cat="events" style="break-inside:avoid;margin:0 0 16px;position:relative;border-radius:4px;overflow:hidden"><div style="aspect-ratio:3/4"><image-slot id="au-gal-6" src="https://static.wixstatic.com/media/f9d3d7_da33001184424bb386ce7742edf5e2a8~mv2.jpg/v1/fill/w_750,h_1000,al_c,q_85,enc_avif,quality_auto/f9d3d7_da33001184424bb386ce7742edf5e2a8~mv2.jpg" shape="rect" placeholder="Events"></image-slot></div><figcaption style="position:absolute;left:14px;bottom:12px;color:#F7F1E7;font:500 10px/1 'Jost';letter-spacing:.2em;text-transform:uppercase;text-shadow:0 1px 8px rgba(0,0,0,.6);pointer-events:none">Events</figcaption></figure>
+      <figure data-cat="rooms" style="break-inside:avoid;margin:0 0 16px;position:relative;border-radius:4px;overflow:hidden"><div style="aspect-ratio:4/5"><image-slot id="au-gal-7" src="https://static.wixstatic.com/media/f9d3d7_b639006d90ee42128eea2062999299ee~mv2.jpg/v1/fill/w_800,h_1000,al_c,q_85,enc_avif,quality_auto/f9d3d7_b639006d90ee42128eea2062999299ee~mv2.jpg" shape="rect" placeholder="Bathroom detail"></image-slot></div><figcaption style="position:absolute;left:14px;bottom:12px;color:#F7F1E7;font:500 10px/1 'Jost';letter-spacing:.2em;text-transform:uppercase;text-shadow:0 1px 8px rgba(0,0,0,.6);pointer-events:none">Rooms</figcaption></figure>
+      <figure data-cat="exterior" style="break-inside:avoid;margin:0 0 16px;position:relative;border-radius:4px;overflow:hidden"><div style="aspect-ratio:1/1"><image-slot id="au-gal-8" src="https://static.wixstatic.com/media/1de95c_90f60c968da246dd9b5fdba3210919d7~mv2.jpg/v1/fill/w_800,h_800,al_c,q_85,enc_avif,quality_auto/1de95c_90f60c968da246dd9b5fdba3210919d7~mv2.jpg" shape="rect" placeholder="Terrace at dusk"></image-slot></div><figcaption style="position:absolute;left:14px;bottom:12px;color:#F7F1E7;font:500 10px/1 'Jost';letter-spacing:.2em;text-transform:uppercase;text-shadow:0 1px 8px rgba(0,0,0,.6);pointer-events:none">Exterior</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<!-- ================= OFFERS ================= -->
+<section id="offers" style="background:#E7DBC8;padding:clamp(70px,9vw,140px) clamp(24px,6vw,120px)">
+  <div style="max-width:1280px;margin:0 auto">
+    <div data-reveal="up" style="text-align:center;margin-bottom:56px">
+      <div style="font:500 12px/1 'Jost';letter-spacing:.4em;text-transform:uppercase;color:#8f7040;margin-bottom:22px">Offers &amp; Packages</div>
+      <h2 style="margin:0;font:400 clamp(32px,4.4vw,62px)/1.05 'Bodoni Moda',serif;color:#2B2721">Reasons to linger longer</h2>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:26px">
+      <article data-reveal="up" style="background:#FBF8F1;border-radius:4px;overflow:hidden;display:flex;flex-direction:column">
+        <div style="aspect-ratio:16/10;position:relative"><image-slot id="au-offer-1" src="https://static.wixstatic.com/media/1de95c_0a26973775ff4331865112ee0b1b6ff7~mv2.jpg/v1/fill/w_800,h_500,al_c,q_85,enc_avif,quality_auto/1de95c_0a26973775ff4331865112ee0b1b6ff7~mv2.jpg" shape="rect" placeholder="Winter Escape"></image-slot><span style="position:absolute;top:14px;left:14px;background:#1e6b4a;color:#fff;font:600 10px/1 'Jost';letter-spacing:.16em;text-transform:uppercase;padding:7px 11px;border-radius:2px">Active</span></div>
+        <div style="padding:28px 26px;display:flex;flex-direction:column;flex:1">
+          <h3 style="margin:0 0 8px;font:400 25px 'Bodoni Moda',serif;color:#2B2721">Winter Escape</h3>
+          <div style="font:400 12px/1 'Jost';letter-spacing:.06em;color:#8f8272;margin-bottom:16px">1 Dec – 28 Feb</div>
+          <p style="margin:0 0 18px;font:300 15px/1.7 'Jost';color:#6B6357">3 nights, daily breakfast, one spa ritual and a private ski transfer.</p>
+          <div style="margin-top:auto;display:flex;align-items:baseline;justify-content:space-between"><span style="font:400 15px 'Jost';color:#6B6357">from <strong style="font:400 24px 'Bodoni Moda',serif;color:#7a5c2f">€1,290</strong></span><a href="#book" style="font:500 11px/1 'Jost';letter-spacing:.18em;text-transform:uppercase;color:#2B2721;border-bottom:1px solid #B08E55;padding-bottom:5px">Book</a></div>
+        </div>
+      </article>
+      <article data-reveal="up" data-delay="80" style="background:#FBF8F1;border-radius:4px;overflow:hidden;display:flex;flex-direction:column">
+        <div style="aspect-ratio:16/10;position:relative"><image-slot id="au-offer-2" src="https://static.wixstatic.com/media/1de95c_491862344bf74e00b37b650f8249e6a8~mv2.jpg/v1/fill/w_800,h_500,al_c,q_85,enc_avif,quality_auto/1de95c_491862344bf74e00b37b650f8249e6a8~mv2.jpg" shape="rect" placeholder="Romance in the Alps"></image-slot><span style="position:absolute;top:14px;left:14px;background:#1e6b4a;color:#fff;font:600 10px/1 'Jost';letter-spacing:.16em;text-transform:uppercase;padding:7px 11px;border-radius:2px">Active</span></div>
+        <div style="padding:28px 26px;display:flex;flex-direction:column;flex:1">
+          <h3 style="margin:0 0 8px;font:400 25px 'Bodoni Moda',serif;color:#2B2721">Romance in the Alps</h3>
+          <div style="font:400 12px/1 'Jost';letter-spacing:.06em;color:#8f8272;margin-bottom:16px">Year-round</div>
+          <p style="margin:0 0 18px;font:300 15px/1.7 'Jost';color:#6B6357">Suite upgrade, champagne on arrival, couples' massage and a candlelit dinner.</p>
+          <div style="margin-top:auto;display:flex;align-items:baseline;justify-content:space-between"><span style="font:400 15px 'Jost';color:#6B6357">from <strong style="font:400 24px 'Bodoni Moda',serif;color:#7a5c2f">€890</strong></span><a href="#book" style="font:500 11px/1 'Jost';letter-spacing:.18em;text-transform:uppercase;color:#2B2721;border-bottom:1px solid #B08E55;padding-bottom:5px">Book</a></div>
+        </div>
+      </article>
+      <article data-reveal="up" data-delay="160" style="background:#FBF8F1;border-radius:4px;overflow:hidden;display:flex;flex-direction:column">
+        <div style="aspect-ratio:16/10;position:relative"><image-slot id="au-offer-3" src="https://static.wixstatic.com/media/f9d3d7_24310a781a3f49e1a8dfa46cfbb3d9e9~mv2.jpg/v1/fill/w_800,h_500,al_c,q_85,enc_avif,quality_auto/f9d3d7_24310a781a3f49e1a8dfa46cfbb3d9e9~mv2.jpg" shape="rect" placeholder="Stay Longer"></image-slot><span style="position:absolute;top:14px;left:14px;background:#1e6b4a;color:#fff;font:600 10px/1 'Jost';letter-spacing:.16em;text-transform:uppercase;padding:7px 11px;border-radius:2px">Active</span></div>
+        <div style="padding:28px 26px;display:flex;flex-direction:column;flex:1">
+          <h3 style="margin:0 0 8px;font:400 25px 'Bodoni Moda',serif;color:#2B2721">Stay Longer</h3>
+          <div style="font:400 12px/1 'Jost';letter-spacing:.06em;color:#8f8272;margin-bottom:16px">5+ nights</div>
+          <p style="margin:0 0 18px;font:300 15px/1.7 'Jost';color:#6B6357">Stay five nights, pay for four — with daily breakfast and late checkout.</p>
+          <div style="margin-top:auto;display:flex;align-items:baseline;justify-content:space-between"><span style="font:400 15px 'Jost';color:#6B6357">save <strong style="font:400 24px 'Bodoni Moda',serif;color:#7a5c2f">20%</strong></span><a href="#book" style="font:500 11px/1 'Jost';letter-spacing:.18em;text-transform:uppercase;color:#2B2721;border-bottom:1px solid #B08E55;padding-bottom:5px">Book</a></div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ================= REVIEWS ================= -->
+<section style="background:#F3ECE0;padding:clamp(70px,9vw,140px) clamp(24px,6vw,120px)">
+  <div style="max-width:1180px;margin:0 auto;text-align:center">
+    <div data-reveal="up" style="font:500 12px/1 'Jost';letter-spacing:.4em;text-transform:uppercase;color:#B08E55;margin-bottom:26px">Guest Reviews</div>
+    <div data-reveal="up" style="display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:44px">
+      <span style="color:#B08E55;letter-spacing:6px;font-size:22px">★★★★★</span>
+      <span style="font:400 17px 'Jost';color:#6B6357">4.9 · 1,240 reviews</span>
+    </div>
+    <blockquote data-reveal="up" style="margin:0 auto;max-width:900px;font:400 clamp(24px,3.2vw,44px)/1.36 'Bodoni Moda',serif;color:#2B2721;font-style:italic;text-wrap:balance">"We have stayed in the great hotels of the world. Brezovica is the only one that felt like it had been waiting for us."</blockquote>
+    <div data-reveal="up" style="margin-top:30px;font:500 12px/1 'Jost';letter-spacing:.22em;text-transform:uppercase;color:#8f8272">Eleanor &amp; James H. · Condé Nast Traveller</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:24px;margin-top:70px;text-align:left">
+      <div data-reveal="up" style="background:#FBF8F1;padding:30px 28px;border-radius:4px"><div style="color:#B08E55;letter-spacing:3px;margin-bottom:16px">★★★★★</div><p style="margin:0 0 20px;font:300 16px/1.7 'Jost';color:#4c463d">"The most restorative week of our year. The spa alone is worth the journey."</p><div style="font:500 11px/1 'Jost';letter-spacing:.2em;text-transform:uppercase;color:#8f8272">Sofia M. · Milan</div></div>
+      <div data-reveal="up" data-delay="80" style="background:#FBF8F1;padding:30px 28px;border-radius:4px"><div style="color:#B08E55;letter-spacing:3px;margin-bottom:16px">★★★★★</div><p style="margin:0 0 20px;font:300 16px/1.7 'Jost';color:#4c463d">"Impeccable service, extraordinary food, and a view I still dream about."</p><div style="font:500 11px/1 'Jost';letter-spacing:.2em;text-transform:uppercase;color:#8f8272">David R. · London</div></div>
+      <div data-reveal="up" data-delay="160" style="background:#FBF8F1;padding:30px 28px;border-radius:4px"><div style="color:#B08E55;letter-spacing:3px;margin-bottom:16px">★★★★★</div><p style="margin:0 0 20px;font:300 16px/1.7 'Jost';color:#4c463d">"Our wedding was flawless. Every guest is still talking about it."</p><div style="font:500 11px/1 'Jost';letter-spacing:.2em;text-transform:uppercase;color:#8f8272">Amara &amp; Tom · Zürich</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= LOCATION ================= -->
+<section id="location" style="background:#FBF8F1;padding:clamp(70px,9vw,140px) clamp(24px,6vw,120px)">
+  <div style="max-width:1280px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:clamp(40px,5vw,80px);align-items:center">
+    <div data-reveal="left">
+      <div style="font:500 12px/1 'Jost';letter-spacing:.4em;text-transform:uppercase;color:#B08E55;margin-bottom:24px">Location</div>
+      <h2 style="margin:0 0 26px;font:400 clamp(32px,4.4vw,62px)/1.05 'Bodoni Moda',serif;color:#2B2721">Find your way<br>to Brezovica</h2>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:26px 30px;margin-bottom:34px">
+        <div><div style="font:500 11px/1 'Jost';letter-spacing:.24em;text-transform:uppercase;color:#8f8272;margin-bottom:8px">Address</div><div style="font:400 16px/1.55 'Jost';color:#4c463d">Brezovica Ski Resort<br>Štrpce, Kosovo</div></div>
+        <div><div style="font:500 11px/1 'Jost';letter-spacing:.24em;text-transform:uppercase;color:#8f8272;margin-bottom:8px">Nearest Airport</div><div style="font:400 16px/1.55 'Jost';color:#4c463d">Pristina · 90 min by car</div></div>
+        <div><div style="font:500 11px/1 'Jost';letter-spacing:.24em;text-transform:uppercase;color:#8f8272;margin-bottom:8px">Transfers</div><div style="font:400 16px/1.55 'Jost';color:#4c463d">Chauffeur, helicopter &amp; rail</div></div>
+        <div><div style="font:500 11px/1 'Jost';letter-spacing:.24em;text-transform:uppercase;color:#8f8272;margin-bottom:8px">Parking</div><div style="font:400 16px/1.55 'Jost';color:#4c463d">Valet &amp; EV charging</div></div>
+      </div>
+      <a href="#contact" style="display:inline-flex;align-items:center;gap:11px;padding:16px 32px;border:1px solid #2B2721;color:#2B2721;font:600 12px/1 'Jost';letter-spacing:.2em;text-transform:uppercase;border-radius:2px">Get directions</a>
+    </div>
+    <div data-reveal="right" style="position:relative;aspect-ratio:4/3;border-radius:4px;overflow:hidden;background:#E7DBC8">
+      <div style="position:absolute;inset:0;background-image:linear-gradient(rgba(120,92,50,.10) 1px,transparent 1px),linear-gradient(90deg,rgba(120,92,50,.10) 1px,transparent 1px);background-size:38px 38px"></div>
+      <div style="position:absolute;left:12%;top:20%;right:30%;height:3px;background:#cbb99a;transform:rotate(8deg)"></div>
+      <div style="position:absolute;left:26%;top:30%;bottom:14%;width:3px;background:#cbb99a;transform:rotate(-6deg)"></div>
+      <div style="position:absolute;left:56%;top:44%;width:22px;height:22px;background:#B08E55;border-radius:50% 50% 50% 0;transform:rotate(-45deg);box-shadow:0 8px 20px rgba(120,92,50,.3)"></div>
+      <div style="position:absolute;left:54%;top:52%;font:500 11px/1 'Jost';letter-spacing:.14em;text-transform:uppercase;color:#7a5c2f;background:rgba(251,248,241,.85);padding:6px 10px;border-radius:2px">Brezovica</div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FINAL CTA ================= -->
+<section style="position:relative;background:#1C140D;color:#F5EEE1;padding:clamp(90px,12vw,180px) clamp(24px,6vw,120px);text-align:center;overflow:hidden">
+  <div style="position:absolute;left:50%;top:-10%;width:min(80vw,900px);height:min(80vw,900px);transform:translateX(-50%);background:radial-gradient(closest-side,rgba(176,142,85,.22),transparent 70%);pointer-events:none;animation:auGlow 7s ease-in-out infinite"></div>
+  <div style="position:relative;max-width:840px;margin:0 auto">
+    <div data-reveal="up" style="font:500 12px/1 'Jost';letter-spacing:.42em;text-transform:uppercase;color:#C9B48A;margin-bottom:30px">Your stay awaits</div>
+    <h2 data-reveal="up" data-delay="80" style="margin:0 0 42px;font:400 clamp(36px,5.6vw,82px)/1.06 'Bodoni Moda',serif;color:#F7F1E7;text-wrap:balance">The mountains are ready.<br>So are we.</h2>
+    <a href="#book" data-reveal="up" data-delay="160" style="display:inline-flex;align-items:center;gap:12px;padding:19px 44px;background:#B08E55;color:#231a10;font:600 12px/1 'Jost';letter-spacing:.22em;text-transform:uppercase;border-radius:2px">Reserve your stay</a>
+  </div>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer id="contact" style="background:#241a12;color:#E9DFCB;padding:clamp(64px,7vw,110px) clamp(24px,6vw,120px) 40px">
+  <div style="max-width:1280px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:48px 40px">
+    <div style="grid-column:1/-1;max-width:520px">
+      <div style="font:600 24px/1 'Bodoni Moda',serif;letter-spacing:.36em;padding-left:.36em;margin-bottom:20px">BREZOVICA</div>
+      <p style="margin:0 0 24px;font:300 15px/1.75 'Jost';color:rgba(233,223,203,.7)">An alpine sanctuary in the Sharr Mountains — where mountain grandeur meets a warmth that feels like your own.</p>
+      <div style="display:flex;gap:14px">
+        <a href="#" style="width:40px;height:40px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(233,223,203,.28);border-radius:50%;color:#C9B48A;font:400 13px 'Jost'">in</a>
+        <a href="#" style="width:40px;height:40px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(233,223,203,.28);border-radius:50%;color:#C9B48A;font:400 13px 'Jost'">ig</a>
+        <a href="#" style="width:40px;height:40px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(233,223,203,.28);border-radius:50%;color:#C9B48A;font:400 13px 'Jost'">fb</a>
+      </div>
+    </div>
+    <div>
+      <div style="font:500 11px/1 'Jost';letter-spacing:.24em;text-transform:uppercase;color:#C9B48A;margin-bottom:20px">Explore</div>
+      <div style="display:flex;flex-direction:column;gap:12px;font:300 15px 'Jost'"><a href="Rooms.dc.html" style="color:rgba(233,223,203,.8)">Rooms &amp; Suites</a><a href="Dining.dc.html" style="color:rgba(233,223,203,.8)">Dining</a><a href="Spa.dc.html" style="color:rgba(233,223,203,.8)">Spa &amp; Wellness</a><a href="Experiences.dc.html" style="color:rgba(233,223,203,.8)">Experiences</a><a href="Tour.dc.html" style="color:rgba(233,223,203,.8)">360&deg; Virtual Tour</a><a href="Events.dc.html" style="color:rgba(233,223,203,.8)">Events &amp; Weddings</a><a href="#events" style="color:rgba(233,223,203,.8)">Events</a><a href="#gallery" style="color:rgba(233,223,203,.8)">Gallery</a><a href="Contact.dc.html" style="color:rgba(233,223,203,.8)">Contact</a></div>
+    </div>
+    <div>
+      <div style="font:500 11px/1 'Jost';letter-spacing:.24em;text-transform:uppercase;color:#C9B48A;margin-bottom:20px">Contact</div>
+      <div style="display:flex;flex-direction:column;gap:12px;font:300 15px/1.5 'Jost';color:rgba(233,223,203,.8)"><span>Brezovica Ski Resort<br>Štrpce, Kosovo</span><a href="tel:+38349301030" style="color:rgba(233,223,203,.8)">+383 49 30 10 30</a><a href="mailto:stay@brezovicahotel.com" style="color:rgba(233,223,203,.8)">stay@brezovicahotel.com</a></div>
+    </div>
+    <div>
+      <div style="font:500 11px/1 'Jost';letter-spacing:.24em;text-transform:uppercase;color:#C9B48A;margin-bottom:20px">Newsletter</div>
+      <p style="margin:0 0 16px;font:300 14px/1.6 'Jost';color:rgba(233,223,203,.7)">Quiet notes from the mountains, a few times a year.</p>
+      <div style="display:flex;border:1px solid rgba(233,223,203,.28);border-radius:2px;overflow:hidden"><input type="email" placeholder="Email address" style="flex:1;min-width:0;padding:13px 14px;background:transparent;border:none;color:#E9DFCB;font:300 14px 'Jost'"><button style="padding:13px 18px;background:#B08E55;color:#231a10;border:none;font:600 11px 'Jost';letter-spacing:.16em;text-transform:uppercase;cursor:pointer">Join</button></div>
+    </div>
+  </div>
+  <div style="max-width:1280px;margin:60px auto 0;padding-top:28px;border-top:1px solid rgba(233,223,203,.16);display:flex;flex-wrap:wrap;justify-content:space-between;gap:16px;font:400 12px/1.6 'Jost';color:rgba(233,223,203,.55)">
+    <span>© 2026 Brezovica Hotel &amp; SPA. All rights reserved.</span>
+    <div style="display:flex;flex-wrap:wrap;gap:22px"><a href="#" style="color:rgba(233,223,203,.55)">Privacy</a><a href="#" style="color:rgba(233,223,203,.55)">Terms</a><a href="#" style="color:rgba(233,223,203,.55)">Cancellation</a><a href="#" style="color:rgba(233,223,203,.55)">FAQ</a></div>
+  </div>
+</footer>
+
+<!-- ================= STICKY RESERVE BAR ================= -->
+<div data-anim="stickyBook" ref="{{ registerRef }}" style="position:fixed;left:0;right:0;bottom:0;z-index:55;transform:translateY(130%);opacity:0;transition:transform .6s cubic-bezier(.2,.7,.2,1),opacity .5s ease;pointer-events:none;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:16px;padding:14px clamp(16px,4vw,40px);background:rgba(36,26,18,.96);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);color:#F5EEE1;box-shadow:0 -14px 44px rgba(0,0,0,.24)">
+  <div style="font:400 14px/1.3 'Jost';color:#E9DFCB">Presidential Suite <span style="color:#C9B48A">· from €680 / night</span></div>
+  <a href="#book" style="display:inline-flex;align-items:center;gap:9px;padding:13px 28px;background:#B08E55;color:#231a10;font:600 11px/1 'Jost';letter-spacing:.2em;text-transform:uppercase;border-radius:2px">Check availability</a>
+</div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;heroLength&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:400,&quot;min&quot;:280,&quot;max&quot;:560,&quot;step&quot;:20,&quot;unit&quot;:&quot;vh&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Opening sequence&quot;},&quot;reduceMotion&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Opening sequence&quot;}}">
+class Component extends DCLogic {
+  state = {
+    vw: (typeof window !== 'undefined' ? window.innerWidth : 1200),
+    menuOpen: false,
+    searched: false,
+    searchError: '',
+    rooms: [],
+    nights: 0,
+    selected: null,
+    held: false,
+    checkin: '',
+    checkout: '',
+    guests: '2 Adults',
+    roomType: 'Presidential Suite',
+    promo: ''
+  };
+
+  els = {};
+  registerRef = (el) => {
+    if (el && el.dataset && el.dataset.anim) this.els[el.dataset.anim] = el;
+  };
+
+  _applySeason() {
+    const chip = this.els && this.els.seasonChip;
+    if (!chip) return;
+    const s = this._season(this.state.checkin);
+    chip.textContent = s.name + ' · no booking fees';
+  }
+
+  componentDidMount() {
+    if (!this.state.checkin) {
+      const p = (x) => (x < 10 ? '0' + x : '' + x);
+      const a = new Date(); a.setDate(a.getDate() + 30);
+      const b = new Date(a); b.setDate(b.getDate() + 2);
+      const iso = (d) => d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate());
+      this.setState({ checkin: iso(a), checkout: iso(b) });
+    }
+    setTimeout(() => this._applySeason(), 60);
+    this._raf = null;
+    this._onScroll = () => {
+      if (this._raf) return;
+      this._raf = requestAnimationFrame(() => { this._raf = null; this._update(); });
+    };
+    this._onResize = () => { this.setState({ vw: window.innerWidth }); this._onScroll(); };
+    window.addEventListener('scroll', this._onScroll, { passive: true, capture: true });
+    window.addEventListener('resize', this._onResize);
+    this._initReveals();
+    this._bindChapters();
+    // Post-hydration nudge: the DC runtime re-patches template attributes after
+    // mount, stripping <image-slot>'s self-managed data-filled/data-editable —
+    // re-render each slot so filled slots hide their placeholder ring.
+    this._slotNudges = [300, 1200, 3000].map((ms) => setTimeout(() => {
+      [].slice.call(document.querySelectorAll('image-slot')).forEach((s) => { try { if (s._render) s._render(); } catch (e) {} });
+    }, ms));
+    this._filter('all');
+    this._update();
+  }
+
+  componentDidUpdate() { this._update(); this._applySeason(); this._syncRows(); this._syncSticky(); }
+
+  _syncSticky() {
+    const sb = this.els.stickyBook;
+    if (!sb) return;
+    const label = sb.querySelector('div');
+    if (!label) return;
+    const sel = (this.state.rooms || []).filter((r) => r.name === this.state.selected)[0];
+    if (sel && this.state.nights) {
+      label.innerHTML = sel.name + ' <span style="color:#C9B48A">· ' + this._euro(sel.direct) + ' for ' + this.state.nights + ' night' + (this.state.nights > 1 ? 's' : '') + ', direct</span>';
+    }
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('scroll', this._onScroll, { capture: true });
+    window.removeEventListener('resize', this._onResize);
+    clearTimeout(this._revealFallback);
+    (this._slotNudges || []).forEach(clearTimeout);
+    clearTimeout(this._chT);
+  }
+
+  _e(t) { return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; }
+  _sg(p, a, b) { return Math.max(0, Math.min(1, (p - a) / (b - a))); }
+  _win(p, a, b, c, d) {
+    if (p <= a || p >= d) return 0;
+    if (p < b) return this._e(this._sg(p, a, b));
+    if (p > c) return 1 - this._e(this._sg(p, c, d));
+    return 1;
+  }
+
+  _initReveals() {
+    const nodes = [].slice.call(document.querySelectorAll('[data-reveal]'));
+    this._reveals = [];
+    nodes.forEach((n) => {
+      const dir = n.getAttribute('data-reveal');
+      n.style.opacity = '0';
+      n.style.transform = dir === 'left' ? 'translateX(-46px)' : dir === 'right' ? 'translateX(46px)' : dir === 'scale' ? 'scale(.94)' : 'translateY(40px)';
+      n.style.transition = 'opacity 1.2s cubic-bezier(.22,.68,.2,1), transform 1.2s cubic-bezier(.22,.68,.2,1)';
+      n.style.transitionDelay = (n.getAttribute('data-delay') || '0') + 'ms';
+      n.style.willChange = 'opacity, transform';
+      this._reveals.push(n);
+    });
+    this._checkReveals();
+    // Safety net: never leave content hidden if scroll events misbehave
+    this._revealFallback = setTimeout(() => this._revealAll(), 4000);
+  }
+
+  _checkReveals() {
+    if (!this._reveals || !this._reveals.length) return;
+    const vh = window.innerHeight || 800;
+    const rest = [];
+    this._reveals.forEach((n) => {
+      if (n.getBoundingClientRect().top < vh * 0.9) {
+        n.style.opacity = '1';
+        n.style.transform = 'none';
+      } else {
+        rest.push(n);
+      }
+    });
+    this._reveals = rest;
+  }
+
+  _revealAll() {
+    if (!this._reveals) return;
+    this._reveals.forEach((n) => { n.style.opacity = '1'; n.style.transform = 'none'; });
+    this._reveals = [];
+  }
+
+  _filter(cat) {
+    const grid = this.els.galleryGrid;
+    if (grid) {
+      [].slice.call(grid.querySelectorAll('[data-cat]')).forEach((it) => {
+        it.style.display = (cat === 'all' || it.getAttribute('data-cat') === cat) ? '' : 'none';
+      });
+    }
+    [].slice.call(document.querySelectorAll('[data-chip]')).forEach((c) => {
+      const on = c.getAttribute('data-chip') === cat;
+      c.style.background = on ? '#2B2721' : 'transparent';
+      c.style.color = on ? '#F3ECE0' : '#6B6357';
+      c.style.borderColor = on ? '#2B2721' : '#C9BBA0';
+    });
+  }
+
+  onGalleryClick = (ev) => {
+    const c = ev.target.closest && ev.target.closest('[data-chip]');
+    if (c) this._filter(c.getAttribute('data-chip'));
+  };
+
+  toggleMenu = () => this.setState((s) => ({ menuOpen: !s.menuOpen }));
+  closeMenu = () => this.setState({ menuOpen: false });
+
+  _rates = { 'Deluxe Alpine Room': 420, 'Junior Suite': 560, 'Presidential Suite': 680, 'Panorama Suite': 980, 'Chalet Residence': 1480 };
+
+  _season(iso) {
+    const m = iso ? (+iso.slice(5, 7)) : (new Date().getMonth() + 1);
+    if ([7, 8, 12, 1].indexOf(m) >= 0) return { name: 'Peak season', mult: 1.15 };
+    if ([4, 11].indexOf(m) >= 0) return { name: 'Quiet season', mult: 0.86 };
+    return { name: 'Shoulder season', mult: 1 };
+  }
+  _euro(n) { return '€' + Math.round(n).toLocaleString('en-US'); }
+  _pax() {
+    const g = this.state.guests || '';
+    if (g.indexOf('1 Guest') === 0) return 1;
+    if (g.indexOf('3') === 0) return 3;
+    if (g.indexOf('Family') === 0) return 4;
+    return 2;
+  }
+
+  _roomMeta = {
+    'Deluxe Alpine Room': '42 m² · 2 guests · valley view · king bed',
+    'Junior Suite': '58 m² · 2 guests · lake view · sitting area',
+    'Presidential Suite': '76 m² · 3 guests · panorama · balcony',
+    'Panorama Suite': '110 m² · 4 guests · terrace · fireplace',
+    'Chalet Residence': '180 m² · 6 guests · private entrance · sauna'
+  };
+  _sleeps = { 'Deluxe Alpine Room': 2, 'Junior Suite': 2, 'Presidential Suite': 3, 'Panorama Suite': 4, 'Chalet Residence': 6 };
+
+  /* Deterministic inventory so the same dates always return the same availability. */
+  _inventory(name, checkin) {
+    let h = 0;
+    const key = name + '|' + checkin;
+    for (let i = 0; i < key.length; i++) h = (h * 31 + key.charCodeAt(i)) % 100003;
+    const r = h % 7;
+    return r === 0 ? 0 : Math.min(4, r);
+  }
+
+  _nights() {
+    const { checkin, checkout } = this.state;
+    if (!checkin || !checkout) return 0;
+    return Math.round((new Date(checkout) - new Date(checkin)) / 86400000);
+  }
+
+  onBook = () => {
+    const { checkin, promo, roomType } = this.state;
+    const n = this._nights();
+    if (!(n > 0)) {
+      this.setState({ searched: false, selected: null, held: false, searchError: 'Choose a check-out date after your check-in and we will price the stay directly — always at or below any booking site.' });
+      return;
+    }
+    if (n > 21) {
+      this.setState({ searched: false, selected: null, held: false, searchError: 'Stays beyond 21 nights are arranged personally — our reservations team will build the rate with you.' });
+      return;
+    }
+    const season = this._season(checkin);
+    const promoOff = /direct5/i.test(promo || '') ? 0.95 : 1;
+    const pax = this._pax();
+    const rooms = Object.keys(this._rates).map((name) => {
+      const nightly = this._rates[name] * season.mult * promoOff;
+      return {
+        name: name,
+        left: this._inventory(name, checkin),
+        fits: this._sleeps[name] >= pax,
+        nightly: nightly,
+        direct: nightly * n,
+        ota: (nightly / 0.82) * n + 28 * pax * n
+      };
+    });
+    const first = rooms.filter((r) => r.left > 0 && r.fits);
+    const keep = first.some((r) => r.name === roomType) ? roomType : (first[0] ? first[0].name : null);
+    this.setState({ searched: true, searchError: '', rooms: rooms, nights: n, selected: keep, held: false });
+    setTimeout(() => this._syncRows(), 40);
+  };
+
+  onSelectRoom = (ev) => {
+    const b = ev.target.closest && ev.target.closest('[data-room]');
+    if (!b) return;
+    const r = (this.state.rooms || [])[+b.getAttribute('data-room')];
+    if (!r || r.left === 0 || !r.fits) return;
+    this.setState({ selected: r.name, roomType: r.name, held: false });
+  };
+
+  onHold = () => this.setState({ held: true });
+
+  _syncRows() {
+    const c = this.els.resultRows;
+    if (!c) return;
+    [].forEach.call(c.querySelectorAll('[data-room]'), (row) => {
+      if (row.tagName === 'BUTTON') return;
+      const r = (this.state.rooms || [])[+row.getAttribute('data-room')];
+      if (!r) return;
+      const off = r.left === 0 || !r.fits;
+      const on = !off && r.name === this.state.selected;
+      row.style.borderColor = on ? '#B08E55' : '#E4D9C4';
+      row.style.background = on ? '#F1E6CF' : (off ? '#F3EFE6' : '#F7F2E7');
+      row.style.opacity = off ? '.55' : '1';
+      row.style.cursor = off ? 'default' : 'pointer';
+      const btn = row.querySelector('button');
+      if (btn) {
+        btn.style.background = off ? 'transparent' : (on ? '#8f7040' : '#B08E55');
+        btn.style.color = off ? '#8f8272' : '#231a10';
+        btn.style.border = off ? '1px solid #D9CDB8' : 'none';
+        btn.style.cursor = off ? 'default' : 'pointer';
+      }
+    });
+  }
+
+  _setNav(solid) {
+    const nav = this.els.nav;
+    if (nav) {
+      if (solid) {
+        Object.assign(nav.style, {
+          background: 'rgba(247,243,236,.92)', color: '#2B2721',
+          boxShadow: '0 10px 40px rgba(70,46,22,.09)', borderBottomColor: '#E7DBC4',
+          backdropFilter: 'saturate(140%) blur(12px)', webkitBackdropFilter: 'saturate(140%) blur(12px)'
+        });
+      } else {
+        Object.assign(nav.style, {
+          background: 'linear-gradient(180deg,rgba(26,18,12,.5),rgba(26,18,12,0))', color: '#F7F1E7',
+          boxShadow: 'none', borderBottomColor: 'transparent',
+          backdropFilter: 'none', webkitBackdropFilter: 'none'
+        });
+      }
+    }
+    const sb = this.els.stickyBook;
+    if (sb) {
+      const show = solid && (this.props.stickyBar !== false);
+      Object.assign(sb.style, {
+        transform: show ? 'translateY(0)' : 'translateY(130%)',
+        opacity: show ? '1' : '0',
+        pointerEvents: show ? 'auto' : 'none'
+      });
+    }
+  }
+
+  _bindChapters() {
+    const c = this.els.chapters;
+    if (!c) { this._chT = setTimeout(() => this._bindChapters(), 400); return; }
+    if (c._bound) return;
+    c._bound = true;
+    const acts = [0, 0.26, 0.55, 0.80];
+    [].forEach.call(c.children, (d, i) => {
+      d.addEventListener('click', () => {
+        const hero = this.els.heroRoot;
+        if (!hero) return;
+        const vh = window.innerHeight || 800;
+        const total = Math.max(1, hero.offsetHeight - vh);
+        window.scrollTo({ top: hero.offsetTop + (acts[i] + 0.015) * total, behavior: 'smooth' });
+      });
+    });
+  }
+
+  _update() {
+    this._checkReveals();
+    const hero = this.els.heroRoot;
+    const vh = window.innerHeight || 800;
+    if (hero) {
+      const base = this.props.heroLength || (((window.innerWidth || 1200) < 700) ? 330 : 400);
+      const h = base + 'vh';
+      if (hero.style.height !== h) hero.style.height = h;
+    }
+    const solid = hero ? (window.scrollY > hero.offsetHeight - vh * 0.55) : (window.scrollY > vh * 0.8);
+    this._setNav(solid);
+    if (hero) {
+      const total = Math.max(1, hero.offsetHeight - vh);
+      const p = Math.max(0, Math.min(1, -hero.getBoundingClientRect().top / total));
+      this._applyHero(p);
+    }
+  }
+
+  _applyHero(p) {
+    const rm = !!this.props.reduceMotion;
+    const set = (k, s) => { const el = this.els[k]; if (el) Object.assign(el.style, s); };
+    const e = this._e.bind(this), sg = this._sg.bind(this), w = this._win.bind(this);
+    const tf = (v) => rm ? 'none' : v;
+
+    const push = e(sg(p, 0, 0.34));
+    set('exterior', { opacity: String(1 - sg(p, 0.24, 0.32)), transform: tf('scale(' + (1.04 + push * 0.13) + ')') });
+    set('snow', { opacity: String(1 - sg(p, 0.22, 0.30)) });
+
+    set('lobby', { opacity: String(w(p, 0.24, 0.33, 0.54, 0.62)), transform: tf('scale(' + (1.14 - e(sg(p, 0.24, 0.60)) * 0.14) + ')') });
+    set('suite', { opacity: String(w(p, 0.54, 0.62, 0.79, 0.86)), transform: tf('scale(' + (1.12 - e(sg(p, 0.54, 0.86)) * 0.12) + ')') });
+    set('suiteOverlay', { opacity: String(w(p, 0.60, 0.67, 0.77, 0.82)), transform: tf('translateY(' + ((1 - e(sg(p, 0.60, 0.70))) * 26) + 'px)') });
+    set('viewStage', { opacity: String(sg(p, 0.79, 0.88)), transform: tf('scale(' + (1.08 - e(sg(p, 0.79, 1)) * 0.08) + ')') });
+
+    const txt = (k, a, b, c, d) => set(k, { opacity: String(w(p, a, b, c, d)), transform: tf('translateY(' + ((1 - e(sg(p, a, b))) * 26 - sg(p, c, d) * 16) + 'px)') });
+    txt('tArrival', -0.10, -0.02, 0.17, 0.24);
+    txt('tLobby', 0.29, 0.35, 0.50, 0.57);
+    txt('tSuite', 0.585, 0.65, 0.745, 0.80);
+    txt('tView', 0.855, 0.92, 1.4, 1.5);
+
+    set('cue', { opacity: String(1 - sg(p, 0, 0.06)) });
+    set('progFill', { transform: 'scaleX(' + p + ')' });
+
+    const acts = [[0, 'Arrival'], [0.26, 'The Lobby'], [0.55, 'Your Suite'], [0.80, 'The View']];
+    let nm = 'Arrival', idx = 1;
+    acts.forEach((x, i) => { if (p >= x[0]) { nm = x[1]; idx = i + 1; } });
+    if (this.els.stageName) {
+      this.els.stageName.textContent = String(idx).padStart(2, '0') + ' — ' + nm;
+      this.els.stageName.style.display = ((window.innerWidth || 1200) < 480) ? 'none' : 'block';
+    }
+    const ch = this.els.chapters;
+    if (ch) {
+      const dark = true;
+      ch.style.display = ((window.innerWidth || 1200) < 760) ? 'none' : 'flex';
+      [].forEach.call(ch.children, (d, i) => {
+        const on = i === idx - 1;
+        d.style.background = on ? (dark ? '#E7C98F' : '#B08E55') : (dark ? 'rgba(247,241,231,.38)' : 'rgba(120,92,50,.3)');
+        d.style.height = on ? '38px' : '16px';
+      });
+    }
+  }
+
+  renderVals() {
+    const s = this.state;
+    const n = s.nights || 0;
+    const season = this._season(s.checkin);
+    const pax = this._pax();
+    const results = (s.rooms || []).map((r) => {
+      const off = r.left === 0 || !r.fits;
+      return {
+        name: r.name,
+        meta: this._roomMeta[r.name] || '',
+        left: !r.fits ? ('Sleeps ' + this._sleeps[r.name] + ' — too small for ' + pax + ' guests')
+          : r.left === 0 ? 'Not available on these dates'
+          : r.left === 1 ? 'Last room at this rate' : (r.left + ' rooms left'),
+        total: off ? '—' : this._euro(r.direct),
+        nightly: off ? '' : this._euro(r.nightly) + ' / night',
+        ota: off ? '' : this._euro(r.ota),
+        save: off ? '' : ('Save ' + this._euro(r.ota - r.direct) + ' vs booking sites'),
+        action: !r.fits ? 'Too small' : r.left === 0 ? 'Sold out' : (r.name === s.selected ? 'Selected' : 'Select')
+      };
+    });
+    const avail = (s.rooms || []).filter((r) => r.left > 0 && r.fits).length;
+    const head = n ? (avail + ' of ' + (s.rooms || []).length + ' room types available · ' + n + ' night' + (n > 1 ? 's' : '')) : '';
+    const sub = n ? (season.name + ' rate · ' + (s.guests || '').toLowerCase() + (/direct5/i.test(s.promo || '') ? ' · promo DIRECT5 applied' : '')) : '';
+    const sel = (s.rooms || []).filter((r) => r.name === s.selected && r.left > 0 && r.fits)[0] || null;
+    return {
+      registerRef: this.registerRef,
+      isDesktopNav: s.vw >= 980,
+      isMobileNav: s.vw < 980,
+      menuOpen: s.menuOpen,
+      toggleMenu: this.toggleMenu,
+      closeMenu: this.closeMenu,
+      onGalleryClick: this.onGalleryClick,
+      checkin: s.checkin, checkout: s.checkout, guests: s.guests, roomType: s.roomType, promo: s.promo,
+      onCheckin: (e) => this.setState({ checkin: e.target.value }),
+      onCheckout: (e) => this.setState({ checkout: e.target.value }),
+      onGuests: (e) => this.setState({ guests: e.target.value }),
+      onRoomType: (e) => this.setState({ roomType: e.target.value }),
+      onPromo: (e) => this.setState({ promo: e.target.value }),
+      onBook: this.onBook,
+      onSelectRoom: this.onSelectRoom,
+      onHold: this.onHold,
+      searched: s.searched,
+      searchError: s.searchError,
+      results: results,
+      resultsHead: head,
+      resultsSub: sub,
+      hasSelection: !!sel,
+      notHeld: !!sel && !s.held,
+      held: !!sel && s.held,
+      selName: sel ? sel.name : '',
+      selMeta: sel ? this._roomMeta[sel.name] : '',
+      selTotal: sel ? this._euro(sel.direct) : '',
+      selOta: sel ? this._euro(sel.ota) : '',
+      selSave: sel ? this._euro(sel.ota - sel.direct) : '',
+      selTerms: sel ? (season.name + ' · breakfast, thermal spa and taxes included · free cancellation to 48h') : '',
+      heldMsg: sel ? ('Held for 30 minutes at ' + this._euro(sel.direct) + ', guaranteed at or below any booking site. Finish now and the rate is locked.') : ''
+    };
+  }
+}
+</script>
+</body>
+</html>

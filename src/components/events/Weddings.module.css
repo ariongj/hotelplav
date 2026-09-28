@@ -1,0 +1,74 @@
+.section {
+  padding: clamp(70px, 9vw, 130px) var(--gutter);
+  background: var(--paper);
+  /* Contains the sideways reveal offsets so they never widen the page. */
+  overflow-x: clip;
+}
+
+.grid {
+  max-width: var(--max);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr));
+  gap: clamp(36px, 5vw, 84px);
+  align-items: center;
+}
+
+.eyebrow {
+  margin-bottom: 22px;
+}
+
+.title {
+  margin: 0 0 22px;
+  font: 400 clamp(30px, 4.2vw, 58px) / 1.06 var(--font-display);
+  color: var(--ink);
+}
+
+.lead {
+  max-width: 52ch;
+  margin: 0 0 30px;
+  font: 300 clamp(15px, 1.2vw, 18px) / 1.8 var(--font-text);
+  color: var(--text-soft);
+}
+
+.facts {
+  max-width: 460px;
+  margin: 0;
+  border-top: 1px solid var(--line);
+}
+
+.fact {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 20px;
+  padding: 15px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.factLabel {
+  font: 500 11px/1 var(--font-text);
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.factValue {
+  margin: 0;
+  font: 400 18px var(--font-display);
+  color: var(--ink);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 32px;
+}
+
+.media {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  border-radius: 4px;
+  overflow: hidden;
+}

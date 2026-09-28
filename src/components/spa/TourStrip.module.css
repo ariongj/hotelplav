@@ -1,0 +1,72 @@
+.strip {
+  padding: clamp(56px, 7vw, 100px) var(--gutter);
+  background: var(--sand);
+}
+
+.inner {
+  max-width: 1080px;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 28px 40px;
+}
+
+.intro {
+  max-width: 460px;
+}
+
+.eyebrow {
+  margin-bottom: 18px;
+  font: 500 12px/1 var(--font-text);
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--gold-dark);
+}
+
+.title {
+  margin: 0 0 12px;
+  font: 400 clamp(26px, 3.6vw, 44px) / 1.1 var(--font-display);
+  color: var(--ink);
+}
+
+.text {
+  margin: 0;
+  font: 300 15px/1.75 var(--font-text);
+  color: var(--text-soft);
+}
+
+.links {
+  display: flex;
+  flex: 1 1 320px;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 440px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 20px;
+  background: rgba(251, 248, 241, 0.75);
+  border: 1px solid var(--line-4);
+  border-radius: 2px;
+  color: var(--ink);
+}
+
+.linkName {
+  font: 400 18px var(--font-display);
+}
+
+.linkCta {
+  font: 600 10px/1 var(--font-text);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold-dark);
+}

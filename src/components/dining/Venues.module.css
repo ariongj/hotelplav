@@ -1,0 +1,109 @@
+.venues {
+  padding: clamp(50px, 7vw, 110px) var(--gutter) clamp(60px, 8vw, 120px);
+  background: var(--paper);
+  /* The left/right reveals start 46px off-axis — never let them widen the page. */
+  overflow-x: clip;
+}
+
+.inner {
+  max-width: var(--max);
+  margin: 0 auto;
+}
+
+.head {
+  max-width: 720px;
+  margin: 0 auto clamp(52px, 7vw, 90px);
+  text-align: center;
+}
+
+.eyebrow {
+  margin-bottom: 20px;
+}
+
+.title {
+  margin: 0;
+  font: 400 clamp(32px, 4.6vw, 64px) / 1.04 var(--font-display);
+  color: var(--ink);
+}
+
+/* ---------- venue row ---------- */
+
+.venue {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr));
+  gap: clamp(36px, 5vw, 84px);
+  align-items: center;
+}
+
+.venue:not(:last-child) {
+  margin-bottom: clamp(56px, 8vw, 110px);
+}
+
+.kicker {
+  margin-bottom: 20px;
+  font: 500 11px/1 var(--font-text);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.name {
+  margin: 0 0 22px;
+  font: 400 clamp(30px, 4vw, 54px) / 1.04 var(--font-display);
+  color: var(--ink);
+}
+
+.text {
+  margin: 0 0 30px;
+  max-width: 48ch;
+  font: 300 clamp(15px, 1.2vw, 17px) / 1.8 var(--font-text);
+  color: var(--text-soft);
+}
+
+.facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+  margin: 0 0 34px;
+}
+
+.factLabel {
+  margin-bottom: 8px;
+  font: 500 10px/1 var(--font-text);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted-2);
+}
+
+.factValue {
+  margin: 0;
+  font: 400 15px var(--font-text);
+  color: var(--text);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 20px;
+}
+
+.reserve {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 28px;
+  background: var(--ink);
+  color: var(--paper);
+  font: 600 11px/1 var(--font-text);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  border-radius: 2px;
+}
+
+.media {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  border-radius: 4px;
+  overflow: hidden;
+}

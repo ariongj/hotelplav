@@ -1,0 +1,75 @@
+.section {
+  padding: clamp(56px, 7vw, 110px) var(--gutter);
+  background: var(--light);
+}
+
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 44px;
+}
+
+.title {
+  margin: 0;
+  font: 400 clamp(28px, 3.8vw, 52px) / 1.06 var(--font-display);
+  color: var(--ink);
+}
+
+.hint {
+  font: 400 14px var(--font-text);
+  color: var(--muted);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(250px, 100%), 1fr));
+  gap: 22px;
+}
+
+.card {
+  overflow: hidden;
+  background: var(--paper);
+  border-radius: 4px;
+}
+
+.thumb {
+  height: 170px;
+  overflow: hidden;
+}
+
+.body {
+  padding: 22px 22px 26px;
+}
+
+.num {
+  margin-bottom: 10px;
+  font: 500 10px/1 var(--font-text);
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.name {
+  margin: 0 0 16px;
+  font: 400 23px var(--font-display);
+  color: var(--ink);
+}
+
+.enter {
+  padding: 0 0 5px;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--gold);
+  font: 500 11px/1 var(--font-text);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink);
+  transition: color 0.3s;
+}
+
+.enter:hover {
+  color: var(--bronze);
+}

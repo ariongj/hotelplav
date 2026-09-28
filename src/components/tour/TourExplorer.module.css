@@ -1,0 +1,100 @@
+/* ---------- viewer ---------- */
+
+.viewer {
+  position: relative;
+  height: clamp(480px, 80vh, 860px);
+  background: #0d0904;
+}
+
+/* Two classes, to out-rank the viewer's own `position: relative`. */
+.viewer .pano {
+  position: absolute;
+  inset: 0;
+}
+
+/* ---------- hotspots ---------- */
+
+.hotspots {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* Placed on every frame through --hx / --hy (position), --ho (opacity) and
+   --hp (pointer-events); hidden until the first frame places it. */
+.hotspot {
+  position: absolute;
+  left: var(--hx, 50%);
+  top: var(--hy, 50%);
+  opacity: var(--ho, 0);
+  pointer-events: var(--hp, none);
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  min-height: 48px;
+  padding: 9px 18px 9px 9px;
+  background: rgba(13, 9, 4, 0.5);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(247, 241, 231, 0.3);
+  border-radius: 40px;
+  color: var(--cream-2);
+  font: 600 11px/1 var(--font-text);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+/* Hover only where it can end: on touch screens a tapped hotspot would stay
+   gold, and the buttons are reused by the next scene. */
+@media (hover: hover) {
+  .hotspot:hover {
+    background: rgba(176, 142, 85, 0.85);
+    color: var(--on-gold);
+  }
+}
+
+.hotspotIcon {
+  flex: 0 0 auto;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--gold);
+  color: var(--on-gold);
+  font: 600 13px/1 var(--font-text);
+}
+
+/* ---------- info caption ---------- */
+
+/* Always rendered (it is the live region); the caption appears inside it.
+   max-content keeps the width at min(90%, 460px) rather than the half-width
+   a left: 50% box would otherwise shrink to. */
+.captionSlot {
+  position: absolute;
+  left: 50%;
+  top: clamp(14px, 3vw, 26px);
+  z-index: 7;
+  width: max-content;
+  max-width: min(90%, 460px);
+  transform: translateX(-50%);
+}
+
+.caption {
+  padding: 16px 20px;
+  background: rgba(13, 9, 4, 0.72);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(247, 241, 231, 0.16);
+  border-radius: 3px;
+  color: rgba(247, 241, 231, 0.92);
+  font: 300 14px/1.6 var(--font-text);
+  text-align: center;
+  text-wrap: pretty;
+}

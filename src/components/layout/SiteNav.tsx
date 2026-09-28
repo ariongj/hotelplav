@@ -1,0 +1,122 @@
+"use client";
+
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
+
+import { exploreNav, mainNav, site, type Cta } from "@/config/site";
+import { cx } from "@/lib/cx";
+
+import styles from "./SiteNav.module.css";
+import { useNavSolid } from "./useNavSolid";
+
+type SiteNavProps = {
+  /** Gold button in the bar, e.g. { label: "Book", href: "#book" }. */
+  cta: Cta;
+  /** Full-width button at the bottom of the mobile menu. */
+  menuCta: Cta;
+};
+
+export function SiteNav({ cta, menuCta }: SiteNavProps) {
+  const pathname = usePathname();
+  const solid = useNavSolid();
+  const [menuOpen, setMenuOpen] = useState(false);
+  const isHome = pathname === "/";
+
+  return (
+    <>
+      <header className={cx(styles.nav, solid && styles.solid)}>
+        {isHome ? (
+          <a href="#top" className={styles.logo}>
+            {site.wordmark}
+          </a>
+        ) : (
+          <Link href="/" className={styles.logo}>
+            {site.wordmark}
+          </Link>
+        )}
+
+        <nav className={styles.links} aria-label="Main">
+          <div className={styles.desktop}>
+            {mainNav.map((item) => (
+              <Link
+                key={item.key}
+                href={item.href}
+                className={cx(styles.link, pathname.startsWith(item.href) && styles.active)}
+                aria-current={pathname.startsWith(item.href) ? "page" : undefined}
+              >
+                {item.label}
+              </Link>
+            ))}
+            <Link href={cta.href} className={styles.cta}>
+              {cta.label}
+            </Link>
+          </div>
+
+          <div className={styles.mobile}>
+            <Link href={cta.href} className={styles.ctaMobile}>
+              {cta.label}
+            </Link>
+            <button
+              type="button"
+              className={styles.burger}
+              aria-label="Menu"
+              aria-expanded={menuOpen}
+              aria-controls="site-menu"
+              onClick={() => setMenuOpen((open) => !open)}
+            >
+              <span />
+              <span />
+              <span />
+            </button>
+          </div>
+        </nav>
+      </header>
+
+      {menuOpen && <MobileMenu cta={menuCta} onClose={() => setMenuOpen(false)} />}
+    </>
+  );
+}
+
+function MobileMenu({ cta, onClose }: { cta: Cta; onClose: () => void }) {
+  const closeRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    const previous = document.activeElement as HTMLElement | null;
+    closeRef.current?.focus();
+    const { overflow } = document.body.style;
+    document.body.style.overflow = "hidden";
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => {
+      document.body.style.overflow = overflow;
+      window.removeEventListener("keydown", onKey);
+      previous?.focus();
+    };
+  }, [onClose]);
+
+  return (
+    <div id="site-menu" className={styles.menu} role="dialog" aria-modal="true" aria-label="Site menu">
+      <div className={styles.menuHead}>
+        <Link href="/" className={styles.menuLogo} onClick={onClose}>
+          {site.wordmark}
+        </Link>
+        <button ref={closeRef} type="button" className={styles.close} aria-label="Close" onClick={onClose}>
+          &times;
+        </button>
+      </div>
+      <div className={styles.menuLinks}>
+        {exploreNav.map((item) => (
+          <Link key={item.href} href={item.href} className={styles.menuLink} onClick={onClose}>
+            {item.label}
+          </Link>
+        ))}
+      </div>
+      <Link href={cta.href} className={styles.menuCta} onClick={onClose}>
+        {cta.label}
+      </Link>
+    </div>
+  );
+}

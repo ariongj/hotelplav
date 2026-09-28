@@ -1,0 +1,82 @@
+.baths {
+  padding: clamp(64px, 8vw, 130px) var(--gutter);
+  background: var(--paper);
+  /* The left/right reveals start 46px off-axis — never let them widen the page. */
+  overflow-x: clip;
+}
+
+.grid {
+  max-width: var(--max);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr));
+  gap: clamp(40px, 5vw, 90px);
+  align-items: center;
+}
+
+.media {
+  position: relative;
+  aspect-ratio: 5 / 6;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.eyebrow {
+  margin-bottom: 24px;
+}
+
+.title {
+  margin: 0 0 26px;
+  font: 400 clamp(30px, 4.2vw, 58px) / 1.05 var(--font-display);
+  color: var(--ink);
+}
+
+.text {
+  margin: 0 0 34px;
+  max-width: 48ch;
+  font: 300 clamp(15px, 1.2vw, 18px) / 1.8 var(--font-text);
+  color: var(--text-soft);
+}
+
+.features {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px 24px;
+  margin: 0;
+  padding: 26px 0 0;
+  border-top: 1px solid var(--line);
+  list-style: none;
+}
+
+.feature {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  font: 400 15px var(--font-text);
+  color: var(--text);
+}
+
+.diamond {
+  color: var(--gold);
+  font-size: 8px;
+}
+
+.stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(28px, 5vw, 60px);
+  margin-top: 34px;
+}
+
+.statValue {
+  font: 400 40px/1 var(--font-display);
+  color: var(--bronze);
+}
+
+.statLabel {
+  margin-top: 8px;
+  font: 500 11px/1 var(--font-text);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--muted);
+}

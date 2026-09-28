@@ -1,0 +1,211 @@
+.footer {
+  background: var(--dark);
+  color: var(--footer-text);
+  padding: clamp(64px, 7vw, 110px) var(--gutter) 40px;
+}
+
+.divider {
+  padding-top: clamp(56px, 7vw, 96px);
+  border-top: 1px solid rgba(233, 223, 203, 0.1);
+}
+
+.grid {
+  max-width: var(--max);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 48px 40px;
+}
+
+.brand {
+  grid-column: 1 / -1;
+  max-width: 520px;
+}
+
+.wordmark {
+  display: inline-block;
+  margin-bottom: 20px;
+  font: 600 24px/1 var(--font-display);
+  letter-spacing: 0.36em;
+  padding-left: 0.36em;
+  color: var(--footer-text);
+}
+
+a.wordmark:hover {
+  color: var(--footer-text);
+}
+
+.tagline {
+  margin: 0;
+  font: 300 15px/1.75 var(--font-text);
+  color: rgba(233, 223, 203, 0.7);
+}
+
+.taglineSpaced {
+  margin-bottom: 24px;
+}
+
+.social {
+  display: flex;
+  gap: 14px;
+}
+
+.socialLink {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(233, 223, 203, 0.28);
+  border-radius: 50%;
+  color: var(--gold-light);
+  font: 400 13px var(--font-text);
+  transition:
+    border-color 0.3s,
+    color 0.3s;
+}
+
+.socialLink:hover {
+  border-color: var(--gold-light);
+  color: var(--cream);
+}
+
+.heading {
+  margin-bottom: 20px;
+  font: 500 11px/1 var(--font-text);
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--gold-light);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  font: 300 15px var(--font-text);
+}
+
+.contact {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  font: 300 15px/1.5 var(--font-text);
+  font-style: normal;
+  color: rgba(233, 223, 203, 0.8);
+}
+
+.listLink {
+  color: rgba(233, 223, 203, 0.8);
+}
+
+.listLink:hover {
+  color: var(--cream);
+}
+
+.note {
+  margin: 0 0 16px;
+  font: 300 14px/1.6 var(--font-text);
+  color: rgba(233, 223, 203, 0.7);
+}
+
+.asideLink {
+  font: 600 11px/1 var(--font-text);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold-light);
+  border-bottom: 1px solid var(--gold);
+  padding-bottom: 6px;
+}
+
+.asideLink:hover {
+  color: var(--cream);
+}
+
+/* ---------- newsletter ---------- */
+
+.newsletter {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  border: 1px solid rgba(233, 223, 203, 0.28);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.newsletterInput {
+  flex: 1;
+  min-width: 0;
+  padding: 13px 14px;
+  background: transparent;
+  border: none;
+  color: var(--footer-text);
+  font: 300 14px var(--font-text);
+}
+
+.newsletterInput::placeholder {
+  color: rgba(233, 223, 203, 0.5);
+}
+
+.newsletterButton {
+  padding: 13px 18px;
+  background: var(--gold);
+  color: var(--on-gold);
+  border: none;
+  font: 600 11px var(--font-text);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  transition: background-color 0.3s;
+}
+
+.newsletterButton:hover {
+  background: var(--gold-hover);
+}
+
+.newsletterButton:disabled {
+  opacity: 0.7;
+  cursor: wait;
+}
+
+.newsletterError {
+  flex: 1 1 100%;
+  margin: 0;
+  padding: 10px 14px;
+  font: 300 13px/1.5 var(--font-text);
+  color: var(--highlight);
+  border-top: 1px solid rgba(233, 223, 203, 0.18);
+}
+
+.newsletterDone {
+  margin: 0;
+  font: 300 14px/1.6 var(--font-text);
+  color: var(--gold-light);
+}
+
+/* ---------- bottom row ---------- */
+
+.bottom {
+  max-width: var(--max);
+  margin: 60px auto 0;
+  padding-top: 28px;
+  border-top: 1px solid rgba(233, 223, 203, 0.16);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 16px;
+  font: 400 12px/1.6 var(--font-text);
+  color: rgba(233, 223, 203, 0.55);
+}
+
+.legal {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 22px;
+}
+
+.legal a {
+  color: rgba(233, 223, 203, 0.55);
+}
+
+.legal a:hover {
+  color: var(--footer-text);
+}

@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<template id="__bundler_thumbnail"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#241a12"/><path d="M25 35h50v34H25z" fill="none" stroke="#B08E55" stroke-width="4"/><path d="M25 37l25 18 25-18" fill="none" stroke="#B08E55" stroke-width="4"/></svg></template>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;0,6..96,600;0,6..96,700;1,6..96,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  html{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;scroll-behavior:smooth}
+  body{margin:0;background:#F3ECE0;color:#2B2721;font-family:'Jost',system-ui,sans-serif}
+  a{color:#B08E55;text-decoration:none;transition:color .3s}
+  a:hover{color:#8f7040}
+  ::selection{background:#E7DBC8;color:#2B2721}
+  input,select,button,textarea{font-family:'Jost',sans-serif}
+  input:focus,select:focus,textarea:focus{outline:none;border-color:#B08E55}
+</style>
+</helmet>
+
+<div id="top" style="position:relative;background:#F3ECE0">
+
+<header data-anim="nav" ref="{{ registerRef }}" style="position:fixed;top:0;left:0;right:0;z-index:60;display:flex;align-items:center;justify-content:space-between;padding:20px clamp(20px,5vw,72px);color:#F7F1E7;background:linear-gradient(180deg,rgba(26,18,12,.5),rgba(26,18,12,0));border-bottom:1px solid transparent;transition:background .55s ease,color .55s ease,box-shadow .55s ease,border-color .55s ease">
+  <a href="Aurelia.dc.html" style="font:600 21px/1 'Bodoni Moda',serif;letter-spacing:.36em;color:inherit;padding-left:.36em">BREZOVICA</a>
+  <nav style="display:flex;align-items:center;gap:clamp(16px,2.4vw,38px)">
+    <sc-if value="{{ isDesktopNav }}" hint-placeholder-val="{{ true }}">
+      <a href="Rooms.dc.html" style="font:500 12px/1 'Jost';letter-spacing:.18em;text-transform:uppercase;color:inherit">Rooms</a>
+      <a href="Dining.dc.html" style="font:500 12px/1 'Jost';letter-spacing:.18em;text-transform:uppercase;color:inherit">Dining</a>
+      <a href="Spa.dc.html" style="font:500 12px/1 'Jost';letter-spacing:.18em;text-transform:uppercase;color:inherit">Spa</a>
+      <a href="Experiences.dc.html" style="font:500 12px/1 'Jost';letter-spacing:.18em;text-transform:uppercase;color:inherit">Experiences</a>
+      <a href="Tour.dc.html" style="font:500 12px/1 'Jost';letter-spacing:.18em;text-transform:uppercase;color:inherit">360&deg; Tour</a>
+      <a href="Events.dc.html" style="font:500 12px/1 'Jost';letter-spacing:.18em;text-transform:uppercase;color:inherit">Events</a>
+      <a href="Contact.dc.html" style="font:500 12px/1 'Jost';letter-spacing:.18em;text-transform:uppercase;color:inherit;border-bottom:1px solid currentColor;padding-bottom:3px">Contact</a>
+      <a href="Aurelia.dc.html#book" style="display:inline-flex;align-items:center;gap:9px;padding:12px 24px;background:#B08E55;color:#231a10;font:600 11px/1 'Jost';letter-spacing:.2em;text-transform:uppercase;border-radius:2px">Book</a>
+    </sc-if>
+    <sc-if value="{{ isMobileNav }}" hint-placeholder-val="{{ false }}">
+      <a href="Aurelia.dc.html#book" style="display:inline-flex;align-items:center;padding:11px 20px;background:#B08E55;color:#231a10;font:600 11px/1 'Jost';letter-spacing:.16em;text-transform:uppercase;border-radius:2px">Book</a>
+      <button onClick="{{ toggleMenu }}" aria-label="Menu" style="display:flex;flex-direction:column;gap:5px;width:34px;height:34px;align-items:center;justify-content:center;background:transparent;border:none;cursor:pointer;color:inherit">
+        <span style="display:block;width:22px;height:1.5px;background:currentColor"></span>
+        <span style="display:block;width:22px;height:1.5px;background:currentColor"></span>
+        <span style="display:block;width:22px;height:1.5px;background:currentColor"></span>
+      </button>
+    </sc-if>
+  </nav>
+</header>
+
+<sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;inset:0;z-index:80;background:#F3ECE0;display:flex;flex-direction:column;padding:26px clamp(24px,7vw,60px)">
+    <div style="display:flex;align-items:center;justify-content:space-between">
+      <a href="Aurelia.dc.html" style="font:600 21px/1 'Bodoni Moda',serif;letter-spacing:.36em;color:#2B2721;padding-left:.36em">BREZOVICA</a>
+      <button onClick="{{ closeMenu }}" aria-label="Close" style="width:40px;height:40px;background:transparent;border:1px solid #D3C6AE;border-radius:50%;color:#2B2721;font-size:20px;cursor:pointer">&times;</button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:6px;margin-top:44px;overflow-y:auto">
+      <a href="Rooms.dc.html" style="font:400 30px/1.4 'Bodoni Moda',serif;color:#2B2721;border-bottom:1px solid #E4D9C4;padding:12px 0">Rooms &amp; Suites</a>
+      <a href="Dining.dc.html" style="font:400 30px/1.4 'Bodoni Moda',serif;color:#2B2721;border-bottom:1px solid #E4D9C4;padding:12px 0">Dining</a>
+      <a href="Spa.dc.html" style="font:400 30px/1.4 'Bodoni Moda',serif;color:#2B2721;border-bottom:1px solid #E4D9C4;padding:12px 0">Spa &amp; Wellness</a>
+      <a href="Experiences.dc.html" style="font:400 30px/1.4 'Bodoni Moda',serif;color:#2B2721;border-bottom:1px solid #E4D9C4;padding:12px 0">Experiences</a>
+      <a href="Tour.dc.html" style="font:400 30px/1.4 'Bodoni Moda',serif;color:#2B2721;border-bottom:1px solid #E4D9C4;padding:12px 0">360&deg; Virtual Tour</a>
+      <a href="Events.dc.html" style="font:400 30px/1.4 'Bodoni Moda',serif;color:#2B2721;border-bottom:1px solid #E4D9C4;padding:12px 0">Events &amp; Weddings</a>
+      <a href="Contact.dc.html" onClick="{{ closeMenu }}" style="font:400 30px/1.4 'Bodoni Moda',serif;color:#7a5c2f;border-bottom:1px solid #E4D9C4;padding:12px 0">Contact</a>
+    </div>
+    <a href="Aurelia.dc.html#book" style="margin-top:auto;display:flex;align-items:center;justify-content:center;padding:20px;background:#B08E55;color:#231a10;font:600 13px/1 'Jost';letter-spacing:.22em;text-transform:uppercase;border-radius:2px">Reserve your stay</a>
+  </div>
+</sc-if>
+
+<section data-anim="hero" ref="{{ registerRef }}" data-screen-label="Contact — intro" style="background:#17110B;color:#F5EEE1;padding:clamp(140px,18vh,190px) clamp(24px,6vw,120px) clamp(48px,6vw,80px)">
+  <div style="max-width:1280px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:26px">
+    <div style="max-width:680px">
+      <div data-reveal="up" style="font:500 12px/1 'Jost';letter-spacing:.42em;text-transform:uppercase;color:#E7C98F;margin-bottom:24px">Contact</div>
+      <h1 data-reveal="up" data-delay="80" style="margin:0;font:400 clamp(36px,5.6vw,76px)/1.05 'Bodoni Moda',serif;color:#F7F1E7">At your service,<br><em style="font-style:italic;color:#E7C98F">around the clock.</em></h1>
+    </div>
+    <p data-reveal="up" data-delay="140" style="margin:0;max-width:360px;font:300 clamp(15px,1.15vw,17px)/1.75 'Jost';color:rgba(245,238,225,.72)">Reservations, occasions, or a question about the mountain &mdash; a person answers, not a machine.</p>
+  </div>
+</section>
+
+<section data-screen-label="Contact — form & details" style="background:#F3ECE0;padding:clamp(60px,8vw,110px) clamp(24px,6vw,120px)">
+  <div style="max-width:1280px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:clamp(40px,5vw,90px);align-items:start">
+    <div data-reveal="up">
+      <div style="border-top:1px solid #E4D9C4">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;gap:20px;padding:20px 0;border-bottom:1px solid #E4D9C4">
+          <span style="font:500 11px/1 'Jost';letter-spacing:.24em;text-transform:uppercase;color:#8f8272">Reservations</span>
+          <a href="tel:+38349301030" style="font:400 19px 'Bodoni Moda',serif;color:#2B2721">+383 49 30 10 30</a>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline;gap:20px;padding:20px 0;border-bottom:1px solid #E4D9C4">
+          <span style="font:500 11px/1 'Jost';letter-spacing:.24em;text-transform:uppercase;color:#8f8272">Email</span>
+          <a href="mailto:stay@brezovicahotel.com" style="font:400 19px 'Bodoni Moda',serif;color:#2B2721">stay@brezovicahotel.com</a>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline;gap:20px;padding:20px 0;border-bottom:1px solid #E4D9C4">
+          <span style="font:500 11px/1 'Jost';letter-spacing:.24em;text-transform:uppercase;color:#8f8272">Events &amp; weddings</span>
+          <a href="mailto:occasions@brezovicahotel.com" style="font:400 19px 'Bodoni Moda',serif;color:#2B2721">occasions@brezovicahotel.com</a>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline;gap:20px;padding:20px 0;border-bottom:1px solid #E4D9C4">
+          <span style="font:500 11px/1 'Jost';letter-spacing:.24em;text-transform:uppercase;color:#8f8272">Address</span>
+          <span style="font:400 17px/1.5 'Bodoni Moda',serif;color:#2B2721;text-align:right">Brezovica Ski Resort<br>&Scaron;trpce, Kosovo</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline;gap:20px;padding:20px 0;border-bottom:1px solid #E4D9C4">
+          <span style="font:500 11px/1 'Jost';letter-spacing:.24em;text-transform:uppercase;color:#8f8272">Front desk</span>
+          <span style="font:400 19px 'Bodoni Moda',serif;color:#2B2721">24 hours, daily</span>
+        </div>
+      </div>
+      <div style="margin-top:36px;background:#E7DBC8;border-radius:4px;padding:26px 26px 28px">
+        <div style="font:500 11px/1 'Jost';letter-spacing:.24em;text-transform:uppercase;color:#8f7040;margin-bottom:12px">Getting here</div>
+        <p style="margin:0;font:300 15px/1.75 'Jost';color:#5c5344">Pristina Airport is 90 minutes by car; Skopje 70 minutes. Chauffeured transfers, helicopter arrivals and valet parking with EV charging are arranged on request.</p>
+      </div>
+    </div>
+    <div data-reveal="up" data-delay="90" style="background:#FBF8F1;border:1px solid #E7DBC4;border-radius:4px;box-shadow:0 40px 90px rgba(70,46,22,.1);padding:clamp(26px,3.4vw,44px)">
+      <h2 style="margin:0 0 8px;font:400 clamp(26px,3vw,38px)/1.1 'Bodoni Moda',serif;color:#2B2721">Write to us</h2>
+      <p style="margin:0 0 26px;font:400 14px/1.6 'Jost';color:#8f8272">We reply within one working day.</p>
+      <div style="display:flex;flex-direction:column;gap:16px">
+        <div style="display:flex;flex-wrap:wrap;gap:16px">
+          <label style="flex:1 1 180px;display:flex;flex-direction:column;gap:8px">
+            <span style="font:500 11px/1 'Jost';letter-spacing:.22em;text-transform:uppercase;color:#8f8272">Name</span>
+            <input type="text" value="{{ fName }}" onChange="{{ onName }}" placeholder="Your name" style="padding:14px 15px;border:1px solid #D9CDB8;background:#FEFCF8;border-radius:2px;color:#2B2721;font:400 15px 'Jost';width:100%">
+          </label>
+          <label style="flex:1 1 180px;display:flex;flex-direction:column;gap:8px">
+            <span style="font:500 11px/1 'Jost';letter-spacing:.22em;text-transform:uppercase;color:#8f8272">Email</span>
+            <input type="email" value="{{ fEmail }}" onChange="{{ onEmail }}" placeholder="you@example.com" style="padding:14px 15px;border:1px solid #D9CDB8;background:#FEFCF8;border-radius:2px;color:#2B2721;font:400 15px 'Jost';width:100%">
+          </label>
+        </div>
+        <label style="display:flex;flex-direction:column;gap:8px">
+          <span style="font:500 11px/1 'Jost';letter-spacing:.22em;text-transform:uppercase;color:#8f8272">Topic</span>
+          <select value="{{ fTopic }}" onChange="{{ onTopic }}" style="padding:14px 15px;border:1px solid #D9CDB8;background:#FEFCF8;border-radius:2px;color:#2B2721;font:400 15px 'Jost';width:100%;cursor:pointer">
+            <option>Reservation enquiry</option><option>Events &amp; weddings</option><option>Spa &amp; wellness</option><option>Press &amp; partnerships</option><option>Something else</option>
+          </select>
+        </label>
+        <label style="display:flex;flex-direction:column;gap:8px">
+          <span style="font:500 11px/1 'Jost';letter-spacing:.22em;text-transform:uppercase;color:#8f8272">Message</span>
+          <textarea rows="5" value="{{ fMsg }}" onChange="{{ onMsg }}" placeholder="Dates, party size, the occasion &mdash; whatever helps us help you." style="padding:14px 15px;border:1px solid #D9CDB8;background:#FEFCF8;border-radius:2px;color:#2B2721;font:400 15px/1.6 'Jost';width:100%;resize:vertical"></textarea>
+        </label>
+        <button onClick="{{ onSend }}" style="align-self:flex-start;display:inline-flex;align-items:center;gap:10px;padding:16px 34px;background:#B08E55;color:#231a10;font:600 12px/1 'Jost';letter-spacing:.2em;text-transform:uppercase;border:none;border-radius:2px;cursor:pointer;transition:background .3s" style-hover="background:#987839">Send message</button>
+        <sc-if value="{{ sent }}" hint-placeholder-val="{{ false }}">
+          <div style="padding:16px 20px;background:#EFE6D3;border-left:2px solid #B08E55;color:#5c5344;font:400 15px/1.6 'Jost'">{{ sentMsg }}</div>
+        </sc-if>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section data-screen-label="Contact — location" style="background:#FBF8F1;padding:clamp(60px,8vw,110px) clamp(24px,6vw,120px)">
+  <div style="max-width:1280px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:clamp(40px,5vw,80px);align-items:center">
+    <div data-reveal="up">
+      <div style="font:500 12px/1 'Jost';letter-spacing:.4em;text-transform:uppercase;color:#B08E55;margin-bottom:24px">Location</div>
+      <h2 style="margin:0 0 26px;font:400 clamp(30px,4.2vw,56px)/1.05 'Bodoni Moda',serif;color:#2B2721">Closer than<br>you think</h2>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:26px 30px">
+        <div><div style="font:500 11px/1 'Jost';letter-spacing:.24em;text-transform:uppercase;color:#8f8272;margin-bottom:8px">By air</div><div style="font:400 16px/1.55 'Jost';color:#4c463d">Pristina 90 min<br>Skopje 70 min</div></div>
+        <div><div style="font:500 11px/1 'Jost';letter-spacing:.24em;text-transform:uppercase;color:#8f8272;margin-bottom:8px">By road</div><div style="font:400 16px/1.55 'Jost';color:#4c463d">E65 to &Scaron;trpce,<br>mountain road to resort</div></div>
+        <div><div style="font:500 11px/1 'Jost';letter-spacing:.24em;text-transform:uppercase;color:#8f8272;margin-bottom:8px">Transfers</div><div style="font:400 16px/1.55 'Jost';color:#4c463d">Chauffeur &amp; helicopter,<br>on request</div></div>
+        <div><div style="font:500 11px/1 'Jost';letter-spacing:.24em;text-transform:uppercase;color:#8f8272;margin-bottom:8px">Parking</div><div style="font:400 16px/1.55 'Jost';color:#4c463d">Valet &amp; EV charging,<br>complimentary</div></div>
+      </div>
+    </div>
+    <div data-reveal="up" data-delay="90" style="position:relative;aspect-ratio:4/3;border-radius:4px;overflow:hidden;background:#E7DBC8">
+      <div style="position:absolute;inset:0;background-image:linear-gradient(rgba(120,92,50,.10) 1px,transparent 1px),linear-gradient(90deg,rgba(120,92,50,.10) 1px,transparent 1px);background-size:38px 38px"></div>
+      <div style="position:absolute;left:12%;top:20%;right:30%;height:3px;background:#cbb99a;transform:rotate(8deg)"></div>
+      <div style="position:absolute;left:26%;top:30%;bottom:14%;width:3px;background:#cbb99a;transform:rotate(-6deg)"></div>
+      <div style="position:absolute;left:56%;top:44%;width:22px;height:22px;background:#B08E55;border-radius:50% 50% 50% 0;transform:rotate(-45deg);box-shadow:0 8px 20px rgba(120,92,50,.3)"></div>
+      <div style="position:absolute;left:54%;top:52%;font:500 11px/1 'Jost';letter-spacing:.14em;text-transform:uppercase;color:#7a5c2f;background:rgba(251,248,241,.85);padding:6px 10px;border-radius:2px">Brezovica</div>
+    </div>
+  </div>
+</section>
+
+<footer style="background:#241a12;color:#E9DFCB;padding:clamp(64px,7vw,110px) clamp(24px,6vw,120px) 40px">
+  <div style="max-width:1280px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:48px 40px">
+    <div style="grid-column:1/-1;max-width:520px">
+      <a href="Aurelia.dc.html" style="font:600 24px/1 'Bodoni Moda',serif;letter-spacing:.36em;padding-left:.36em;color:#E9DFCB;display:inline-block;margin-bottom:20px">BREZOVICA</a>
+      <p style="margin:0;font:300 15px/1.75 'Jost';color:rgba(233,223,203,.7)">An alpine sanctuary in the Sharr Mountains &mdash; where mountain grandeur meets a warmth that feels like your own.</p>
+    </div>
+    <div>
+      <div style="font:500 11px/1 'Jost';letter-spacing:.24em;text-transform:uppercase;color:#C9B48A;margin-bottom:20px">Explore</div>
+      <div style="display:flex;flex-direction:column;gap:12px;font:300 15px 'Jost'"><a href="Rooms.dc.html" style="color:rgba(233,223,203,.8)">Rooms &amp; Suites</a><a href="Dining.dc.html" style="color:rgba(233,223,203,.8)">Dining</a><a href="Spa.dc.html" style="color:rgba(233,223,203,.8)">Spa &amp; Wellness</a><a href="Experiences.dc.html" style="color:rgba(233,223,203,.8)">Experiences</a><a href="Tour.dc.html" style="color:rgba(233,223,203,.8)">360&deg; Virtual Tour</a><a href="Events.dc.html" style="color:rgba(233,223,203,.8)">Events &amp; Weddings</a><a href="Contact.dc.html" style="color:rgba(233,223,203,.8)">Contact</a></div>
+    </div>
+    <div>
+      <div style="font:500 11px/1 'Jost';letter-spacing:.24em;text-transform:uppercase;color:#C9B48A;margin-bottom:20px">Contact</div>
+      <div style="display:flex;flex-direction:column;gap:12px;font:300 15px/1.5 'Jost';color:rgba(233,223,203,.8)"><span>Brezovica Ski Resort<br>&Scaron;trpce, Kosovo</span><a href="tel:+38349301030" style="color:rgba(233,223,203,.8)">+383 49 30 10 30</a><a href="mailto:stay@brezovicahotel.com" style="color:rgba(233,223,203,.8)">stay@brezovicahotel.com</a></div>
+    </div>
+    <div>
+      <div style="font:500 11px/1 'Jost';letter-spacing:.24em;text-transform:uppercase;color:#C9B48A;margin-bottom:20px">Newsletter</div>
+      <p style="margin:0 0 16px;font:300 14px/1.6 'Jost';color:rgba(233,223,203,.7)">Quiet notes from the mountains, a few times a year.</p>
+      <div style="display:flex;border:1px solid rgba(233,223,203,.28);border-radius:2px;overflow:hidden"><input type="email" placeholder="Email address" style="flex:1;min-width:0;padding:13px 14px;background:transparent;border:none;color:#E9DFCB;font:300 14px 'Jost'"><button style="padding:13px 18px;background:#B08E55;color:#231a10;border:none;font:600 11px 'Jost';letter-spacing:.16em;text-transform:uppercase;cursor:pointer">Join</button></div>
+    </div>
+  </div>
+  <div style="max-width:1280px;margin:60px auto 0;padding-top:28px;border-top:1px solid rgba(233,223,203,.16);display:flex;flex-wrap:wrap;justify-content:space-between;gap:16px;font:400 12px/1.6 'Jost';color:rgba(233,223,203,.55)">
+    <span>&copy; 2026 Brezovica Hotel &amp; SPA. All rights reserved.</span>
+    <div style="display:flex;flex-wrap:wrap;gap:22px"><a href="#" style="color:rgba(233,223,203,.55)">Privacy</a><a href="#" style="color:rgba(233,223,203,.55)">Terms</a><a href="#" style="color:rgba(233,223,203,.55)">Cancellation</a><a href="#" style="color:rgba(233,223,203,.55)">FAQ</a></div>
+  </div>
+</footer>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { vw: (typeof window !== 'undefined' ? window.innerWidth : 1200), menuOpen: false, fName: '', fEmail: '', fTopic: 'Reservation enquiry', fMsg: '', sent: false, sentMsg: '' };
+  els = {};
+  registerRef = (el) => { if (el && el.dataset && el.dataset.anim) this.els[el.dataset.anim] = el; };
+
+  componentDidMount() {
+    this._raf = null;
+    this._onScroll = () => {
+      if (this._raf) return;
+      this._raf = requestAnimationFrame(() => { this._raf = null; this._update(); });
+    };
+    this._onResize = () => { this.setState({ vw: window.innerWidth }); this._onScroll(); };
+    window.addEventListener('scroll', this._onScroll, { passive: true, capture: true });
+    window.addEventListener('resize', this._onResize);
+    this._initReveals();
+    this._update();
+  }
+
+  componentDidUpdate() { this._update(); }
+
+  componentWillUnmount() {
+    window.removeEventListener('scroll', this._onScroll, { capture: true });
+    window.removeEventListener('resize', this._onResize);
+    clearTimeout(this._revealFallback);
+  }
+
+  _initReveals() {
+    const nodes = [].slice.call(document.querySelectorAll('[data-reveal]'));
+    this._reveals = [];
+    nodes.forEach((n) => {
+      n.style.opacity = '0';
+      n.style.transform = 'translateY(40px)';
+      n.style.transition = 'opacity 1.2s cubic-bezier(.22,.68,.2,1), transform 1.2s cubic-bezier(.22,.68,.2,1)';
+      n.style.transitionDelay = (n.getAttribute('data-delay') || '0') + 'ms';
+      this._reveals.push(n);
+    });
+    this._checkReveals();
+    this._revealFallback = setTimeout(() => {
+      (this._reveals || []).forEach((n) => { n.style.opacity = '1'; n.style.transform = 'none'; });
+      this._reveals = [];
+    }, 4000);
+  }
+
+  _checkReveals() {
+    if (!this._reveals || !this._reveals.length) return;
+    const vh = window.innerHeight || 800;
+    const rest = [];
+    this._reveals.forEach((n) => {
+      if (n.getBoundingClientRect().top < vh * 0.9) { n.style.opacity = '1'; n.style.transform = 'none'; }
+      else rest.push(n);
+    });
+    this._reveals = rest;
+  }
+
+  _update() {
+    this._checkReveals();
+    const nav = this.els.nav, h = this.els.hero;
+    const solid = h ? (window.scrollY > h.offsetTop + h.offsetHeight - 90) : (window.scrollY > 240);
+    if (nav) {
+      if (solid) Object.assign(nav.style, { background: 'rgba(247,243,236,.92)', color: '#2B2721', boxShadow: '0 10px 40px rgba(70,46,22,.09)', borderBottomColor: '#E7DBC4', backdropFilter: 'saturate(140%) blur(12px)', webkitBackdropFilter: 'saturate(140%) blur(12px)' });
+      else Object.assign(nav.style, { background: 'linear-gradient(180deg,rgba(26,18,12,.5),rgba(26,18,12,0))', color: '#F7F1E7', boxShadow: 'none', borderBottomColor: 'transparent', backdropFilter: 'none', webkitBackdropFilter: 'none' });
+    }
+  }
+
+  onSend = () => {
+    const { fName, fTopic } = this.state;
+    const who = fName ? fName.split(' ')[0] : 'there';
+    this.setState({ sent: true, sentMsg: 'Thank you, ' + who + ' — your ' + fTopic.toLowerCase() + ' is with our team. Expect a reply within one working day.' });
+  };
+
+  renderVals() {
+    const s = this.state;
+    return {
+      registerRef: this.registerRef,
+      isDesktopNav: s.vw >= 980,
+      isMobileNav: s.vw < 980,
+      menuOpen: s.menuOpen,
+      toggleMenu: () => this.setState((st) => ({ menuOpen: !st.menuOpen })),
+      closeMenu: () => this.setState({ menuOpen: false }),
+      fName: s.fName, fEmail: s.fEmail, fTopic: s.fTopic, fMsg: s.fMsg,
+      onName: (e) => this.setState({ fName: e.target.value }),
+      onEmail: (e) => this.setState({ fEmail: e.target.value }),
+      onTopic: (e) => this.setState({ fTopic: e.target.value }),
+      onMsg: (e) => this.setState({ fMsg: e.target.value }),
+      onSend: this.onSend,
+      sent: s.sent, sentMsg: s.sentMsg
+    };
+  }
+}
+</script>
+</body>
+</html>

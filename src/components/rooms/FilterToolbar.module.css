@@ -1,0 +1,190 @@
+.section {
+  padding: clamp(30px, 4vw, 56px) var(--gutter-tight) 0;
+  background: var(--paper);
+}
+
+.inner {
+  max-width: var(--max);
+  margin: 0 auto;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 20px 24px;
+  padding: 22px 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+/* ---------- room type (segmented) ---------- */
+
+.segmented {
+  display: flex;
+  flex: 0 0 auto;
+  align-self: center;
+  gap: 6px;
+  padding: 4px;
+  background: #eae0ce;
+  border-radius: 40px;
+}
+
+.segment {
+  padding: 9px 18px;
+  border: none;
+  border-radius: 40px;
+  background: transparent;
+  color: var(--text-soft);
+  font: 500 11px/1 var(--font-text);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition:
+    background-color 0.3s,
+    color 0.3s;
+}
+
+.segment[aria-pressed="true"] {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+/* At phone width the four options share one full-width row instead of
+   overflowing it. */
+@media (max-width: 480px) {
+  .segmented {
+    flex: 1 1 100%;
+  }
+
+  .segment {
+    flex: 1 1 auto;
+    padding-inline: 6px;
+  }
+}
+
+/* ---------- selects and price ---------- */
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.selectField {
+  flex: 1 1 120px;
+  min-width: 110px;
+}
+
+.sortField {
+  flex: 1 1 130px;
+  min-width: 120px;
+  margin-left: auto;
+}
+
+.priceField {
+  flex: 1 1 180px;
+  gap: 11px;
+  min-width: 160px;
+}
+
+.label {
+  font: 500 10px/1 var(--font-text);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted-2);
+}
+
+.priceValue {
+  color: var(--bronze);
+  letter-spacing: 0;
+}
+
+.select {
+  width: 100%;
+  padding: 11px 34px 11px 14px;
+  border: 1px solid var(--line-3);
+  border-radius: 2px;
+  /* Longhand, so the global select chevron survives. */
+  background-color: var(--light);
+  color: var(--ink);
+  font: 400 14px var(--font-text);
+  cursor: pointer;
+}
+
+.range {
+  width: 100%;
+}
+
+/* The global input:focus reset removes the outline; ring the thumb instead. */
+.range:focus-visible::-webkit-slider-thumb {
+  box-shadow:
+    0 0 0 4px rgba(176, 142, 85, 0.3),
+    0 2px 6px rgba(120, 90, 50, 0.3);
+}
+
+.range:focus-visible::-moz-range-thumb {
+  box-shadow: 0 0 0 4px rgba(176, 142, 85, 0.3);
+}
+
+/* ---------- amenities + count ---------- */
+
+.chipsRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 20px 0 4px;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.chipsLabel {
+  margin-right: 4px;
+}
+
+.chip {
+  padding: 8px 15px;
+  background: transparent;
+  color: var(--text-soft);
+  border: 1px solid var(--line-chip);
+  border-radius: 40px;
+  font: 500 11px/1 var(--font-text);
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  transition:
+    background-color 0.3s,
+    border-color 0.3s,
+    color 0.3s;
+}
+
+.chip[aria-pressed="true"] {
+  background: var(--gold);
+  color: var(--on-gold);
+  border-color: var(--gold);
+}
+
+.clear {
+  padding: 8px 12px;
+  background: transparent;
+  color: var(--muted-2);
+  border: none;
+  font: 500 11px/1 var(--font-text);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.count {
+  font: 400 13px/1 var(--font-text);
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}

@@ -1,0 +1,277 @@
+.treatments {
+  padding: clamp(50px, 6vw, 90px) var(--gutter-tight) clamp(70px, 9vw, 130px);
+  background: var(--light);
+}
+
+.inner {
+  max-width: var(--max);
+  margin: 0 auto;
+}
+
+.head {
+  max-width: 720px;
+  margin: 0 auto clamp(36px, 5vw, 56px);
+  text-align: center;
+}
+
+.eyebrow {
+  margin-bottom: 20px;
+}
+
+.title {
+  margin: 0;
+  font: 400 clamp(32px, 4.6vw, 60px) / 1.04 var(--font-display);
+  color: var(--ink);
+}
+
+/* ---------- toolbar ---------- */
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px 24px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 4px;
+  background: var(--note);
+  border-radius: 40px;
+}
+
+.chip {
+  padding: 9px 18px;
+  border: none;
+  border-radius: 40px;
+  background: transparent;
+  color: var(--text-soft);
+  font: 500 11px/1 var(--font-text);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.chip[aria-pressed="true"] {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.tools {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.count {
+  font: 400 13px/1 var(--font-text);
+  color: var(--muted);
+}
+
+.sort {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sortLabel {
+  font: 500 10px/1 var(--font-text);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted-2);
+}
+
+.sortSelect {
+  padding: 10px 34px 10px 14px;
+  border: 1px solid var(--line-3);
+  /* background-color, not the shorthand — keeps the global select chevron. */
+  background-color: var(--paper);
+  border-radius: 2px;
+  color: var(--ink);
+  font: 400 14px var(--font-text);
+  cursor: pointer;
+}
+
+/* ---------- grid ---------- */
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(340px, 100%), 1fr));
+  gap: 28px;
+  margin-top: clamp(30px, 4vw, 48px);
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--paper);
+  border-radius: 4px;
+}
+
+.media {
+  position: relative;
+  aspect-ratio: 16 / 10;
+}
+
+.badge {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  padding: 7px 11px;
+  background: var(--gold);
+  color: var(--on-gold);
+  font: 600 10px/1 var(--font-text);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  border-radius: 2px;
+}
+
+.duration {
+  position: absolute;
+  right: 14px;
+  bottom: 14px;
+  padding: 7px 11px;
+  background: rgba(26, 18, 12, 0.55);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  color: var(--cream-2);
+  font: 500 10px/1 var(--font-text);
+  letter-spacing: 0.1em;
+  border-radius: 40px;
+}
+
+.body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  padding: 26px 26px 28px;
+}
+
+.category {
+  margin-bottom: 12px;
+  font: 500 10px/1 var(--font-text);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted-2);
+}
+
+.titleRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.name {
+  margin: 0;
+  font: 400 24px/1.1 var(--font-display);
+  color: var(--ink);
+}
+
+.price {
+  font: 400 22px var(--font-display);
+  color: var(--bronze);
+  white-space: nowrap;
+}
+
+.text {
+  flex: 1;
+  margin: 14px 0 22px;
+  font: 300 15px/1.65 var(--font-text);
+  color: var(--text-soft);
+}
+
+.book {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 13px 26px;
+  background: var(--ink);
+  color: var(--paper);
+  font: 600 11px/1 var(--font-text);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  border-radius: 2px;
+}
+
+/* ---------- dark card (the retreat) ---------- */
+
+.dark {
+  background: var(--dark);
+  color: var(--cream);
+}
+
+.dark .duration {
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.dark .category {
+  color: rgba(201, 180, 138, 0.8);
+}
+
+.dark .name {
+  color: var(--cream-2);
+}
+
+.dark .price {
+  color: var(--gold-light);
+}
+
+.dark .text {
+  color: rgba(245, 238, 225, 0.72);
+}
+
+.dark .book {
+  background: var(--gold);
+  color: var(--on-gold);
+  transition: background-color 0.3s;
+}
+
+.dark .book:hover {
+  background: var(--gold-hover);
+}
+
+/* ---------- empty state ---------- */
+
+.empty {
+  grid-column: 1 / -1;
+  padding: 80px 20px;
+  text-align: center;
+}
+
+.emptyTitle {
+  margin: 0 0 8px;
+  font: 400 26px var(--font-display);
+  color: var(--ink);
+}
+
+.emptyText {
+  margin: 0 0 22px;
+  font: 300 15px var(--font-text);
+  color: var(--muted);
+}
+
+.emptyButton {
+  padding: 13px 28px;
+  background: var(--gold);
+  color: var(--on-gold);
+  border: none;
+  border-radius: 2px;
+  font: 600 11px/1 var(--font-text);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.emptyButton:hover {
+  background: var(--gold-hover);
+}

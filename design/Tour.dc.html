@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<template id="__bundler_thumbnail"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#241a12"/><circle cx="50" cy="50" r="26" fill="none" stroke="#B08E55" stroke-width="4"/><text x="50" y="57" font-family="Georgia,serif" font-size="18" fill="#B08E55" text-anchor="middle">360</text></svg></template>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;0,6..96,600;0,6..96,700;1,6..96,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  html{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;scroll-behavior:smooth}
+  body{margin:0;background:#F3ECE0;color:#2B2721;font-family:'Jost',system-ui,sans-serif}
+  a{color:#B08E55;text-decoration:none;transition:color .3s}
+  a:hover{color:#8f7040}
+  ::selection{background:#E7DBC8;color:#2B2721}
+  input,select,button,textarea{font-family:'Jost',sans-serif}
+  @keyframes auGlow{0%,100%{opacity:.55}50%{opacity:.95}}
+</style>
+<script src="./pano-view.js"></script>
+</helmet>
+
+<div id="top" style="position:relative;background:#F3ECE0">
+
+<header data-anim="nav" ref="{{ registerRef }}" style="position:fixed;top:0;left:0;right:0;z-index:60;display:flex;align-items:center;justify-content:space-between;padding:20px clamp(20px,5vw,72px);color:#F7F1E7;background:linear-gradient(180deg,rgba(26,18,12,.5),rgba(26,18,12,0));border-bottom:1px solid transparent;transition:background .55s ease,color .55s ease,box-shadow .55s ease,border-color .55s ease">
+  <a href="Aurelia.dc.html" style="font:600 21px/1 'Bodoni Moda',serif;letter-spacing:.36em;color:inherit;padding-left:.36em">BREZOVICA</a>
+  <nav style="display:flex;align-items:center;gap:clamp(16px,2.4vw,38px)">
+    <sc-if value="{{ isDesktopNav }}" hint-placeholder-val="{{ true }}">
+      <a href="Rooms.dc.html" style="font:500 12px/1 'Jost';letter-spacing:.18em;text-transform:uppercase;color:inherit">Rooms</a>
+      <a href="Dining.dc.html" style="font:500 12px/1 'Jost';letter-spacing:.18em;text-transform:uppercase;color:inherit">Dining</a>
+      <a href="Spa.dc.html" style="font:500 12px/1 'Jost';letter-spacing:.18em;text-transform:uppercase;color:inherit">Spa</a>
+      <a href="Experiences.dc.html" style="font:500 12px/1 'Jost';letter-spacing:.18em;text-transform:uppercase;color:inherit">Experiences</a>
+      <a href="Tour.dc.html" style="font:500 12px/1 'Jost';letter-spacing:.18em;text-transform:uppercase;color:inherit;border-bottom:1px solid currentColor;padding-bottom:3px">360&deg; Tour</a>
+      <a href="Events.dc.html" style="font:500 12px/1 'Jost';letter-spacing:.18em;text-transform:uppercase;color:inherit">Events</a>
+      <a href="Contact.dc.html" style="font:500 12px/1 'Jost';letter-spacing:.18em;text-transform:uppercase;color:inherit">Contact</a>
+      <a href="Aurelia.dc.html#book" style="display:inline-flex;align-items:center;gap:9px;padding:12px 24px;background:#B08E55;color:#231a10;font:600 11px/1 'Jost';letter-spacing:.2em;text-transform:uppercase;border-radius:2px">Book</a>
+    </sc-if>
+    <sc-if value="{{ isMobileNav }}" hint-placeholder-val="{{ false }}">
+      <a href="Aurelia.dc.html#book" style="display:inline-flex;align-items:center;padding:11px 20px;background:#B08E55;color:#231a10;font:600 11px/1 'Jost';letter-spacing:.16em;text-transform:uppercase;border-radius:2px">Book</a>
+      <button onClick="{{ toggleMenu }}" aria-label="Menu" style="display:flex;flex-direction:column;gap:5px;width:34px;height:34px;align-items:center;justify-content:center;background:transparent;border:none;cursor:pointer;color:inherit">
+        <span style="display:block;width:22px;height:1.5px;background:currentColor"></span>
+        <span style="display:block;width:22px;height:1.5px;background:currentColor"></span>
+        <span style="display:block;width:22px;height:1.5px;background:currentColor"></span>
+      </button>
+    </sc-if>
+  </nav>
+</header>
+
+<sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;inset:0;z-index:80;background:#F3ECE0;display:flex;flex-direction:column;padding:26px clamp(24px,7vw,60px)">
+    <div style="display:flex;align-items:center;justify-content:space-between">
+      <a href="Aurelia.dc.html" style="font:600 21px/1 'Bodoni Moda',serif;letter-spacing:.36em;color:#2B2721;padding-left:.36em">BREZOVICA</a>
+      <button onClick="{{ closeMenu }}" aria-label="Close" style="width:40px;height:40px;background:transparent;border:1px solid #D3C6AE;border-radius:50%;color:#2B2721;font-size:20px;cursor:pointer">&times;</button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:6px;margin-top:44px;overflow-y:auto">
+      <a href="Rooms.dc.html" style="font:400 30px/1.4 'Bodoni Moda',serif;color:#2B2721;border-bottom:1px solid #E4D9C4;padding:12px 0">Rooms &amp; Suites</a>
+      <a href="Dining.dc.html" style="font:400 30px/1.4 'Bodoni Moda',serif;color:#2B2721;border-bottom:1px solid #E4D9C4;padding:12px 0">Dining</a>
+      <a href="Spa.dc.html" style="font:400 30px/1.4 'Bodoni Moda',serif;color:#2B2721;border-bottom:1px solid #E4D9C4;padding:12px 0">Spa &amp; Wellness</a>
+      <a href="Experiences.dc.html" style="font:400 30px/1.4 'Bodoni Moda',serif;color:#2B2721;border-bottom:1px solid #E4D9C4;padding:12px 0">Experiences</a>
+      <a href="Tour.dc.html" onClick="{{ closeMenu }}" style="font:400 30px/1.4 'Bodoni Moda',serif;color:#7a5c2f;border-bottom:1px solid #E4D9C4;padding:12px 0">360&deg; Virtual Tour</a>
+      <a href="Events.dc.html" style="font:400 30px/1.4 'Bodoni Moda',serif;color:#2B2721;border-bottom:1px solid #E4D9C4;padding:12px 0">Events &amp; Weddings</a>
+      <a href="Contact.dc.html" style="font:400 30px/1.4 'Bodoni Moda',serif;color:#2B2721;border-bottom:1px solid #E4D9C4;padding:12px 0">Contact</a>
+    </div>
+    <a href="Aurelia.dc.html#book" style="margin-top:auto;display:flex;align-items:center;justify-content:center;padding:20px;background:#B08E55;color:#231a10;font:600 13px/1 'Jost';letter-spacing:.22em;text-transform:uppercase;border-radius:2px">Reserve your stay</a>
+  </div>
+</sc-if>
+
+<section data-screen-label="Tour — intro" style="background:#17110B;color:#F5EEE1;padding:clamp(140px,18vh,190px) clamp(24px,6vw,120px) clamp(40px,5vw,64px)">
+  <div style="max-width:1280px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:26px">
+    <div style="max-width:720px">
+      <div data-reveal="up" style="font:500 12px/1 'Jost';letter-spacing:.42em;text-transform:uppercase;color:#E7C98F;margin-bottom:24px">360&deg; Virtual Tour</div>
+      <h1 data-reveal="up" data-delay="80" style="margin:0;font:400 clamp(36px,5.6vw,76px)/1.05 'Bodoni Moda',serif;color:#F7F1E7">Be there,<br><em style="font-style:italic;color:#E7C98F">before you arrive.</em></h1>
+    </div>
+    <p data-reveal="up" data-delay="140" style="margin:0;max-width:380px;font:300 clamp(15px,1.15vw,17px)/1.75 'Jost';color:rgba(245,238,225,.72)">Step inside four spaces of the resort in full 360&deg;. Drag to look around, pinch or double-tap to move closer &mdash; as if you were standing there.</p>
+  </div>
+</section>
+
+<section data-anim="viewerWrap" ref="{{ registerRef }}" data-screen-label="Tour — 360 viewer" style="position:relative;background:#0d0904;height:clamp(480px,80vh,860px)">
+  <pano-view data-anim="pano" ref="{{ registerRef }}" src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/Chiemsee_bei_Seebruck_Luftbild.jpg/3840px-Chiemsee_bei_Seebruck_Luftbild.jpg" yaw="20" pitch="-6" fov="62" autorotate="1.6" label="01 &mdash; The Sharr Valley" style="position:absolute;inset:0"></pano-view>
+
+  <div data-anim="hotspots" ref="{{ registerRef }}" style="position:absolute;inset:0;overflow:hidden;pointer-events:none">
+    <sc-for list="{{ hotspots }}" as="h" hint-placeholder-count="0">
+      <button data-h="{{ $index }}" onClick="{{ onHotspot }}" style="position:absolute;left:var(--hx,50%);top:var(--hy,50%);opacity:var(--ho,0);transform:translate(-50%,-50%);display:flex;align-items:center;gap:11px;min-height:48px;padding:9px 18px 9px 9px;background:rgba(13,9,4,.5);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border:1px solid rgba(247,241,231,.3);border-radius:40px;color:#F7F1E7;font:600 11px/1 'Jost';letter-spacing:.14em;text-transform:uppercase;white-space:nowrap;cursor:pointer;pointer-events:var(--hp,auto);transition:background .3s" style-hover="background:rgba(176,142,85,.85);color:#231a10">
+        <span style="flex:0 0 auto;width:30px;height:30px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:#B08E55;color:#231a10;font:600 13px/1 'Jost'">{{ h.icon }}</span>
+        {{ h.label }}
+      </button>
+    </sc-for>
+  </div>
+
+  <sc-if value="{{ infoText }}" hint-placeholder-val="{{ false }}">
+    <div style="position:absolute;left:50%;top:clamp(14px,3vw,26px);transform:translateX(-50%);z-index:7;max-width:min(90%,460px);background:rgba(13,9,4,.72);backdrop-filter:blur(10px);border:1px solid rgba(247,241,231,.16);border-radius:3px;padding:16px 20px;color:rgba(247,241,231,.92);font:300 14px/1.6 'Jost';text-align:center;text-wrap:pretty">{{ infoText }}</div>
+  </sc-if>
+
+  <sc-if value="{{ bookOpen }}" hint-placeholder-val="{{ false }}">
+    <div style="position:absolute;inset:0;z-index:8;display:flex;align-items:flex-end;justify-content:flex-end;padding:clamp(12px,2vw,24px);pointer-events:none">
+      <div style="pointer-events:auto;width:100%;max-width:430px;background:rgba(20,14,9,.93);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(247,241,231,.18);border-radius:4px;padding:clamp(20px,2.4vw,26px);color:#F5EEE1;box-shadow:0 26px 60px rgba(0,0,0,.45)">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px">
+          <div>
+            <div style="font:500 10px/1 'Jost';letter-spacing:.26em;text-transform:uppercase;color:#C9B48A;margin-bottom:11px">Reserve from inside the room</div>
+            <div style="font:400 25px/1.15 'Bodoni Moda',serif;color:#F7F1E7">{{ bookName }}</div>
+          </div>
+          <button onClick="{{ closeBook }}" aria-label="Close" style="flex:0 0 auto;width:44px;height:44px;background:transparent;border:1px solid rgba(247,241,231,.24);border-radius:50%;color:#F5EEE1;font-size:19px;cursor:pointer">&times;</button>
+        </div>
+
+        <sc-if value="{{ bookOpenForm }}" hint-placeholder-val="{{ true }}">
+          <div style="font:400 12px/1.5 'Jost';letter-spacing:.04em;color:rgba(245,238,225,.6);margin:10px 0 20px">{{ bookMeta }}</div>
+          <sc-if value="{{ showNights }}" hint-placeholder-val="{{ true }}">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px 0;border-top:1px solid rgba(247,241,231,.14);border-bottom:1px solid rgba(247,241,231,.14)">
+            <span style="font:500 11px/1 'Jost';letter-spacing:.2em;text-transform:uppercase;color:rgba(245,238,225,.68)">Nights</span>
+            <div style="display:flex;align-items:center;gap:6px">
+              <button onClick="{{ fewerNights }}" aria-label="Fewer nights" style="width:44px;height:44px;background:transparent;border:1px solid rgba(247,241,231,.24);border-radius:2px;color:#F5EEE1;font-size:18px;cursor:pointer">&minus;</button>
+              <span style="min-width:42px;text-align:center;font:400 21px/1 'Bodoni Moda',serif;color:#F7F1E7">{{ nights }}</span>
+              <button onClick="{{ moreNights }}" aria-label="More nights" style="width:44px;height:44px;background:transparent;border:1px solid rgba(247,241,231,.24);border-radius:2px;color:#F5EEE1;font-size:18px;cursor:pointer">+</button>
+            </div>
+          </div>
+          </sc-if>
+          <div style="display:flex;align-items:baseline;justify-content:space-between;gap:14px;padding:16px 0 6px">
+            <span style="font:600 11px/1 'Jost';letter-spacing:.18em;text-transform:uppercase;color:#C9B48A">Direct total</span>
+            <span style="font:400 30px/1 'Bodoni Moda',serif;color:#F7F1E7">{{ bookTotal }}</span>
+          </div>
+          <div style="display:flex;align-items:baseline;justify-content:space-between;gap:14px;font:300 13px/1.6 'Jost';color:rgba(245,238,225,.6)">
+            <span>Booking sites</span>
+            <span style="text-decoration:line-through">{{ bookOta }}</span>
+          </div>
+          <div style="display:flex;align-items:baseline;justify-content:space-between;gap:14px;font:300 13px/1.6 'Jost';color:#C9B48A;margin-bottom:20px">
+            <span>You keep</span>
+            <span>{{ bookSave }}</span>
+          </div>
+          <button onClick="{{ confirmBook }}" style="width:100%;display:inline-flex;align-items:center;justify-content:center;padding:17px 26px;min-height:54px;background:#B08E55;color:#231a10;font:600 12px/1 'Jost';letter-spacing:.2em;text-transform:uppercase;border:none;border-radius:2px;cursor:pointer">Hold this rate</button>
+          <div style="font:300 12px/1.6 'Jost';color:rgba(245,238,225,.5);margin-top:12px;text-align:center">{{ bookSeason }} &middot; breakfast and spa included &middot; free cancellation to 48h</div>
+        </sc-if>
+
+        <sc-if value="{{ bookDone }}" hint-placeholder-val="{{ false }}">
+          <div style="font:300 15px/1.7 'Jost';color:rgba(245,238,225,.86);margin:16px 0 22px;text-wrap:pretty">Held for thirty minutes at {{ bookTotal }}. Our reservations team will confirm by email, or finish now and keep the rate.</div>
+          <a href="Contact.dc.html" style="width:100%;display:inline-flex;align-items:center;justify-content:center;padding:17px 26px;min-height:54px;background:#B08E55;color:#231a10;font:600 12px/1 'Jost';letter-spacing:.2em;text-transform:uppercase;border-radius:2px">Complete reservation</a>
+        </sc-if>
+      </div>
+    </div>
+  </sc-if>
+</section>
+
+<section style="background:#1C140D;padding:0 clamp(16px,4vw,60px)">
+  <div style="max-width:1280px;margin:0 auto;display:flex;align-items:center;justify-content:center;gap:8px;padding:10px 0">
+    <button onClick="{{ onPrev }}" aria-label="Previous space" style="flex:0 0 auto;background:transparent;border:1px solid rgba(233,223,203,.22);color:#E9DFCB;width:44px;min-height:44px;border-radius:2px;cursor:pointer;font-size:16px">&larr;</button>
+    <div data-anim="tabs" ref="{{ registerRef }}" style="display:flex;flex-wrap:wrap;justify-content:center;gap:6px;min-width:0">
+      <sc-for list="{{ scenes }}" as="scene" hint-placeholder-count="4">
+        <button data-i="{{ $index }}" onClick="{{ onSceneTab }}" style="padding:14px 20px;background:transparent;border:1px solid transparent;border-radius:2px;cursor:pointer;font:500 11px/1 'Jost';letter-spacing:.2em;text-transform:uppercase;color:rgba(233,223,203,.62);transition:all .3s">{{ scene.num }} &middot; {{ scene.name }}</button>
+      </sc-for>
+    </div>
+    <button onClick="{{ onNext }}" aria-label="Next space" style="flex:0 0 auto;background:transparent;border:1px solid rgba(233,223,203,.22);color:#E9DFCB;width:44px;min-height:44px;border-radius:2px;cursor:pointer;font-size:16px">&rarr;</button>
+  </div>
+</section>
+
+<section data-screen-label="Tour — scene details" style="background:#F3ECE0;padding:clamp(56px,7vw,100px) clamp(24px,6vw,120px)">
+  <div style="max-width:1280px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:clamp(36px,5vw,90px);align-items:start">
+    <div>
+      <div style="font:500 12px/1 'Jost';letter-spacing:.4em;text-transform:uppercase;color:#B08E55;margin-bottom:20px;min-height:12px">{{ sceneKicker }}</div>
+      <h2 style="margin:0 0 22px;font:400 clamp(32px,4.4vw,58px)/1.06 'Bodoni Moda',serif;color:#2B2721;min-height:1.1em">{{ sceneName }}</h2>
+      <p style="margin:0;font:300 clamp(15px,1.2vw,18px)/1.8 'Jost';color:#6B6357;max-width:52ch;min-height:3em">{{ sceneDesc }}</p>
+      <a href="{{ sceneCta }}" style="margin-top:32px;display:inline-flex;align-items:center;gap:11px;padding:16px 32px;background:#B08E55;color:#231a10;font:600 12px/1 'Jost';letter-spacing:.2em;text-transform:uppercase;border-radius:2px">{{ sceneCtaLabel }}</a>
+    </div>
+    <div style="border-top:1px solid #E4D9C4">
+      <sc-for list="{{ sceneFacts }}" as="fact" hint-placeholder-count="3">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;gap:20px;padding:18px 0;border-bottom:1px solid #E4D9C4">
+          <span style="font:500 11px/1 'Jost';letter-spacing:.24em;text-transform:uppercase;color:#8f8272">{{ fact.k }}</span>
+          <span style="font:400 19px 'Bodoni Moda',serif;color:#2B2721;text-align:right">{{ fact.v }}</span>
+        </div>
+      </sc-for>
+      <p style="margin:20px 0 0;font:400 12.5px/1.6 'Jost';color:#a79c88">Sample 360&deg; captures (Wikimedia Commons, CC BY-SA) shown for demonstration &mdash; swap in your property&rsquo;s own panoramas anytime.</p>
+    </div>
+  </div>
+</section>
+
+<section data-screen-label="Tour — all spaces" style="background:#FBF8F1;padding:clamp(56px,7vw,110px) clamp(24px,6vw,120px)">
+  <div style="max-width:1280px;margin:0 auto">
+    <div data-reveal="up" style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:18px;margin-bottom:44px">
+      <h2 style="margin:0;font:400 clamp(28px,3.8vw,52px)/1.06 'Bodoni Moda',serif;color:#2B2721">Four spaces, one visit</h2>
+      <span style="font:400 14px 'Jost';color:#8f8272">Click a space to step inside</span>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:22px">
+      <article data-reveal="up" style="background:#F3ECE0;border-radius:4px;overflow:hidden">
+        <div style="height:170px;overflow:hidden"><img crossorigin="anonymous" src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/Chiemsee_bei_Seebruck_Luftbild.jpg/3840px-Chiemsee_bei_Seebruck_Luftbild.jpg" alt="The Sharr Valley 360 preview" style="width:100%;height:100%;object-fit:cover;display:block"></div>
+        <div style="padding:22px 22px 26px">
+          <div style="font:500 10px/1 'Jost';letter-spacing:.26em;color:#B08E55;margin-bottom:10px">SCENE 01</div>
+          <h3 style="margin:0 0 16px;font:400 23px 'Bodoni Moda',serif;color:#2B2721">The Sharr Valley</h3>
+          <button data-i="0" onClick="{{ onEnter }}" style="background:transparent;border:none;padding:0 0 5px;cursor:pointer;font:500 11px/1 'Jost';letter-spacing:.18em;text-transform:uppercase;color:#2B2721;border-bottom:1px solid #B08E55">Enter space &rarr;</button>
+        </div>
+      </article>
+      <article data-reveal="up" data-delay="70" style="background:#F3ECE0;border-radius:4px;overflow:hidden">
+        <div style="height:170px;overflow:hidden"><img crossorigin="anonymous" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/32/Paris,_mairie_du_10e_arrdt,_hall_04.jpg/3840px-Paris,_mairie_du_10e_arrdt,_hall_04.jpg" alt="The Grand Hall 360 preview" style="width:100%;height:100%;object-fit:cover;display:block"></div>
+        <div style="padding:22px 22px 26px">
+          <div style="font:500 10px/1 'Jost';letter-spacing:.26em;color:#B08E55;margin-bottom:10px">SCENE 02</div>
+          <h3 style="margin:0 0 16px;font:400 23px 'Bodoni Moda',serif;color:#2B2721">The Grand Hall</h3>
+          <button data-i="1" onClick="{{ onEnter }}" style="background:transparent;border:none;padding:0 0 5px;cursor:pointer;font:500 11px/1 'Jost';letter-spacing:.18em;text-transform:uppercase;color:#2B2721;border-bottom:1px solid #B08E55">Enter space &rarr;</button>
+        </div>
+      </article>
+      <article data-reveal="up" data-delay="140" style="background:#F3ECE0;border-radius:4px;overflow:hidden">
+        <div style="height:170px;overflow:hidden"><img crossorigin="anonymous" src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Cerro_Tololo_Hotel_Interior_360_Panorama_(2022_04_08_Pano360_Tololo_Hotel_Room-CC).jpg/3840px-Cerro_Tololo_Hotel_Interior_360_Panorama_(2022_04_08_Pano360_Tololo_Hotel_Room-CC).jpg" alt="Alpine Room 360 preview" style="width:100%;height:100%;object-fit:cover;display:block"></div>
+        <div style="padding:22px 22px 26px">
+          <div style="font:500 10px/1 'Jost';letter-spacing:.26em;color:#B08E55;margin-bottom:10px">SCENE 03</div>
+          <h3 style="margin:0 0 16px;font:400 23px 'Bodoni Moda',serif;color:#2B2721">The Alpine Room</h3>
+          <button data-i="2" onClick="{{ onEnter }}" style="background:transparent;border:none;padding:0 0 5px;cursor:pointer;font:500 11px/1 'Jost';letter-spacing:.18em;text-transform:uppercase;color:#2B2721;border-bottom:1px solid #B08E55">Enter space &rarr;</button>
+        </div>
+      </article>
+      <article data-reveal="up" data-delay="210" style="background:#F3ECE0;border-radius:4px;overflow:hidden">
+        <div style="height:170px;overflow:hidden"><img crossorigin="anonymous" src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Soissons_Cathedral_Interior_360x180,_Picardy,_France_-_Diliff.jpg/3840px-Soissons_Cathedral_Interior_360x180,_Picardy,_France_-_Diliff.jpg" alt="The Chapel 360 preview" style="width:100%;height:100%;object-fit:cover;display:block"></div>
+        <div style="padding:22px 22px 26px">
+          <div style="font:500 10px/1 'Jost';letter-spacing:.26em;color:#B08E55;margin-bottom:10px">SCENE 04</div>
+          <h3 style="margin:0 0 16px;font:400 23px 'Bodoni Moda',serif;color:#2B2721">The Chapel</h3>
+          <button data-i="3" onClick="{{ onEnter }}" style="background:transparent;border:none;padding:0 0 5px;cursor:pointer;font:500 11px/1 'Jost';letter-spacing:.18em;text-transform:uppercase;color:#2B2721;border-bottom:1px solid #B08E55">Enter space &rarr;</button>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section data-screen-label="Tour — CTA" style="position:relative;background:#1C140D;color:#F5EEE1;padding:clamp(70px,9vw,130px) clamp(24px,6vw,120px);text-align:center;overflow:hidden">
+  <div style="position:absolute;left:50%;top:-20%;width:min(80vw,900px);height:min(80vw,900px);transform:translateX(-50%);background:radial-gradient(closest-side,rgba(176,142,85,.2),transparent 70%);pointer-events:none;animation:auGlow 7s ease-in-out infinite"></div>
+  <div style="position:relative;max-width:760px;margin:0 auto">
+    <div data-reveal="up" style="font:500 12px/1 'Jost';letter-spacing:.42em;text-transform:uppercase;color:#C9B48A;margin-bottom:26px">Seen enough to fall for it?</div>
+    <h2 data-reveal="up" data-delay="80" style="margin:0 0 38px;font:400 clamp(32px,4.8vw,64px)/1.08 'Bodoni Moda',serif;color:#F7F1E7">The real view is better.</h2>
+    <div data-reveal="up" data-delay="160" style="display:flex;flex-wrap:wrap;justify-content:center;gap:14px">
+      <a href="Aurelia.dc.html#book" style="display:inline-flex;align-items:center;gap:12px;padding:18px 38px;background:#B08E55;color:#231a10;font:600 12px/1 'Jost';letter-spacing:.22em;text-transform:uppercase;border-radius:2px">Reserve your stay</a>
+      <a href="Contact.dc.html" style="display:inline-flex;align-items:center;gap:12px;padding:18px 38px;border:1px solid rgba(245,238,225,.4);color:#F5EEE1;font:600 12px/1 'Jost';letter-spacing:.22em;text-transform:uppercase;border-radius:2px">Ask the concierge</a>
+    </div>
+  </div>
+</section>
+
+<footer style="background:#241a12;color:#E9DFCB;padding:clamp(64px,7vw,110px) clamp(24px,6vw,120px) 40px">
+  <div style="max-width:1280px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:48px 40px">
+    <div style="grid-column:1/-1;max-width:520px">
+      <a href="Aurelia.dc.html" style="font:600 24px/1 'Bodoni Moda',serif;letter-spacing:.36em;padding-left:.36em;color:#E9DFCB;display:inline-block;margin-bottom:20px">BREZOVICA</a>
+      <p style="margin:0;font:300 15px/1.75 'Jost';color:rgba(233,223,203,.7)">An alpine sanctuary in the Sharr Mountains &mdash; where mountain grandeur meets a warmth that feels like your own.</p>
+    </div>
+    <div>
+      <div style="font:500 11px/1 'Jost';letter-spacing:.24em;text-transform:uppercase;color:#C9B48A;margin-bottom:20px">Explore</div>
+      <div style="display:flex;flex-direction:column;gap:12px;font:300 15px 'Jost'"><a href="Rooms.dc.html" style="color:rgba(233,223,203,.8)">Rooms &amp; Suites</a><a href="Dining.dc.html" style="color:rgba(233,223,203,.8)">Dining</a><a href="Spa.dc.html" style="color:rgba(233,223,203,.8)">Spa &amp; Wellness</a><a href="Experiences.dc.html" style="color:rgba(233,223,203,.8)">Experiences</a><a href="Tour.dc.html" style="color:rgba(233,223,203,.8)">360&deg; Virtual Tour</a><a href="Events.dc.html" style="color:rgba(233,223,203,.8)">Events &amp; Weddings</a><a href="Contact.dc.html" style="color:rgba(233,223,203,.8)">Contact</a></div>
+    </div>
+    <div>
+      <div style="font:500 11px/1 'Jost';letter-spacing:.24em;text-transform:uppercase;color:#C9B48A;margin-bottom:20px">Contact</div>
+      <div style="display:flex;flex-direction:column;gap:12px;font:300 15px/1.5 'Jost';color:rgba(233,223,203,.8)"><span>Brezovica Ski Resort<br>&Scaron;trpce, Kosovo</span><a href="tel:+38349301030" style="color:rgba(233,223,203,.8)">+383 49 30 10 30</a><a href="mailto:stay@brezovicahotel.com" style="color:rgba(233,223,203,.8)">stay@brezovicahotel.com</a></div>
+    </div>
+    <div>
+      <div style="font:500 11px/1 'Jost';letter-spacing:.24em;text-transform:uppercase;color:#C9B48A;margin-bottom:20px">Visit</div>
+      <p style="margin:0 0 16px;font:300 14px/1.6 'Jost';color:rgba(233,223,203,.7)">Prefer to see it in person? Private viewings of suites and event spaces by appointment.</p>
+      <a href="Contact.dc.html" style="font:600 11px/1 'Jost';letter-spacing:.2em;text-transform:uppercase;color:#C9B48A;border-bottom:1px solid #B08E55;padding-bottom:6px">Arrange a viewing</a>
+    </div>
+  </div>
+  <div style="max-width:1280px;margin:60px auto 0;padding-top:28px;border-top:1px solid rgba(233,223,203,.16);display:flex;flex-wrap:wrap;justify-content:space-between;gap:16px;font:400 12px/1.6 'Jost';color:rgba(233,223,203,.55)">
+    <span>&copy; 2026 Brezovica Hotel &amp; SPA. All rights reserved.</span>
+    <div style="display:flex;flex-wrap:wrap;gap:22px"><a href="#" style="color:rgba(233,223,203,.55)">Privacy</a><a href="#" style="color:rgba(233,223,203,.55)">Terms</a><a href="#" style="color:rgba(233,223,203,.55)">Cancellation</a><a href="#" style="color:rgba(233,223,203,.55)">FAQ</a></div>
+  </div>
+</footer>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;autorotate&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;360° viewer&quot;},&quot;rotateSpeed&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:1.6,&quot;min&quot;:0,&quot;max&quot;:4,&quot;step&quot;:0.2,&quot;unit&quot;:&quot;°/s&quot;,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;360° viewer&quot;}}">
+class Component extends DCLogic {
+  state = {
+    i: 0, vw: (typeof window !== 'undefined' ? window.innerWidth : 1200), menuOpen: false,
+    infoText: '', bookOpen: false, bookDone: false, bookRoom: null, nights: 2
+  };
+
+  scenes = [
+    { num: '01', name: 'The Sharr Valley', kicker: 'Scene 01 — Above the resort',
+      desc: 'Begin a thousand metres up. A full-circle view over the valley, the lake and the ridgelines that cradle the hotel — the landscape every window frames.',
+      facts: [{ k: 'Altitude', v: '1,100 m' }, { k: 'Best light', v: 'Sunrise' }, { k: 'Capture', v: 'Aerial, mid-summer' }],
+      cta: 'Experiences.dc.html', ctaLabel: 'Plan your days',
+      src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/Chiemsee_bei_Seebruck_Luftbild.jpg/3840px-Chiemsee_bei_Seebruck_Luftbild.jpg',
+      yaw: 20, pitch: -6, fov: 62 },
+    { num: '02', name: 'The Grand Hall', kicker: 'Scene 02 — Arrival & reception',
+      desc: 'Marble, brass and nine-metre ceilings. The hall where every stay begins — coats taken, keys presented, the mountains waiting just beyond the doors.',
+      facts: [{ k: 'Ceiling height', v: '9 m' }, { k: 'Style', v: 'Belle Époque' }, { k: 'Concierge', v: '24 hours' }],
+      cta: 'Aurelia.dc.html#book', ctaLabel: 'Reserve your stay',
+      src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/32/Paris,_mairie_du_10e_arrdt,_hall_04.jpg/3840px-Paris,_mairie_du_10e_arrdt,_hall_04.jpg',
+      yaw: 0, pitch: 4, fov: 58 },
+    { num: '03', name: 'The Alpine Room', kicker: 'Scene 03 — Rooms & suites',
+      desc: 'Stand in the middle of the room before you sleep in it. Turn toward the window — that is the view you wake to.',
+      facts: [{ k: 'Size', v: '42–110 m²' }, { k: 'Sleeps', v: '2–4 guests' }, { k: 'Aspect', v: 'South ridge' }],
+      cta: 'Rooms.dc.html', ctaLabel: 'Explore rooms & suites',
+      src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Cerro_Tololo_Hotel_Interior_360_Panorama_(2022_04_08_Pano360_Tololo_Hotel_Room-CC).jpg/3840px-Cerro_Tololo_Hotel_Interior_360_Panorama_(2022_04_08_Pano360_Tololo_Hotel_Room-CC).jpg',
+      yaw: 180, pitch: 0, fov: 60 },
+    { num: '04', name: 'The Chapel', kicker: 'Scene 04 — Events & weddings',
+      desc: 'Stone arches and long light — the ceremony space couples cross mountains for. Stand at the altar and look back down the aisle.',
+      facts: [{ k: 'Capacity', v: '220 seated' }, { k: 'Ceremonies', v: 'Civil & religious' }, { k: 'Season', v: 'Year-round' }],
+      cta: 'Events.dc.html', ctaLabel: 'Plan an occasion',
+      src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Soissons_Cathedral_Interior_360x180,_Picardy,_France_-_Diliff.jpg/3840px-Soissons_Cathedral_Interior_360x180,_Picardy,_France_-_Diliff.jpg',
+      yaw: 0, pitch: 8, fov: 56 }
+  ];
+
+  /* Hotspots per scene, positioned in panorama space (same yaw/pitch convention
+     as the scenes above). kind: nav → another scene, book → in-scene rate card,
+     info → caption over the view. */
+  hotspots = [
+    [
+      { yaw: 48, pitch: -14, icon: '→', label: 'Enter the hotel', kind: 'nav', t: 1 },
+      { yaw: -22, pitch: -4, icon: 'i', label: 'The lake', kind: 'info', note: 'Lake Brezovica, twenty minutes down the valley road. Rowing boats and a lakeside breakfast can be arranged at reception.' }
+    ],
+    [
+      { yaw: 30, pitch: 2, icon: '→', label: 'To the rooms', kind: 'nav', t: 2 },
+      { yaw: -34, pitch: -2, icon: '→', label: 'To the chapel', kind: 'nav', t: 3 },
+      { yaw: 4, pitch: 22, icon: 'i', label: 'The ceiling', kind: 'info', note: 'The original 1904 plasterwork, restored over eleven months by a workshop in Prizren.' }
+    ],
+    [
+      { yaw: 196, pitch: -6, icon: '€', label: 'Reserve this room', kind: 'book', room: 'Alpine Room', rate: 420, meta: '58 m² · King bed · south ridge · sleeps 2' },
+      { yaw: 152, pitch: 4, icon: 'i', label: 'The window', kind: 'info', note: 'Triple-glazed and floor to ceiling. In winter the ridge opposite holds snow until May.' },
+      { yaw: 236, pitch: -2, icon: '←', label: 'Back to the hall', kind: 'nav', t: 1 }
+    ],
+    [
+      { yaw: 26, pitch: 4, icon: '€', label: 'Hold a ceremony date', kind: 'book', room: 'Chapel ceremony', rate: 2400, flat: true, meta: '220 seated · civil & religious · exclusive use' },
+      { yaw: -28, pitch: 0, icon: 'i', label: 'The aisle', kind: 'info', note: 'Twenty-two metres of limestone, laid in 1904. Ceremonies run to forty minutes.' }
+    ]
+  ];
+
+  els = {};
+  registerRef = (el) => { if (el && el.dataset && el.dataset.anim) this.els[el.dataset.anim] = el; };
+
+  _season() {
+    const m = new Date().getMonth() + 1;
+    if ([7, 8, 12, 1].indexOf(m) >= 0) return { name: 'Peak season', mult: 1.15 };
+    if ([4, 11].indexOf(m) >= 0) return { name: 'Quiet season', mult: 0.86 };
+    return { name: 'Shoulder season', mult: 1 };
+  }
+  _euro(n) { return '€' + Math.round(n).toLocaleString('en-US'); }
+
+  /* Project each hotspot's yaw/pitch into the viewer's current frame.
+     Mirrors the inverse of pano-view's shader rotation (yw = -yaw). */
+  _positionHotspots() {
+    const p = this.els.pano || document.querySelector('pano-view');
+    const wrap = this.els.hotspots || document.querySelector('[data-anim="hotspots"]');
+    if (!p || !wrap) return;
+    const v = p.view;
+    if (!v || !v.ready || !v.w || !v.h) return;
+    const d2r = Math.PI / 180;
+    const tf = Math.tan(v.fov * d2r / 2), ar = v.w / v.h;
+    const yw = -v.yaw * d2r, pt = v.pitch * d2r;
+    const cyw = Math.cos(yw), syw = Math.sin(yw), cp = Math.cos(pt), sp = Math.sin(pt);
+    const list = this.hotspots[this.state.i] || [];
+    [].slice.call(wrap.querySelectorAll('[data-h]')).forEach((el) => {
+      const hide = () => { el.style.setProperty('--ho', '0'); el.style.setProperty('--hp', 'none'); };
+      const h = list[+el.getAttribute('data-h')];
+      if (!h) return hide();
+      const lon = h.yaw * d2r, lat = h.pitch * d2r, cl = Math.cos(lat);
+      const x2 = Math.sin(lon) * cl, y2 = Math.sin(lat), z2 = -Math.cos(lon) * cl;
+      const x1 = x2 * cyw - z2 * syw, z1 = x2 * syw + z2 * cyw;
+      const y0 = y2 * cp + z1 * sp, z0 = -y2 * sp + z1 * cp;
+      if (z0 > -0.05) return hide();
+      const vx = x1 / -z0 / (tf * ar), vy = y0 / -z0 / tf;
+      const edge = Math.max(Math.abs(vx), Math.abs(vy));
+      if (edge > 1.02) return hide();
+      el.style.setProperty('--hx', ((vx + 1) / 2 * 100).toFixed(2) + '%');
+      el.style.setProperty('--hy', ((1 - vy) / 2 * 100).toFixed(2) + '%');
+      el.style.setProperty('--ho', edge > 0.84 ? (1 - (edge - 0.84) / 0.2).toFixed(2) : '1');
+      el.style.setProperty('--hp', 'auto');
+    });
+  }
+
+  onHotspot = (ev) => {
+    const b = ev.target.closest && ev.target.closest('[data-h]');
+    if (!b) return;
+    const h = (this.hotspots[this.state.i] || [])[+b.getAttribute('data-h')];
+    if (!h) return;
+    if (h.kind === 'nav') this.go(h.t);
+    else if (h.kind === 'info') {
+      this.setState({ infoText: h.note, bookOpen: false });
+      clearTimeout(this._infoT);
+      this._infoT = setTimeout(() => this.setState({ infoText: '' }), 7000);
+      const p = this.els.pano;
+      if (p && p.lookAt) p.lookAt({ yaw: h.yaw, pitch: h.pitch });
+    } else if (h.kind === 'book') {
+      this.setState({ bookOpen: true, bookDone: false, bookRoom: h, infoText: '' });
+      const p = this.els.pano;
+      if (p && p.lookAt) p.lookAt({ yaw: h.yaw, pitch: h.pitch });
+    }
+  };
+  closeBook = () => this.setState({ bookOpen: false, bookDone: false });
+  moreNights = () => this.setState((s) => ({ nights: Math.min(14, s.nights + 1) }));
+  fewerNights = () => this.setState((s) => ({ nights: Math.max(1, s.nights - 1) }));
+  confirmBook = () => this.setState({ bookDone: true });
+
+  componentDidMount() {
+    this._raf = null;
+    this._onScroll = () => {
+      if (this._raf) return;
+      this._raf = requestAnimationFrame(() => { this._raf = null; this._update(); });
+    };
+    this._onResize = () => { this.setState({ vw: window.innerWidth }); this._onScroll(); };
+    this._onKey = (e) => {
+      const t = e.target && e.target.tagName;
+      if (t === 'INPUT' || t === 'TEXTAREA' || t === 'SELECT') return;
+      if (e.key === 'ArrowRight') this.go(this.state.i + 1);
+      else if (e.key === 'ArrowLeft') this.go(this.state.i - 1);
+    };
+    window.addEventListener('scroll', this._onScroll, { passive: true, capture: true });
+    window.addEventListener('resize', this._onResize);
+    window.addEventListener('keydown', this._onKey);
+    cancelAnimationFrame(this._hsRaf); this._hsRaf = 0;
+    this._startHotspotLoop();
+    this._initReveals();
+    const names = { valley: 0, hall: 1, room: 2, chapel: 3 };
+    const m = (location.hash || '').toLowerCase().match(/#(valley|hall|room|chapel|scene-(\d))/);
+    if (m) {
+      const i = m[2] != null ? (+m[2] - 1) : names[m[1]];
+      if (i >= 0 && i < this.scenes.length) setTimeout(() => this.go(i, true), 60);
+    }
+    this._applyPanoProps();
+    this._syncTabs();
+    this._update();
+  }
+
+  _startHotspotLoop() {
+    if (!this._hsTick) this._hsTick = () => { this._hsCount = (this._hsCount || 0) + 1; this._positionHotspots(); this._hsRaf = requestAnimationFrame(this._hsTick); };
+    if (!this._hsRaf) this._hsRaf = requestAnimationFrame(this._hsTick);
+    // Watchdog: rAF can be throttled or dropped in hidden/background frames —
+    // if ticks stall, reposition directly and re-arm the loop.
+    if (!this._hsWatch) this._hsWatch = setInterval(() => {
+      if (this._hsCount === this._hsSeen) {
+        cancelAnimationFrame(this._hsRaf);
+        this._hsRaf = requestAnimationFrame(this._hsTick);
+        this._positionHotspots();
+      }
+      this._hsSeen = this._hsCount;
+    }, 600);
+  }
+
+  componentDidUpdate() { this._applyPanoProps(); this._syncTabs(); this._update(); this._startHotspotLoop(); }
+
+  componentWillUnmount() {
+    window.removeEventListener('scroll', this._onScroll, { capture: true });
+    window.removeEventListener('resize', this._onResize);
+    window.removeEventListener('keydown', this._onKey);
+    clearTimeout(this._revealFallback);
+    clearTimeout(this._infoT);
+    cancelAnimationFrame(this._hsRaf);
+    this._hsRaf = 0;
+    clearInterval(this._hsWatch);
+    this._hsWatch = 0;
+  }
+
+  _applyPanoProps() {
+    const p = this.els.pano;
+    if (!p) return;
+    const v = this.props.autorotate === false ? 'off' : String(this.props.rotateSpeed ?? 1.6);
+    if (p.getAttribute('autorotate') !== v) p.setAttribute('autorotate', v);
+  }
+
+  go = (i, scroll) => {
+    const n = this.scenes.length;
+    i = ((i % n) + n) % n;
+    if (i === this.state.i && !scroll) return;
+    const s = this.scenes[i];
+    clearTimeout(this._infoT);
+    this.setState({ i, infoText: '', bookOpen: false, bookDone: false });
+    const p = this.els.pano;
+    if (p && p.setScene) p.setScene({ src: s.src, yaw: s.yaw, pitch: s.pitch, fov: s.fov, label: s.num + ' — ' + s.name });
+    if (scroll && this.els.viewerWrap) window.scrollTo({ top: Math.max(0, this.els.viewerWrap.offsetTop - 72), behavior: 'smooth' });
+  };
+
+  onSceneTab = (ev) => { const b = ev.target.closest && ev.target.closest('[data-i]'); if (b) this.go(+b.getAttribute('data-i')); };
+  onEnter = (ev) => { const b = ev.target.closest && ev.target.closest('[data-i]'); if (b) this.go(+b.getAttribute('data-i'), true); };
+  onPrev = () => this.go(this.state.i - 1);
+  onNext = () => this.go(this.state.i + 1);
+  toggleMenu = () => this.setState((s) => ({ menuOpen: !s.menuOpen }));
+  closeMenu = () => this.setState({ menuOpen: false });
+
+  _syncTabs() {
+    const c = this.els.tabs;
+    if (!c) return;
+    [].forEach.call(c.querySelectorAll('[data-i]'), (b) => {
+      const on = +b.getAttribute('data-i') === this.state.i;
+      b.style.color = on ? '#231a10' : 'rgba(233,223,203,.62)';
+      b.style.background = on ? '#B08E55' : 'transparent';
+      b.style.borderColor = on ? '#B08E55' : 'transparent';
+    });
+  }
+
+  _initReveals() {
+    const nodes = [].slice.call(document.querySelectorAll('[data-reveal]'));
+    this._reveals = [];
+    nodes.forEach((n) => {
+      const dir = n.getAttribute('data-reveal');
+      n.style.opacity = '0';
+      n.style.transform = dir === 'left' ? 'translateX(-46px)' : dir === 'right' ? 'translateX(46px)' : 'translateY(40px)';
+      n.style.transition = 'opacity 1.2s cubic-bezier(.22,.68,.2,1), transform 1.2s cubic-bezier(.22,.68,.2,1)';
+      n.style.transitionDelay = (n.getAttribute('data-delay') || '0') + 'ms';
+      this._reveals.push(n);
+    });
+    this._checkReveals();
+    this._revealFallback = setTimeout(() => {
+      (this._reveals || []).forEach((n) => { n.style.opacity = '1'; n.style.transform = 'none'; });
+      this._reveals = [];
+    }, 4000);
+  }
+
+  _checkReveals() {
+    if (!this._reveals || !this._reveals.length) return;
+    const vh = window.innerHeight || 800;
+    const rest = [];
+    this._reveals.forEach((n) => {
+      if (n.getBoundingClientRect().top < vh * 0.9) { n.style.opacity = '1'; n.style.transform = 'none'; }
+      else rest.push(n);
+    });
+    this._reveals = rest;
+  }
+
+  _update() {
+    this._checkReveals();
+    const nav = this.els.nav, v = this.els.viewerWrap;
+    const solid = v ? (window.scrollY > v.offsetTop + v.offsetHeight - 90) : (window.scrollY > 420);
+    if (nav) {
+      if (solid) Object.assign(nav.style, { background: 'rgba(247,243,236,.92)', color: '#2B2721', boxShadow: '0 10px 40px rgba(70,46,22,.09)', borderBottomColor: '#E7DBC4', backdropFilter: 'saturate(140%) blur(12px)', webkitBackdropFilter: 'saturate(140%) blur(12px)' });
+      else Object.assign(nav.style, { background: 'linear-gradient(180deg,rgba(26,18,12,.5),rgba(26,18,12,0))', color: '#F7F1E7', boxShadow: 'none', borderBottomColor: 'transparent', backdropFilter: 'none', webkitBackdropFilter: 'none' });
+    }
+  }
+
+  renderVals() {
+    const s = this.state, sc = this.scenes[s.i];
+    const season = this._season();
+    const h = s.bookRoom;
+    const nightly = h ? h.rate * season.mult : 0;
+    const direct = h ? (h.flat ? nightly : nightly * s.nights) : 0;
+    const ota = h ? (h.flat ? direct * 1.12 : (nightly / 0.82) * s.nights + 56 * s.nights) : 0;
+    return {
+      hotspots: this.hotspots[s.i] || [],
+      onHotspot: this.onHotspot,
+      infoText: s.infoText,
+      bookOpen: s.bookOpen,
+      bookOpenForm: s.bookOpen && !s.bookDone,
+      bookDone: s.bookDone,
+      showNights: !!(h && !h.flat),
+      nights: s.nights,
+      bookName: h ? h.room : '',
+      bookMeta: h ? h.meta : '',
+      bookTotal: this._euro(direct),
+      bookOta: this._euro(ota),
+      bookSave: this._euro(ota - direct),
+      bookSeason: season.name,
+      closeBook: this.closeBook, moreNights: this.moreNights, fewerNights: this.fewerNights, confirmBook: this.confirmBook,
+      registerRef: this.registerRef,
+      isDesktopNav: s.vw >= 980,
+      isMobileNav: s.vw < 980,
+      menuOpen: s.menuOpen,
+      toggleMenu: this.toggleMenu,
+      closeMenu: this.closeMenu,
+      scenes: this.scenes,
+      sceneKicker: sc.kicker, sceneName: sc.name, sceneDesc: sc.desc,
+      sceneFacts: sc.facts, sceneCta: sc.cta, sceneCtaLabel: sc.ctaLabel,
+      onSceneTab: this.onSceneTab, onEnter: this.onEnter, onPrev: this.onPrev, onNext: this.onNext
+    };
+  }
+}
+</script>
+</body>
+</html>

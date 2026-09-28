@@ -1,0 +1,104 @@
+.hours {
+  padding: clamp(64px, 8vw, 120px) var(--gutter);
+  background: var(--light);
+}
+
+.inner {
+  max-width: var(--max-narrow);
+  margin: 0 auto;
+}
+
+.head {
+  margin-bottom: clamp(40px, 5vw, 64px);
+  text-align: center;
+}
+
+.eyebrow {
+  margin-bottom: 20px;
+}
+
+.title {
+  margin: 0;
+  font: 400 clamp(28px, 3.8vw, 52px) / 1.06 var(--font-display);
+  color: var(--ink);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr));
+  gap: 24px;
+}
+
+/* ---------- venue card ---------- */
+
+.card {
+  padding: 34px 30px;
+  background: var(--paper);
+  border-radius: 4px;
+}
+
+.name {
+  margin: 0 0 6px;
+  font: 400 24px var(--font-display);
+  color: var(--ink);
+}
+
+.type {
+  margin-bottom: 18px;
+  font: 400 12px/1 var(--font-text);
+  letter-spacing: 0.06em;
+  color: var(--muted);
+}
+
+.rows {
+  margin: 0;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-top: 1px solid var(--line);
+  font: 400 15px var(--font-text);
+  color: var(--text);
+}
+
+.row dd {
+  margin: 0;
+  color: var(--bronze);
+}
+
+.link {
+  display: inline-block;
+  margin-top: 16px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--gold);
+  font: 600 11px/1 var(--font-text);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold-light);
+}
+
+/* ---------- dark card (night club) ---------- */
+
+.dark {
+  background: var(--dark);
+  color: var(--cream);
+}
+
+.dark .name {
+  color: var(--cream-2);
+}
+
+.dark .type {
+  color: rgba(201, 180, 138, 0.8);
+}
+
+.dark .row {
+  border-top-color: rgba(233, 223, 203, 0.16);
+  color: rgba(245, 238, 225, 0.82);
+}
+
+.dark .row dd {
+  color: var(--gold-light);
+}
