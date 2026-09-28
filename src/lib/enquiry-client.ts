@@ -4,6 +4,13 @@ export type EnquiryType = "newsletter" | "contact" | "event" | "table" | "spa" |
 
 export type EnquiryResponse = { ok: true } | { ok: false; error: string };
 
+/** True for the static export (GitHub Pages preview), which has no /api/enquiry. */
+const STATIC_EXPORT = process.env.NEXT_PUBLIC_STATIC_EXPORT === "true";
+/** Optional form service for static hosting (e.g. a Formspree endpoint accepting JSON). */
+const FORM_ENDPOINT = process.env.NEXT_PUBLIC_ENQUIRY_ENDPOINT;
+
+const SEND_FAILED = "We couldn't send that just now — please call or email us directly.";
+
 /** Accepts an email address or a phone number (6+ digits). */
 export function isEmailOrPhone(value: string): boolean {
   const v = value.trim();
@@ -16,15 +23,49 @@ export async function submitEnquiry(
   type: EnquiryType,
   fields: Record<string, string | number | boolean | null | undefined>,
 ): Promise<EnquiryResponse> {
+  const payload = { type, fields, page: window.location.pathname };
+
+  if (STATIC_EXPORT) {
+    // Bots fill the hidden honeypot; drop those quietly.
+    if (typeof fields.company === "string" && fields.company.trim()) return { ok: true };
+    if (!FORM_ENDPOINT) {
+      showPreviewNotice();
+      return { ok: true };
+    }
+    try {
+      const res = await fetch(FORM_ENDPOINT, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({ ...payload, ...fields }),
+      });
+      return res.ok ? { ok: true } : { ok: false, error: SEND_FAILED };
+    } catch {
+      return { ok: false, error: SEND_FAILED };
+    }
+  }
+
   try {
     const res = await fetch("/api/enquiry", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ type, fields, page: window.location.pathname }),
+      body: JSON.stringify(payload),
     });
     const data = (await res.json()) as EnquiryResponse;
     return data;
   } catch {
-    return { ok: false, error: "We couldn't send that just now — please call or email us directly." };
+    return { ok: false, error: SEND_FAILED };
   }
+}
+
+/** A short note on the static preview that nothing was actually sent. */
+function showPreviewNotice() {
+  const id = "preview-notice";
+  document.getElementById(id)?.remove();
+  const note = document.createElement("div");
+  note.id = id;
+  note.className = "preview-toast";
+  note.setAttribute("role", "status");
+  note.textContent = "Preview site — this request wasn't sent. On the live site it goes straight to the hotel.";
+  document.body.appendChild(note);
+  window.setTimeout(() => note.remove(), 6500);
 }

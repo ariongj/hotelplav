@@ -5,8 +5,22 @@ import { useCallback, useState, useSyncExternalStore } from "react";
 import { addDays, localTodayIso } from "./pricing";
 import type { AvailabilityQuery, AvailabilityResult } from "./types";
 
-/** Browser-side call to /api/availability. */
+/** True for the static export (GitHub Pages preview), which has no server API. */
+const STATIC_EXPORT = process.env.NEXT_PUBLIC_STATIC_EXPORT === "true";
+
+/**
+ * Rates and availability for a stay: /api/availability on a server
+ * deployment, or the same pricing and mock inventory computed in the browser
+ * on the static preview.
+ */
 export async function fetchAvailability(query: AvailabilityQuery): Promise<AvailabilityResult> {
+  if (STATIC_EXPORT) {
+    const [{ searchWithProvider }, { mockAvailability }] = await Promise.all([
+      import("./search-core"),
+      import("./mock-availability"),
+    ]);
+    return searchWithProvider(query, mockAvailability);
+  }
   const params = new URLSearchParams({
     checkin: query.checkin,
     checkout: query.checkout,

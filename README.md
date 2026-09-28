@@ -23,9 +23,17 @@ Open http://localhost:3000.
 | `npm run lint` | ESLint |
 | `npm run typecheck` | TypeScript only |
 
+## Live preview (GitHub Pages)
+
+Every push to `main` publishes a preview to **https://ariongj.github.io/hotelplav/** through `.github/workflows/pages.yml`.
+
+GitHub Pages only serves static files, so the preview is a static export: the booking engine prices stays in the browser with the mock inventory, and forms show a "this request wasn't sent" note instead of reaching the hotel. To make the preview's forms deliver, create a form endpoint that accepts JSON (e.g. Formspree) and add it as the repository variable `NEXT_PUBLIC_ENQUIRY_ENDPOINT` (Settings → Secrets and variables → Actions → Variables). The preview is marked `noindex` so search engines skip it.
+
+To build the same export locally: remove `src/app/api` from a copy of the project, then run `npm run build` with `NEXT_PUBLIC_STATIC_EXPORT=true` and `NEXT_PUBLIC_BASE_PATH=/hotelplav`; the site is written to `out/`.
+
 ## Deploy
 
-- **Vercel** (recommended): import the GitHub repository, keep the detected Next.js settings, add the environment variables below, deploy.
+- **Vercel** (recommended for the live site): import the GitHub repository, keep the detected Next.js settings, add the environment variables below, deploy.
 - **Netlify** supports Next.js the same way.
 - **Any Node.js host**: `npm ci && npm run build && npm start` (port 3000, or set `PORT`).
 

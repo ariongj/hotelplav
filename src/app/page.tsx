@@ -27,7 +27,7 @@ import { lowestBaseRate } from "@/lib/booking/rooms";
 import { euro } from "@/lib/format";
 
 export const metadata: Metadata = {
-  alternates: { canonical: "/" },
+  alternates: { canonical: `${site.url}/` },
 };
 
 const hotelJsonLd = {

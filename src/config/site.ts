@@ -10,8 +10,8 @@ export const site = {
     "A five-star alpine resort in Brezovica, beneath the Sharr Mountains — suites with a view, three restaurants, a thermal spa and direct-booking rates with no fees.",
   tagline:
     "An alpine sanctuary in the Sharr Mountains — where mountain grandeur meets a warmth that feels like your own.",
-  /** Public origin, used for canonical URLs, sitemap and structured data. */
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://brezovicahotel.com",
+  /** Public URL (no trailing slash), used for canonical URLs, sitemap and structured data. */
+  url: (process.env.NEXT_PUBLIC_SITE_URL ?? "https://brezovicahotel.com").replace(/\/+$/, ""),
   address: {
     line1: "Brezovica Ski Resort",
     locality: "Štrpce",

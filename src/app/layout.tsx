@@ -38,6 +38,8 @@ export const metadata: Metadata = {
   },
   twitter: { card: "summary_large_image" },
   formatDetection: { telephone: false },
+  // Preview deployments (e.g. GitHub Pages) stay out of search results.
+  robots: process.env.NEXT_PUBLIC_NOINDEX === "true" ? { index: false, follow: false } : undefined,
 };
 
 export const viewport: Viewport = {
