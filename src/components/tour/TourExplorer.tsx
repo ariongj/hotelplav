@@ -3,14 +3,21 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import { PanoViewer, projectToView, type PanoHandle, type PanoView } from "@/components/pano/PanoViewer";
+import type { PoiId } from "@/components/resort3d/pois";
+import { ResortMap, type MapFocus } from "@/components/resort3d/ResortMap";
+import type { ViewId } from "@/components/resort3d/resortEngine";
+import { cx } from "@/lib/cx";
 
 import { BookingDrawer, DEFAULT_NIGHTS } from "./BookingDrawer";
-import { sceneIndex, sceneIndexFromHash, sceneLabel, scenes, type Hotspot, type TourOffer } from "./content";
+import { sceneIndex, sceneIndexFromHash, sceneLabel, scenes, type Hotspot, type SceneId, type TourOffer } from "./content";
+import { GuideCard } from "./GuideCard";
+import { guideStops, type GuideStop } from "./guide";
 import { preloadPanoramas } from "./preload";
 import { SceneDetails } from "./SceneDetails";
 import { SceneRail } from "./SceneRail";
 import { SpacesGrid } from "./SpacesGrid";
 import styles from "./TourExplorer.module.css";
+import { useGuidedTour } from "./useGuidedTour";
 
 /** Degrees per second, after 3.5 s without interaction. */
 const AUTOROTATE = 1.6;
@@ -19,15 +26,23 @@ const CAPTION_MS = 7000;
 /** Room left above the viewer for the fixed nav when scrolling to it. */
 const NAV_CLEARANCE = 72;
 
+/** "map": the illustrated 3D resort. "space": the 360° panoramas. */
+type Mode = "map" | "space";
+
 /** A hotspot button and the direction it is pinned to. */
 type Pin = { el: HTMLButtonElement; yaw: number; pitch: number };
 
 /**
- * The interactive tour: the 360° viewer with its hotspots, caption and
- * booking drawer, then the scene rail, the current scene's details and the
- * "Four spaces" grid — all following the current scene.
+ * The interactive tour: a stage that shows either the 3D resort map or the
+ * 360° spaces (with hotspots, caption and booking drawer), a guided tour that
+ * moves between the two, then the scene rail, the current space's details and
+ * the "Four spaces" grid.
  */
 export function TourExplorer() {
+  const [mode, setMode] = useState<Mode>("map");
+  const [spaceMounted, setSpaceMounted] = useState(false);
+  const [mapFocus, setMapFocus] = useState<MapFocus>({ id: "overview", nonce: 0 });
+  const [place, setPlace] = useState<PoiId | null>(null);
   const [index, setIndex] = useState(0);
   const [caption, setCaption] = useState<{ note: string } | null>(null);
   const [booking, setBooking] = useState<{ offer: TourOffer; id: number } | null>(null);
@@ -35,7 +50,8 @@ export function TourExplorer() {
 
   const viewerRef = useRef<HTMLElement>(null);
   const panoRef = useRef<PanoHandle>(null);
-  /** Mirrors `index` for event handlers and the frame loop. */
+  /** Mirror `mode` and `index` for event handlers and the frame loop. */
+  const modeRef = useRef<Mode>("map");
   const indexRef = useRef(0);
   const pins = useRef<(Pin | null)[]>([]);
   const bookingCount = useRef(0);
@@ -43,27 +59,75 @@ export function TourExplorer() {
 
   const scene = scenes[index];
 
-  /** Switch space (wrapping around); `scroll` also brings the viewer into view. */
-  const go = useCallback((target: number, scroll = false) => {
-    const next = ((target % scenes.length) + scenes.length) % scenes.length;
-    if (next === indexRef.current && !scroll) return;
-    setCaption(null);
-    setBooking(null);
-    if (next === indexRef.current) {
-      // Re-entering the current space starts it again from its opening view.
-      const { yaw, pitch, fov } = scenes[next];
-      panoRef.current?.setScene({ yaw, pitch, fov });
-    } else {
-      indexRef.current = next;
-      setIndex(next);
-    }
+  const scrollToViewer = useCallback(() => {
     const viewer = viewerRef.current;
-    if (scroll && viewer) {
-      const top = viewer.getBoundingClientRect().top + window.scrollY - NAV_CLEARANCE;
-      const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      window.scrollTo({ top: Math.max(0, top), behavior: reduce ? "auto" : "smooth" });
-    }
+    if (!viewer) return;
+    const top = viewer.getBoundingClientRect().top + window.scrollY - NAV_CLEARANCE;
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    window.scrollTo({ top: Math.max(0, top), behavior: reduce ? "auto" : "smooth" });
   }, []);
+
+  const showMode = useCallback((next: Mode) => {
+    modeRef.current = next;
+    setMode(next);
+    if (next === "space") setSpaceMounted(true);
+  }, []);
+
+  /** Switch 360° space (wrapping around); `scroll` also brings the stage into view. */
+  const openSpace = useCallback(
+    (target: number, scroll = false) => {
+      const next = ((target % scenes.length) + scenes.length) % scenes.length;
+      showMode("space");
+      setCaption(null);
+      setBooking(null);
+      if (next === indexRef.current) {
+        // Re-entering the current space starts it again from its opening view.
+        const { yaw, pitch, fov } = scenes[next];
+        panoRef.current?.setScene({ yaw, pitch, fov });
+      } else {
+        indexRef.current = next;
+        setIndex(next);
+      }
+      if (scroll) scrollToViewer();
+    },
+    [showMode, scrollToViewer],
+  );
+
+  const flyMap = useCallback(
+    (id: ViewId) => {
+      showMode("map");
+      setMapFocus((focus) => ({ id, nonce: focus.nonce + 1 }));
+    },
+    [showMode],
+  );
+
+  const onGuideStop = useCallback(
+    (stop: GuideStop) => {
+      setPlace(null);
+      if (stop.kind === "map") flyMap(stop.view);
+      else openSpace(sceneIndex(stop.scene));
+    },
+    [flyMap, openSpace],
+  );
+
+  const guide = useGuidedTour(guideStops, onGuideStop);
+  const { start: startGuide, pause: pauseGuide, active: touring } = guide;
+
+  function startTour() {
+    scrollToViewer();
+    startGuide();
+  }
+
+  function chooseMode(next: Mode) {
+    if (touring) pauseGuide();
+    showMode(next);
+  }
+
+  function enterSpace(id: SceneId) {
+    setPlace(null);
+    if (touring) pauseGuide();
+    openSpace(sceneIndex(id));
+  }
 
   const closeBooking = useCallback(() => setBooking(null), []);
 
@@ -95,7 +159,7 @@ export function TourExplorer() {
 
   function onHotspot(hotspot: Hotspot) {
     if (hotspot.kind === "nav") {
-      go(sceneIndex(hotspot.target));
+      openSpace(sceneIndex(hotspot.target));
       return;
     }
     panoRef.current?.lookAt({ yaw: hotspot.yaw, pitch: hotspot.pitch });
@@ -124,92 +188,185 @@ export function TourExplorer() {
     return () => clearTimeout(timer);
   }, [caption]);
 
-  // ← / → switch spaces from anywhere on the page, except in form fields.
+  // ← / → switch 360° spaces from anywhere on the page, except in form fields.
+  // (During the guided tour the guide takes the arrow keys first.)
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key !== "ArrowLeft" && e.key !== "ArrowRight") return;
+      if (modeRef.current !== "space") return;
       if (e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey) return;
       const target = e.target;
       if (target instanceof HTMLElement && (/^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName) || target.isContentEditable)) {
         return;
       }
-      go(indexRef.current + (e.key === "ArrowRight" ? 1 : -1));
+      openSpace(indexRef.current + (e.key === "ArrowRight" ? 1 : -1));
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [go]);
+  }, [openSpace]);
 
-  // Deep links (/tour#room, #chapel, #scene-2 …) open that space.
+  // Deep links: /tour#guided-tour starts the guide; #room, #chapel, #scene-2 …
+  // open that 360° space.
   useEffect(() => {
-    const target = sceneIndexFromHash(window.location.hash);
-    if (target < 0) return;
-    const timer = setTimeout(() => go(target, true), 60);
+    const hash = window.location.hash.toLowerCase();
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    if (hash === "#guided-tour") {
+      timer = setTimeout(() => {
+        scrollToViewer();
+        startGuide();
+      }, 60);
+    } else {
+      const target = sceneIndexFromHash(hash);
+      if (target >= 0) timer = setTimeout(() => openSpace(target, true), 60);
+    }
     return () => clearTimeout(timer);
-  }, [go]);
+  }, [openSpace, scrollToViewer, startGuide]);
+
+  const guidePlace = touring && guide.stop.kind === "map" && guide.stop.view !== "overview" ? guide.stop.view : null;
 
   return (
     <>
-      <section ref={viewerRef} className={styles.viewer} data-nav-anchor>
-        <PanoViewer
-          ref={panoRef}
-          className={styles.pano}
-          src={scene.src}
-          yaw={scene.yaw}
-          pitch={scene.pitch}
-          fov={scene.fov}
-          label={sceneLabel(scene)}
-          autorotate={AUTOROTATE}
-          onFrame={onFrame}
-        >
-          <div className={styles.hotspots}>
-            {scene.hotspots.map((hotspot, i) => (
-              // Keyed by position: the buttons are reused across scenes, so a
-              // focused hotspot keeps focus when it switches scene.
-              <button
-                key={i}
-                ref={(el) => {
-                  pins.current[i] = el ? { el, yaw: hotspot.yaw, pitch: hotspot.pitch } : null;
-                }}
-                type="button"
-                className={styles.hotspot}
-                aria-label={hotspot.label}
-                aria-haspopup={hotspot.kind === "book" ? "dialog" : undefined}
-                onClick={() => onHotspot(hotspot)}
-                onFocus={(e) => revealHotspot(hotspot, e.currentTarget)}
-              >
-                <span className={styles.hotspotIcon} aria-hidden="true">
-                  {hotspot.icon}
-                </span>
-                {hotspot.label}
-              </button>
-            ))}
+      <div className={styles.toolbar}>
+        <div className={styles.toolbarInner}>
+          <div className={styles.modes} role="group" aria-label="Choose a view">
+            <button
+              type="button"
+              className={cx(styles.mode, mode === "map" && styles.modeOn)}
+              aria-pressed={mode === "map"}
+              onClick={() => chooseMode("map")}
+            >
+              3D resort map
+            </button>
+            <button
+              type="button"
+              className={cx(styles.mode, mode === "space" && styles.modeOn)}
+              aria-pressed={mode === "space"}
+              onClick={() => chooseMode("space")}
+            >
+              360&deg; spaces
+            </button>
           </div>
+          <p className={styles.toolbarNote}>Explore freely &mdash; or let us show you around.</p>
+          <button
+            type="button"
+            className={cx(styles.guideButton, touring && styles.guideButtonActive)}
+            onClick={touring ? guide.exit : startTour}
+          >
+            {touring ? (
+              "End guided tour"
+            ) : (
+              <>
+                <svg width="12" height="12" viewBox="0 0 14 14" aria-hidden="true">
+                  <path d="M3.5 1.8v10.4L12 7z" fill="currentColor" />
+                </svg>
+                Start guided tour
+              </>
+            )}
+          </button>
+        </div>
+      </div>
 
-          <div className={styles.captionSlot} role="status">
-            {caption && <div className={styles.caption}>{caption.note}</div>}
-          </div>
-
-          {booking && (
-            <BookingDrawer
-              key={booking.id}
-              offer={booking.offer}
-              scene={scene.name}
-              nights={nights}
-              onNights={setNights}
-              onClose={closeBooking}
+      {/* The guide card overlays the stage on larger screens and docks below it on phones. */}
+      <div className={cx(styles.stage, touring && styles.touring)}>
+        <section ref={viewerRef} className={styles.viewer} data-nav-anchor aria-label="Virtual tour">
+          <div className={styles.layer} hidden={mode !== "map"}>
+            <ResortMap
+              focus={mapFocus}
+              touring={touring}
+              selected={touring ? guidePlace : place}
+              onSelect={(id) => {
+                setPlace(id);
+                flyMap(id);
+              }}
+              onCloseSelected={() => setPlace(null)}
+              onEnter360={enterSpace}
             />
-          )}
-        </PanoViewer>
+          </div>
 
-        {/* Announces scene changes, e.g. from the arrow keys. */}
-        <p className="visually-hidden" aria-live="polite">
-          {sceneLabel(scene)}
-        </p>
-      </section>
+          <div className={styles.layer} hidden={mode !== "space"}>
+            {spaceMounted && (
+              <PanoViewer
+                ref={panoRef}
+                className={styles.pano}
+                src={scene.src}
+                yaw={scene.yaw}
+                pitch={scene.pitch}
+                fov={scene.fov}
+                label={sceneLabel(scene)}
+                autorotate={AUTOROTATE}
+                onFrame={onFrame}
+              >
+                <div className={styles.hotspots}>
+                  {scene.hotspots.map((hotspot, i) => (
+                    // Keyed by position: the buttons are reused across scenes, so a
+                    // focused hotspot keeps focus when it switches scene.
+                    <button
+                      key={i}
+                      ref={(el) => {
+                        pins.current[i] = el ? { el, yaw: hotspot.yaw, pitch: hotspot.pitch } : null;
+                      }}
+                      type="button"
+                      className={styles.hotspot}
+                      aria-label={hotspot.label}
+                      aria-haspopup={hotspot.kind === "book" ? "dialog" : undefined}
+                      onClick={() => onHotspot(hotspot)}
+                      onFocus={(e) => revealHotspot(hotspot, e.currentTarget)}
+                    >
+                      <span className={styles.hotspotIcon} aria-hidden="true">
+                        {hotspot.icon}
+                      </span>
+                      {hotspot.label}
+                    </button>
+                  ))}
+                </div>
 
-      <SceneRail scenes={scenes} current={index} onSelect={go} onStep={(delta) => go(index + delta)} />
+                <div className={styles.captionSlot} role="status">
+                  {caption && <div className={styles.caption}>{caption.note}</div>}
+                </div>
+
+                {booking && (
+                  <BookingDrawer
+                    key={booking.id}
+                    offer={booking.offer}
+                    scene={scene.name}
+                    nights={nights}
+                    onNights={setNights}
+                    onClose={closeBooking}
+                  />
+                )}
+              </PanoViewer>
+            )}
+          </div>
+
+          {/* Announces scene changes, e.g. from the arrow keys. */}
+          <p className="visually-hidden" aria-live="polite">
+            {mode === "space" ? sceneLabel(scene) : ""}
+          </p>
+        </section>
+
+        {touring && (
+          <GuideCard
+            stop={guide.stop}
+            index={guide.index}
+            total={guide.total}
+            isLast={guide.isLast}
+            playing={guide.playing}
+            voice={guide.voice}
+            voiceAvailable={guide.voiceAvailable}
+            runKey={guide.runKey}
+            duration={guide.duration}
+            onBack={guide.back}
+            onNext={guide.next}
+            onTogglePlay={guide.togglePlay}
+            onToggleVoice={guide.toggleVoice}
+            onExit={guide.exit}
+          />
+        )}
+      </div>
+
+      <SceneRail scenes={scenes} current={index} onSelect={openSpace} onStep={(delta) => openSpace(index + delta)} />
       <SceneDetails scene={scene} />
-      <SpacesGrid scenes={scenes} onEnter={(i) => go(i, true)} />
+      <SpacesGrid scenes={scenes} onEnter={(i) => openSpace(i, true)} />
     </>
   );
 }

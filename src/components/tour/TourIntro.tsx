@@ -1,13 +1,13 @@
 import styles from "./TourIntro.module.css";
 
-/** Dark page header above the 360° viewer. */
+/** Dark page header above the virtual tour stage. */
 export function TourIntro() {
   return (
     <section className={styles.intro}>
       <div className={styles.inner}>
         <div className={styles.heading}>
           <div className={styles.eyebrow} data-reveal="up">
-            360&deg; Virtual Tour
+            Virtual Tour &middot; 3D &amp; 360&deg;
           </div>
           <h1 className={styles.title} data-reveal="up" data-delay="80">
             Be there,
@@ -16,8 +16,8 @@ export function TourIntro() {
           </h1>
         </div>
         <p className={styles.lead} data-reveal="up" data-delay="140">
-          Step inside four spaces of the resort in full 360&deg;. Drag to look around, pinch or double-tap to move
-          closer &mdash; as if you were standing there.
+          Fly over the resort in 3D, then step inside four of its spaces in full 360&deg;. Drag to look around, pinch
+          to move closer &mdash; or take the guided tour and let us show you around.
         </p>
       </div>
     </section>

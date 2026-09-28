@@ -1,6 +1,6 @@
 # Brezovica Hotel & SPA — website
 
-Marketing and direct-booking website for a five-star alpine resort in Brezovica, beneath the Sharr Mountains: eight pages, a live rate search with a "best rate direct" comparison against booking sites, a 360° virtual tour with in-tour booking, and enquiry forms for tables, treatments, events and reservations.
+Marketing and direct-booking website for a five-star alpine resort in Brezovica, beneath the Sharr Mountains: eight pages, a live rate search with a "best rate direct" comparison against booking sites, a virtual tour (an interactive 3D resort map, 360° spaces with in-tour booking, and a narrated guided tour), and enquiry forms for tables, treatments, events and reservations.
 
 Built with **Next.js 16** (App Router, Turbopack), **React 19**, **TypeScript** and **CSS Modules**, from the high-fidelity design handoff in [`design/`](design/README.md).
 
@@ -48,7 +48,7 @@ Copy `.env.example` to `.env.local` for local work, or set these in the hosting 
 | `/rooms` | `design/Rooms.dc.html` | Availability search, rate panel, filterable and sortable room grid |
 | `/dining` | `design/Dining.dc.html` | Table requests, venues, interactive chef's tasting menu |
 | `/spa` | `design/Spa.dc.html` | Treatment requests, filterable treatment menu, bathing ritual |
-| `/tour` | `design/Tour.dc.html` | WebGL 360° viewer, hotspots, in-tour booking drawer, deep links (`/tour#room`) |
+| `/tour` | `design/Tour.dc.html` | 3D resort map (three.js), WebGL 360° viewer with hotspots and in-tour booking, guided tour with optional voice; deep links `/tour#room`, `/tour#guided-tour` |
 | `/events` | `design/Events.dc.html` | Weddings, venues, corporate, planning |
 | `/experiences` | `design/Experiences.dc.html` | Winter and green-season activities |
 | `/contact` | `design/Contact.dc.html` | Enquiry form (pre-filled from held rates via the URL), details, location |
@@ -62,6 +62,7 @@ src/
     layout/            nav + mobile menu, footer, sticky reserve bar
     ui/                Photo (next/image wrapper), scroll-reveal observer
     pano/              360° panorama viewer (WebGL) and lazy loader
+    resort3d/          illustrated 3D resort map (three.js, loaded on demand) and its places
     home/ rooms/ dining/ spa/ tour/ events/ experiences/ contact/   page sections
   config/site.ts       hotel name, address, phone, emails, navigation, social and legal links
   lib/booking/         room catalogue, pricing rules, availability provider, search
@@ -79,6 +80,12 @@ Conventions: colours, fonts and spacing are CSS variables in `src/app/globals.cs
 - **Availability** — currently a deterministic mock. To go live, implement `AvailabilityProvider` in `src/lib/booking/availability.ts` for the hotel's PMS or channel manager (Cloudbeds, SiteMinder, HotelRunner, Opera, Mews) and return it from `getAvailabilityProvider()`. Keep API credentials in server-side environment variables.
 - **Checkout** — "Hold this rate" notifies the reservations team (`stay-hold` enquiry) and "Complete reservation" opens the contact form pre-filled with the stay. Replace with the PMS checkout once connected.
 
+## Virtual tour
+
+- **3D resort map** (`src/components/resort3d/`) — a stylised, procedurally generated model of the valley: terrain, lake, hotel, spa, terrace, chapel, ski lift, forest and snowfall. It is illustrative, not a survey of the real site. Places and their copy live in `pois.ts`; building positions and camera angles in `resortEngine.ts`. three.js is code-split and only downloaded on the tour page; phones get a lighter scene (no shadows, fewer trees), and motion respects `prefers-reduced-motion`.
+- **360° spaces** — scenes, hotspots and the booking drawer are in `src/components/tour/content.ts`.
+- **Guided tour** — the stops and narration are in `src/components/tour/guide.ts`; each stop either flies the 3D camera to a place or opens a 360° space. It plays automatically (Back / Pause / Next, ← → keys) and can read the narration aloud with the browser's built-in speech.
+
 ## Forms
 
 Every form posts to `/api/enquiry` with a type (`newsletter`, `contact`, `event`, `table`, `spa`, `stay-hold`), which is validated and delivered by `src/lib/enquiry.ts`. Forms include a honeypot field against bots; add rate limiting or a CAPTCHA if spam becomes a problem.
@@ -86,6 +93,7 @@ Every form posts to `/api/enquiry` with a type (`newsletter`, `contact`, `event`
 ## Before launch
 
 - [ ] Replace placeholder photography (hot-linked from `static.wixstatic.com`) and the 360° panoramas (Wikimedia Commons — attribute or replace) with the hotel's licensed images; then update `images.remotePatterns` in `next.config.ts`.
+- [ ] Check the 3D map's layout against the real resort (building positions, the lake and the lift are illustrative).
 - [ ] Set `ENQUIRY_WEBHOOK_URL` and send a test from each form.
 - [ ] Connect availability to the PMS (see above).
 - [ ] Verify trust figures, awards, reviews and ratings (the design shows both "8.7" and "4.9 / 5").

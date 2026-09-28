@@ -59,7 +59,7 @@ export const mainNav: readonly NavItem[] = [
   { key: "dining", label: "Dining", longLabel: "Dining", href: "/dining" },
   { key: "spa", label: "Spa", longLabel: "Spa & Wellness", href: "/spa" },
   { key: "experiences", label: "Experiences", longLabel: "Experiences", href: "/experiences" },
-  { key: "tour", label: "360° Tour", longLabel: "360° Virtual Tour", href: "/tour" },
+  { key: "tour", label: "Virtual Tour", longLabel: "Virtual Tour · 3D & 360°", href: "/tour" },
   { key: "events", label: "Events", longLabel: "Events & Weddings", href: "/events" },
   { key: "contact", label: "Contact", longLabel: "Contact", href: "/contact" },
 ];

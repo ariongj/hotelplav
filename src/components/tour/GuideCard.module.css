@@ -1,0 +1,219 @@
+.card {
+  position: absolute;
+  left: clamp(12px, 3vw, 28px);
+  bottom: clamp(12px, 3vw, 28px);
+  z-index: 8;
+  width: min(420px, calc(100% - 24px));
+  padding: 20px 22px 18px;
+  overflow: hidden;
+  background: rgba(13, 9, 4, 0.82);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(247, 241, 231, 0.16);
+  border-radius: 4px;
+  color: var(--cream);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.4);
+  animation: rise 0.5s var(--ease-soft);
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+}
+
+/* Phones: dock under the stage instead of covering half of it. */
+@media (max-width: 599.98px) {
+  .card {
+    position: relative;
+    left: auto;
+    bottom: auto;
+    width: 100%;
+    padding: 18px var(--gutter) 20px;
+    border: none;
+    border-top: 1px solid rgba(247, 241, 231, 0.12);
+    border-radius: 0;
+    background: var(--deeper);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    box-shadow: none;
+  }
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.count {
+  font: 500 10px/1 var(--font-text);
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--gold-light);
+}
+
+.exit {
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  background: transparent;
+  border: 1px solid rgba(247, 241, 231, 0.24);
+  border-radius: 50%;
+  color: var(--cream-2);
+  font-size: 17px;
+  line-height: 1;
+}
+
+.kicker {
+  margin-bottom: 8px;
+  font: 500 10px/1 var(--font-text);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(245, 238, 225, 0.55);
+}
+
+.title {
+  margin: 0 0 10px;
+  font: 400 clamp(22px, 2.2vw, 28px) / 1.12 var(--font-display);
+  color: var(--cream-2);
+}
+
+.text {
+  margin: 0;
+  font: 300 15px/1.65 var(--font-text);
+  color: rgba(245, 238, 225, 0.84);
+  text-wrap: pretty;
+}
+
+@media (max-width: 599.98px) {
+  .text {
+    font-size: 14px;
+  }
+}
+
+.link {
+  display: inline-block;
+  margin-top: 14px;
+  font: 600 11px/1 var(--font-text);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--gold-light);
+  border-bottom: 1px solid var(--gold);
+  padding-bottom: 5px;
+}
+
+.link:hover {
+  color: var(--cream);
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.round {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  background: transparent;
+  border: 1px solid rgba(247, 241, 231, 0.3);
+  border-radius: 50%;
+  color: var(--cream-2);
+  font: 600 10px/1 var(--font-text);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition:
+    background-color 0.3s,
+    border-color 0.3s,
+    color 0.3s;
+}
+
+.round:hover:not(:disabled) {
+  border-color: var(--cream-2);
+}
+
+.round:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.play,
+.finish {
+  background: var(--gold);
+  border-color: var(--gold);
+  color: var(--on-gold);
+}
+
+.play:hover:not(:disabled),
+.finish:hover:not(:disabled) {
+  background: var(--gold-hover);
+  border-color: var(--gold-hover);
+}
+
+.voice {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 14px;
+  background: transparent;
+  border: 1px solid rgba(247, 241, 231, 0.24);
+  border-radius: 40px;
+  color: rgba(245, 238, 225, 0.8);
+  font: 600 10px/1 var(--font-text);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  transition:
+    background-color 0.3s,
+    color 0.3s;
+}
+
+.voiceOn {
+  background: rgba(176, 142, 85, 0.22);
+  border-color: var(--gold);
+  color: var(--cream-2);
+}
+
+.progress {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background: rgba(247, 241, 231, 0.12);
+}
+
+.progressFill {
+  display: block;
+  height: 100%;
+  background: var(--gold);
+  transform-origin: left;
+  animation-name: progress;
+  animation-timing-function: linear;
+  animation-fill-mode: both;
+}
+
+@keyframes progress {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card {
+    animation: none;
+  }
+}

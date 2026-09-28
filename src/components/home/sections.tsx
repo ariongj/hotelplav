@@ -188,8 +188,11 @@ export function TourTeaser() {
             <Link href="/tour" className={ui.btnGold}>
               Launch the full tour
             </Link>
-            <span className={styles.tourHint}>Drag to look around &middot; double-tap to zoom</span>
+            <Link href="/tour#guided-tour" className={styles.guidedLink}>
+              Take the guided 3D tour &rarr;
+            </Link>
           </div>
+          <p className={styles.tourHint}>Drag to look around &middot; double-tap to zoom</p>
         </div>
         <div data-reveal="right" className={styles.tourFrame}>
           <LazyPanoViewer

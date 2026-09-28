@@ -8,9 +8,9 @@ import { TourIntro } from "@/components/tour/TourIntro";
 import { contactHref } from "@/lib/contact-link";
 
 export const metadata: Metadata = {
-  title: "360° Virtual Tour",
+  title: "Virtual Tour — 3D Resort Map & 360° Spaces",
   description:
-    "Step inside the resort in full 360° — the Sharr Valley, the Grand Hall, an Alpine Room and the chapel — and hold a direct rate without leaving the tour.",
+    "Fly over the resort in 3D, step inside the Grand Hall, an Alpine Room and the chapel in full 360°, or take the guided tour — and hold a direct rate without leaving it.",
 };
 
 export default function TourPage() {

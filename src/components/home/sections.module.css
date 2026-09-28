@@ -326,8 +326,22 @@
 }
 
 .tourHint {
+  margin: 18px 0 0;
   font: 400 13px var(--font-text);
   color: rgba(245, 238, 225, 0.55);
+}
+
+.guidedLink {
+  font: 600 11px/1 var(--font-text);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold-light);
+  border-bottom: 1px solid var(--gold);
+  padding-bottom: 6px;
+}
+
+.guidedLink:hover {
+  color: var(--cream);
 }
 
 .tourFrame {

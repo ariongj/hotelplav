@@ -1,9 +1,136 @@
+/* ---------- toolbar: view switch + guided tour ---------- */
+
+.toolbar {
+  padding: 0 var(--gutter) clamp(18px, 2.4vw, 26px);
+  background: var(--deeper);
+}
+
+.toolbarInner {
+  max-width: var(--max);
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px 22px;
+}
+
+.modes {
+  display: inline-flex;
+  gap: 4px;
+  padding: 4px;
+  background: rgba(247, 241, 231, 0.07);
+  border: 1px solid rgba(247, 241, 231, 0.16);
+  border-radius: 40px;
+}
+
+.mode {
+  min-height: 40px;
+  padding: 0 18px;
+  background: transparent;
+  border: none;
+  border-radius: 40px;
+  color: rgba(245, 238, 225, 0.72);
+  font: 500 11px/1 var(--font-text);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition:
+    background-color 0.3s,
+    color 0.3s;
+}
+
+.mode:hover {
+  color: var(--cream-2);
+}
+
+.modeOn,
+.modeOn:hover {
+  background: var(--cream-2);
+  color: var(--on-gold);
+}
+
+.toolbarNote {
+  margin: 0;
+  font: 300 14px/1.5 var(--font-text);
+  color: rgba(245, 238, 225, 0.55);
+}
+
+.guideButton {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 48px;
+  padding: 0 24px;
+  background: var(--gold);
+  color: var(--on-gold);
+  border: 1px solid var(--gold);
+  border-radius: 2px;
+  font: 600 11px/1 var(--font-text);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  transition:
+    background-color 0.3s,
+    color 0.3s;
+}
+
+.guideButton:hover {
+  background: var(--gold-hover);
+}
+
+.guideButtonActive {
+  background: transparent;
+  border-color: rgba(247, 241, 231, 0.4);
+  color: var(--cream-2);
+}
+
+.guideButtonActive:hover {
+  background: rgba(247, 241, 231, 0.08);
+}
+
+@media (max-width: 699.98px) {
+  .toolbarNote {
+    display: none;
+  }
+
+  .modes,
+  .guideButton {
+    flex: 1 1 100%;
+    margin-left: 0;
+  }
+
+  .mode {
+    flex: 1;
+    padding: 0 10px;
+  }
+}
+
 /* ---------- viewer ---------- */
+
+/* Positioning context for the guide card (see GuideCard.module.css). */
+.stage {
+  position: relative;
+}
 
 .viewer {
   position: relative;
   height: clamp(480px, 80vh, 860px);
   background: #0d0904;
+}
+
+/* Phones: while the guide talks, shrink the stage so it and the docked card
+   fit on one screen below the nav. */
+@media (max-width: 599.98px) {
+  .touring .viewer {
+    height: max(280px, calc(100svh - 380px));
+  }
+}
+
+/* The 3D map and the 360° spaces share the stage; `hidden` swaps them. */
+.layer {
+  position: absolute;
+  inset: 0;
 }
 
 /* Two classes, to out-rank the viewer's own `position: relative`. */
