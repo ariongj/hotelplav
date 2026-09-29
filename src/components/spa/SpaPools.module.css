@@ -1,0 +1,184 @@
+.baths {
+  padding: var(--section-y) var(--gutter);
+  background: var(--paper);
+}
+
+.grid {
+  display: grid;
+  gap: clamp(40px, 5vw, 88px);
+  max-width: var(--max);
+  margin: 0 auto;
+}
+
+@media (min-width: 960px) {
+  .grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+    align-items: center;
+  }
+}
+
+/* ---------- photo + floating note ---------- */
+
+.mediaCol {
+  position: relative;
+}
+
+.media {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  border-radius: var(--r-xl);
+  box-shadow: var(--shadow-lift);
+}
+
+.media .photo {
+  position: absolute;
+  inset: 0;
+  aspect-ratio: auto;
+}
+
+.float {
+  position: relative;
+  margin: -64px 16px 0;
+  padding: 20px 22px;
+}
+
+/* A little more opaque than ui.glass, so the note stays legible over the photo. */
+.mediaCol .float {
+  background: var(--glass-strong);
+}
+
+@media (min-width: 600px) {
+  .float {
+    position: absolute;
+    left: 20px;
+    right: auto;
+    bottom: 20px;
+    max-width: 330px;
+    margin: 0;
+  }
+}
+
+.floatKicker {
+  margin-bottom: 8px;
+  font: 700 11px/1 var(--font-text);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--lake);
+}
+
+.floatText {
+  margin: 0;
+  font: 400 15px/1.55 var(--font-text);
+  color: var(--ink);
+}
+
+/* ---------- copy ---------- */
+
+.eyebrow {
+  margin-bottom: 22px;
+}
+
+.title {
+  margin-bottom: 22px;
+  letter-spacing: -0.022em;
+}
+
+.title em {
+  font-style: italic;
+  color: var(--lake);
+}
+
+.text {
+  max-width: 48ch;
+  margin-bottom: 26px;
+}
+
+.features {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 32px;
+  padding: 0;
+  list-style: none;
+}
+
+.feature {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 15px;
+  background: var(--light);
+  border: 1px solid var(--line-3);
+  border-radius: var(--r-pill);
+  font: 500 14px/1.2 var(--font-text);
+  color: var(--text);
+}
+
+.feature::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--lake);
+}
+
+/* ---------- stat cards ---------- */
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin: 0;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column-reverse;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: clamp(18px, 2vw, 24px);
+  background: var(--light);
+  border: 1px solid var(--line-2);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-soft);
+}
+
+.statValue {
+  margin: 0;
+  font: 400 clamp(38px, 4vw, 54px) / 1 var(--font-display);
+  letter-spacing: -0.03em;
+  font-variant-numeric: lining-nums;
+  color: var(--ink);
+}
+
+.statUnit {
+  margin-left: 2px;
+  font-size: 0.5em;
+  letter-spacing: 0;
+  color: var(--lake);
+}
+
+.statLabel {
+  font: 500 14px/1.4 var(--font-text);
+  color: var(--text-soft);
+}
+
+.statDark {
+  background:
+    radial-gradient(120% 100% at 100% 0%, rgba(47, 113, 118, 0.6), transparent 65%),
+    var(--deeper);
+  border-color: transparent;
+}
+
+.statDark .statValue {
+  color: var(--cream-2);
+}
+
+.statDark .statUnit {
+  color: var(--gold-light);
+}
+
+.statDark .statLabel {
+  color: rgba(238, 244, 243, 0.76);
+}

@@ -130,6 +130,24 @@ export class PanoEngine {
     this.poke();
   }
 
+  /**
+   * Turn the view by about this many degrees (keyboard). Glides there by
+   * giving the camera the momentum a drag would; a held key keeps it turning.
+   */
+  turnBy(dYaw: number, dPitch: number) {
+    clearInterval(this.lookTimer);
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      this.yaw += dYaw;
+      this.pitch = clamp(this.pitch + dPitch, -PITCH_LIMIT, PITCH_LIMIT);
+    } else {
+      // Momentum decays as 0.05^t, so a start speed of d · ln 20 travels d in all.
+      this.vy = dYaw * Math.log(20);
+      this.vp = dPitch * Math.log(20);
+    }
+    this.el.hint.style.opacity = "0";
+    this.poke();
+  }
+
   toggleFullscreen() {
     if (document.fullscreenElement === this.el.host) void document.exitFullscreen?.();
     else void this.el.host.requestFullscreen?.();
@@ -314,7 +332,7 @@ export class PanoEngine {
     );
 
     this.hintTimer = setTimeout(() => {
-      if (!this.lastAct) hint.style.opacity = "0";
+      hint.style.opacity = "0";
     }, 7000);
   }
 
@@ -350,7 +368,7 @@ export class PanoEngine {
       if (this.src !== src) return;
       const gl = this.gl;
       if (!gl) {
-        wrap.style.background = `#0d0904 url(${JSON.stringify(src)}) center/cover no-repeat`;
+        wrap.style.background = `#061a1d url(${JSON.stringify(src)}) center/cover no-repeat`;
       } else {
         let source: TexImageSource = img;
         const max = (gl.getParameter(gl.MAX_TEXTURE_SIZE) as number) || 4096;

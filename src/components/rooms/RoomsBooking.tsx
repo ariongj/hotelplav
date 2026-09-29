@@ -21,22 +21,19 @@ export type RatesSuccess = {
   availability: Availability;
   /** Guest label the search ran with, e.g. "2 Adults". */
   guestLabel: string;
-  rows: RateRow[];
 };
 
 export type RatesOutcome = RatesSuccess | { id: number; ok: false; error: string };
 
-const MAX_RATE_ROWS = 5;
-
 /** Bookable rooms among those the filters show, cheapest direct total first. */
-function bookableRows(availability: Availability, filters: RoomFilters): RateRow[] {
+function bookableRows(availability: Availability, visibleRooms: readonly RoomType[]): RateRow[] {
   const quotes = new Map(availability.rooms.map((quote) => [quote.id, quote]));
   const rows: RateRow[] = [];
-  for (const room of filterRooms(filters)) {
+  for (const room of visibleRooms) {
     const quote = quotes.get(room.id);
     if (quote && quote.left > 0 && quote.fits) rows.push({ room, quote });
   }
-  return rows.sort((a, b) => a.quote.direct - b.quote.direct).slice(0, MAX_RATE_ROWS);
+  return rows.sort((a, b) => a.quote.direct - b.quote.direct);
 }
 
 type RoomsBookingValue = {
@@ -56,6 +53,11 @@ type RoomsBookingValue = {
   visibleRooms: RoomType[];
   loading: boolean;
   outcome: RatesOutcome | null;
+  /**
+   * Bookable room types from the last search that pass the filters as they
+   * are now, cheapest first — the rates panel follows the filters live.
+   */
+  rateRows: RateRow[];
   search: () => void;
   /** Sticky bar: the first time, bring the availability bar into view and then search. */
   searchFromStickyBar: () => void;
@@ -83,20 +85,25 @@ export function RoomsBookingProvider({ children }: { children: ReactNode }) {
 
   const visibleRooms = useMemo(() => filterRooms(filters), [filters]);
 
+  const rateRows = useMemo(
+    () => (outcome?.ok ? bookableRows(outcome.availability, visibleRooms) : []),
+    [outcome, visibleRooms],
+  );
+
   const search = useCallback(() => {
     const id = ++lastRequest.current;
     setLoading(true);
+    // fetchAvailability never throws: failures come back as { ok: false }.
     void fetchAvailability({ checkin, checkout, guests: paxFor(guests) }).then((result) => {
       if (id !== lastRequest.current) return; // a newer search is on its way
       setLoading(false);
-      // Rows reflect the filters as they were when the search was made.
       setOutcome(
         result.ok
-          ? { id, ok: true, availability: result, guestLabel: guests, rows: bookableRows(result, filters) }
+          ? { id, ok: true, availability: result, guestLabel: guests }
           : { id, ok: false, error: result.error },
       );
     });
-  }, [checkin, checkout, guests, filters]);
+  }, [checkin, checkout, guests]);
 
   const searchFromStickyBar = useCallback(() => {
     if (outcome || loading) {
@@ -139,6 +146,7 @@ export function RoomsBookingProvider({ children }: { children: ReactNode }) {
       visibleRooms,
       loading,
       outcome,
+      rateRows,
       search,
       searchFromStickyBar,
     }),
@@ -156,6 +164,7 @@ export function RoomsBookingProvider({ children }: { children: ReactNode }) {
       visibleRooms,
       loading,
       outcome,
+      rateRows,
       search,
       searchFromStickyBar,
     ],

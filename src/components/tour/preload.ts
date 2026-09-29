@@ -1,9 +1,9 @@
 /*
  * Warms the browser cache with the other scenes' panoramas once the first one
  * is showing, so a scene switch cross-fades straight away instead of holding
- * the previous frame while several megabytes download. (In the prototype the
- * "Four spaces" thumbnails were the full-size panoramas, which had the same
- * effect; those thumbnails are now small optimised images.)
+ * the previous frame while several megabytes download. The "Four spaces"
+ * cards use small Commons thumbnails (Scene.thumb), so the full panoramas are
+ * only fetched by the viewer and by this warm-up.
  */
 
 const requested = new Set<string>();

@@ -1,190 +1,388 @@
-.section {
-  padding: clamp(30px, 4vw, 56px) var(--gutter-tight) 0;
-  background: var(--paper);
-}
+/* ---------- heading ---------- */
 
-.inner {
-  max-width: var(--max);
-  margin: 0 auto;
-}
-
-.toolbar {
+.head {
   display: flex;
   flex-wrap: wrap;
   align-items: flex-end;
-  gap: 20px 24px;
-  padding: 22px 0;
-  border-top: 1px solid var(--line);
-  border-bottom: 1px solid var(--line);
+  justify-content: space-between;
+  gap: 14px 32px;
+  margin-bottom: clamp(22px, 3vw, 34px);
 }
 
-/* ---------- room type (segmented) ---------- */
+.title {
+  margin-top: 16px;
+}
+
+.title em {
+  font-style: italic;
+  color: var(--lake);
+}
+
+.count {
+  margin: 0;
+  font: 400 15px/1.4 var(--font-text);
+  color: var(--text-soft);
+}
+
+.count strong {
+  font-weight: 700;
+  color: var(--ink);
+}
+
+/* ---------- sticky bar ---------- */
+
+/* Sticks just under the floating nav while the grid scrolls past. */
+.sticky {
+  position: sticky;
+  top: 86px;
+  z-index: 20;
+}
+
+.bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px;
+  background: var(--glass-strong);
+  -webkit-backdrop-filter: saturate(160%) blur(18px);
+  backdrop-filter: saturate(160%) blur(18px);
+  border: 1px solid var(--line-2);
+  border-radius: var(--r-pill);
+  box-shadow: var(--shadow-soft);
+  /* Wraps rather than spilling out if the controls ever outgrow one row. */
+  flex-wrap: wrap;
+}
+
+.bar > * {
+  flex: 0 0 auto;
+}
+
+.bar :focus-visible {
+  outline-offset: -2px;
+}
+
+.filtersButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  min-height: 44px;
+  padding: 0 16px 0 14px;
+  background: var(--lighter);
+  border: 1px solid var(--line-3);
+  border-radius: var(--r-pill);
+  font: 700 14px/1 var(--font-text);
+  color: var(--ink);
+  transition:
+    background-color 0.25s,
+    border-color 0.25s,
+    color 0.25s;
+}
+
+.filtersButton:hover {
+  border-color: var(--ink);
+}
+
+.filtersButton[aria-expanded="true"] {
+  background: var(--teal);
+  border-color: var(--teal);
+  color: var(--cream-2);
+}
+
+/* Two slider lines with knobs, drawn in CSS. */
+.slidersIcon {
+  position: relative;
+  width: 16px;
+  height: 12px;
+  background:
+    linear-gradient(currentColor, currentColor) 0 2px / 100% 1.5px no-repeat,
+    linear-gradient(currentColor, currentColor) 0 9px / 100% 1.5px no-repeat;
+}
+
+.slidersIcon::before,
+.slidersIcon::after {
+  content: "";
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--lighter);
+  box-shadow: 0 0 0 1.5px currentColor;
+}
+
+.slidersIcon::before {
+  top: 0.5px;
+  left: 3px;
+}
+
+.slidersIcon::after {
+  top: 7.5px;
+  right: 3px;
+}
+
+.filtersButton[aria-expanded="true"] .slidersIcon::before,
+.filtersButton[aria-expanded="true"] .slidersIcon::after {
+  background: var(--teal);
+}
+
+.badge {
+  display: inline-grid;
+  place-items: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  background: var(--gold);
+  border-radius: var(--r-pill);
+  font: 700 12px/1 var(--font-text);
+  color: var(--on-gold);
+}
+
+/* ---------- room type ---------- */
 
 .segmented {
   display: flex;
-  flex: 0 0 auto;
-  align-self: center;
-  gap: 6px;
-  padding: 4px;
-  background: #eae0ce;
-  border-radius: 40px;
+  gap: 2px;
+  padding: 3px;
+  background: var(--mist);
+  border-radius: var(--r-pill);
 }
 
 .segment {
-  padding: 9px 18px;
-  border: none;
-  border-radius: 40px;
+  min-height: 38px;
+  padding: 0 16px;
   background: transparent;
+  border: none;
+  border-radius: var(--r-pill);
+  font: 600 14px/1 var(--font-text);
   color: var(--text-soft);
-  font: 500 11px/1 var(--font-text);
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  cursor: pointer;
   transition:
-    background-color 0.3s,
-    color 0.3s;
+    background-color 0.25s,
+    color 0.25s,
+    box-shadow 0.25s;
+}
+
+.segment:hover {
+  color: var(--ink);
 }
 
 .segment[aria-pressed="true"] {
-  background: var(--ink);
-  color: var(--paper);
+  background: var(--lighter);
+  color: var(--ink);
+  box-shadow: 0 2px 10px rgba(12, 44, 48, 0.12);
 }
 
-/* At phone width the four options share one full-width row instead of
-   overflowing it. */
-@media (max-width: 480px) {
-  .segmented {
-    flex: 1 1 100%;
-  }
+/* ---------- sort + clear ---------- */
 
-  .segment {
-    flex: 1 1 auto;
-    padding-inline: 6px;
+.sort {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: auto;
+  padding-left: 12px;
+}
+
+.sortLabel {
+  font: 600 13px/1 var(--font-text);
+  color: var(--muted);
+}
+
+.sortSelect {
+  min-height: 44px;
+  padding: 0 34px 0 10px;
+  /* Longhands, so the global select chevron survives. */
+  background-color: transparent;
+  border: none;
+  border-radius: var(--r-pill);
+  font: 700 14px/1 var(--font-text);
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.sortSelect:hover,
+.sortSelect:focus-visible {
+  background-color: var(--mist);
+}
+
+.sortSelect:focus-visible {
+  outline: 2px solid var(--gold);
+}
+
+.clear {
+  min-height: 44px;
+  padding: 0 16px;
+  background: transparent;
+  border: none;
+  border-radius: var(--r-pill);
+  font: 700 14px/1 var(--font-text);
+  color: var(--lake);
+  text-decoration: underline;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 4px;
+}
+
+.clear:hover {
+  color: var(--ink);
+}
+
+/* ---------- filter panel ---------- */
+
+.panel {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 0;
+  display: grid;
+  gap: 22px;
+  width: min(720px, 100%);
+  /* Scrolls inside itself so that, while stuck, it stays between the bar and
+     the floating "Check availability" bar at the bottom of the screen. */
+  max-height: max(280px, calc(100svh - 260px));
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: clamp(18px, 2.6vw, 28px);
+  background: var(--light);
+  border: 1px solid var(--line-2);
+  border-radius: var(--r-xl);
+  box-shadow: var(--shadow-lift);
+  animation: panel-in 0.3s var(--ease-soft);
+}
+
+.panel[hidden] {
+  display: none;
+}
+
+@keyframes panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
   }
 }
 
-/* ---------- selects and price ---------- */
-
-.field {
+.group {
   display: flex;
   flex-direction: column;
-  gap: 7px;
+  gap: 12px;
 }
 
-.selectField {
-  flex: 1 1 120px;
-  min-width: 110px;
-}
-
-.sortField {
-  flex: 1 1 130px;
-  min-width: 120px;
-  margin-left: auto;
-}
-
-.priceField {
-  flex: 1 1 180px;
-  gap: 11px;
-  min-width: 160px;
-}
-
-.label {
-  font: 500 10px/1 var(--font-text);
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--muted-2);
+.groupHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
 }
 
 .priceValue {
+  font: 700 15px/1 var(--font-text);
   color: var(--bronze);
-  letter-spacing: 0;
-}
-
-.select {
-  width: 100%;
-  padding: 11px 34px 11px 14px;
-  border: 1px solid var(--line-3);
-  border-radius: 2px;
-  /* Longhand, so the global select chevron survives. */
-  background-color: var(--light);
-  color: var(--ink);
-  font: 400 14px var(--font-text);
-  cursor: pointer;
 }
 
 .range {
   width: 100%;
-}
-
-/* The global input:focus reset removes the outline; ring the thumb instead. */
-.range:focus-visible::-webkit-slider-thumb {
-  box-shadow:
-    0 0 0 4px rgba(176, 142, 85, 0.3),
-    0 2px 6px rgba(120, 90, 50, 0.3);
-}
-
-.range:focus-visible::-moz-range-thumb {
-  box-shadow: 0 0 0 4px rgba(176, 142, 85, 0.3);
-}
-
-/* ---------- amenities + count ---------- */
-
-.chipsRow {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 14px;
-  padding: 20px 0 4px;
+  margin: 6px 0;
 }
 
 .chips {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
   gap: 8px;
 }
 
-.chipsLabel {
-  margin-right: 4px;
+.chip {
+  min-height: 40px;
+  padding: 0 16px;
+  background: var(--lighter);
+  border: 1px solid var(--line-3);
+  border-radius: var(--r-pill);
+  font: 600 14px/1 var(--font-text);
+  color: var(--text-2);
+  transition:
+    background-color 0.25s,
+    border-color 0.25s,
+    color 0.25s;
 }
 
-.chip {
-  padding: 8px 15px;
-  background: transparent;
-  color: var(--text-soft);
-  border: 1px solid var(--line-chip);
-  border-radius: 40px;
-  font: 500 11px/1 var(--font-text);
-  letter-spacing: 0.08em;
-  cursor: pointer;
-  transition:
-    background-color 0.3s,
-    border-color 0.3s,
-    color 0.3s;
+.chip:hover {
+  border-color: var(--ink);
+  color: var(--ink);
 }
 
 .chip[aria-pressed="true"] {
-  background: var(--gold);
-  color: var(--on-gold);
-  border-color: var(--gold);
+  background: var(--teal);
+  border-color: var(--teal);
+  color: var(--cream-2);
 }
 
-.clear {
-  padding: 8px 12px;
+.panelFoot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line-2);
+}
+
+.clearAll {
+  min-height: 44px;
+  padding: 0 4px;
   background: transparent;
-  color: var(--muted-2);
   border: none;
-  font: 500 11px/1 var(--font-text);
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+  font: 700 14px/1 var(--font-text);
+  color: var(--ink);
   text-decoration: underline;
-  text-underline-offset: 3px;
-  cursor: pointer;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 4px;
 }
 
-.count {
-  font: 400 13px/1 var(--font-text);
-  letter-spacing: 0.04em;
-  color: var(--muted);
+.done {
+  min-height: 48px;
+  padding: 0 26px;
+  background: var(--teal);
+  border: none;
+  border-radius: var(--r-pill);
+  font: 700 15px/1 var(--font-text);
+  color: var(--cream-2);
+  transition: background-color 0.25s;
+}
+
+.done:hover {
+  background: var(--teal-2);
+}
+
+/* Too narrow for one row (with Clear and the badge it runs to ~770px): the
+   room types across the top, then Filters and Sort — nothing hidden
+   off-screen. */
+@media (max-width: 860px) {
+  .bar {
+    border-radius: var(--r-lg);
+  }
+
+  .bar > .segmented {
+    order: -1;
+    flex: 1 1 100%;
+  }
+
+  .segment {
+    flex: 1 1 auto;
+    padding: 0 10px;
+  }
+}
+
+@media (max-width: 600px) {
+  .sticky {
+    /* The nav is shorter on phones. */
+    top: 80px;
+  }
+
+  .sort {
+    padding-left: 4px;
+  }
+
+  .done {
+    flex: 1 1 auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .panel {
+    animation: none;
+  }
 }

@@ -2,24 +2,32 @@
 
 import { useCallback, useState, useSyncExternalStore } from "react";
 
-import { addDays, localTodayIso } from "./pricing";
+import { addDays, isIsoDate, localTodayIso } from "./pricing";
 import type { AvailabilityQuery, AvailabilityResult } from "./types";
 
 /** True for the static export (GitHub Pages preview), which has no server API. */
 const STATIC_EXPORT = process.env.NEXT_PUBLIC_STATIC_EXPORT === "true";
 
+const UNREACHABLE =
+  "We couldn't reach our reservations system just now — please try again, or call us and we'll price your stay.";
+
 /**
  * Rates and availability for a stay: /api/availability on a server
  * deployment, or the same pricing and mock inventory computed in the browser
- * on the static preview.
+ * on the static preview. Never throws — failures come back as { ok: false }.
  */
 export async function fetchAvailability(query: AvailabilityQuery): Promise<AvailabilityResult> {
   if (STATIC_EXPORT) {
-    const [{ searchWithProvider }, { mockAvailability }] = await Promise.all([
-      import("./search-core"),
-      import("./mock-availability"),
-    ]);
-    return searchWithProvider(query, mockAvailability);
+    // The search code loads on demand; the chunk can fail (offline, or a redeploy while the page is open).
+    try {
+      const [{ searchWithProvider }, { mockAvailability }] = await Promise.all([
+        import("./search-core"),
+        import("./mock-availability"),
+      ]);
+      return await searchWithProvider(query, mockAvailability);
+    } catch {
+      return { ok: false, error: UNREACHABLE };
+    }
   }
   const params = new URLSearchParams({
     checkin: query.checkin,
@@ -31,10 +39,7 @@ export async function fetchAvailability(query: AvailabilityQuery): Promise<Avail
     const res = await fetch(`/api/availability?${params}`, { cache: "no-store" });
     return (await res.json()) as AvailabilityResult;
   } catch {
-    return {
-      ok: false,
-      error: "We couldn't reach our reservations system just now — please try again, or call us and we'll price your stay.",
-    };
+    return { ok: false, error: UNREACHABLE };
   }
 }
 
@@ -62,7 +67,7 @@ export function useStayDates(leadDays = 30, defaultNights = 2) {
   const today = hydrated ? localTodayIso() : "";
   const defaultCheckin = hydrated ? addDays(today, leadDays) : "";
   const checkin = checkinInput ?? defaultCheckin;
-  const checkout = checkoutInput ?? (checkin ? addDays(checkin, defaultNights) : "");
+  const checkout = checkoutInput ?? (isIsoDate(checkin) ? addDays(checkin, defaultNights) : "");
 
   const reset = useCallback(() => {
     setCheckin(null);

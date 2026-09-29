@@ -1,8 +1,8 @@
 {
-  "name": "brezovica-hotel",
+  "name": "plav-hotel",
   "version": "0.1.0",
   "private": true,
-  "description": "Brezovica Hotel & SPA — marketing and direct-booking website (Next.js App Router).",
+  "description": "Plav Hotel — lakeside hotel & spa on Lake Plav, Montenegro: marketing and direct-booking website (Next.js App Router).",
   "engines": {
     "node": ">=20.9.0"
   },

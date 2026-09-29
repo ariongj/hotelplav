@@ -3,16 +3,37 @@
   position: relative;
 }
 
+/* Focusable for the arrow keys. The ring is drawn inside, above the canvas,
+   where a rounded, clipping stage can't cut it off. */
+.host:focus-visible {
+  outline: none;
+}
+
+.host::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 9;
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 2px var(--gold-light);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.host:focus-visible::after {
+  opacity: 1;
+}
+
 /* Stand-in for LazyPanoViewer before the viewer mounts. */
 .placeholder {
-  background: #0d0904;
+  background: #061a1d;
 }
 
 .wrap {
   position: absolute;
   inset: 0;
   overflow: hidden;
-  background: #0d0904;
+  background: #061a1d;
   -webkit-user-select: none;
   user-select: none;
   cursor: grab;
@@ -51,18 +72,26 @@
 .badge {
   background: var(--gold);
   color: var(--on-gold);
-  font: 600 10px/1 var(--font-text);
-  letter-spacing: 0.14em;
-  padding: 7px 9px;
-  border-radius: 2px;
+  font: 700 12px/1 var(--font-text);
+  letter-spacing: 0.02em;
+  padding: 7px 10px;
+  border-radius: var(--r-pill);
 }
 
+/* Dark glass, so the name stays legible over bright stone and white walls. */
 .label {
+  padding: 6px 12px;
+  background: rgba(6, 26, 29, 0.72);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  border-radius: var(--r-pill);
   color: var(--cream-2);
-  font: 500 11px/1.4 var(--font-text);
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.7);
+  font: 600 13px/1.2 var(--font-text);
+  letter-spacing: 0.01em;
+}
+
+.label:empty {
+  display: none;
 }
 
 .hint {
@@ -70,15 +99,14 @@
   left: 50%;
   bottom: 16px;
   transform: translateX(-50%);
-  background: rgba(13, 9, 4, 0.55);
+  background: rgba(6, 26, 29, 0.72);
   -webkit-backdrop-filter: blur(6px);
   backdrop-filter: blur(6px);
-  color: rgba(247, 241, 231, 0.9);
-  font: 500 11px/1 var(--font-text);
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+  color: rgba(246, 249, 248, 0.92);
+  font: 500 13px/1 var(--font-text);
+  letter-spacing: 0.01em;
   padding: 10px 16px;
-  border-radius: 30px;
+  border-radius: var(--r-pill);
   pointer-events: none;
   transition: opacity 0.6s;
   white-space: nowrap;
@@ -99,18 +127,26 @@
   align-items: center;
   justify-content: center;
   padding: 0;
-  background: rgba(13, 9, 4, 0.55);
+  background: rgba(6, 26, 29, 0.55);
   -webkit-backdrop-filter: blur(6px);
   backdrop-filter: blur(6px);
-  border: 1px solid rgba(247, 241, 231, 0.22);
-  border-radius: 2px;
+  border: 1px solid rgba(246, 249, 248, 0.22);
+  border-radius: 50%;
   color: var(--cream-2);
   font: 400 17px/1 var(--font-text);
   transition: background-color 0.3s;
 }
 
 .control:hover {
-  background: rgba(13, 9, 4, 0.8);
+  background: rgba(6, 26, 29, 0.8);
+}
+
+/* Finger-sized targets on touch screens. */
+@media (pointer: coarse) {
+  .control {
+    width: 44px;
+    height: 44px;
+  }
 }
 
 .loader {
@@ -121,7 +157,7 @@
   align-items: center;
   justify-content: center;
   gap: 16px;
-  background: #0d0904;
+  background: #061a1d;
   transition: opacity 0.5s;
   pointer-events: none;
 }
@@ -130,16 +166,15 @@
   width: 38px;
   height: 38px;
   border-radius: 50%;
-  border: 2px solid rgba(176, 142, 85, 0.25);
+  border: 2px solid rgba(184, 137, 74, 0.25);
   border-top-color: var(--gold);
   animation: spin 1s linear infinite;
 }
 
 .loaderText {
-  color: rgba(247, 241, 231, 0.6);
-  font: 500 10px/1 var(--font-text);
-  letter-spacing: 0.24em;
-  text-transform: uppercase;
+  color: rgba(246, 249, 248, 0.7);
+  font: 500 13px/1 var(--font-text);
+  letter-spacing: 0.01em;
 }
 
 .error {
@@ -148,11 +183,11 @@
   top: 50%;
   transform: translate(-50%, -50%);
   display: none;
-  background: rgba(13, 9, 4, 0.8);
-  color: #e9d9bc;
+  background: rgba(6, 26, 29, 0.8);
+  color: #dbe7e6;
   font: 400 13px/1.5 var(--font-text);
   padding: 12px 18px;
-  border-radius: 2px;
+  border-radius: var(--r-sm);
 }
 
 @keyframes spin {

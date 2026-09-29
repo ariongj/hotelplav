@@ -1,60 +1,86 @@
 /* ==========================================================================
-   Brezovica Hotel & SPA — global styles
-   Design tokens mirror design/README.md › "Design tokens". Component styles
-   live next to their components as CSS Modules.
+   Plav Hotel — global styles
+   "Lakeside modern": lake teal, glacier blue, warm stone and brass, inspired
+   by Lake Plav and the Prokletije peaks. Component styles live next to
+   their components as CSS Modules and read these tokens.
    ========================================================================== */
 
 :root {
   /* Text */
-  --ink: #2b2721;
-  --text: #4c463d;
-  --text-2: #5c5344;
-  --text-soft: #6b6357;
-  --muted: #8f8272;
-  --muted-2: #a29886;
-  --faint: #a79c88;
+  --ink: #152a2c;
+  --text: #34494b;
+  --text-2: #43585a;
+  --text-soft: #56696a;
+  --muted: #5f7071;
+  --muted-2: #8d9c9c;
+  --faint: #9eaaaa;
 
   /* Surfaces */
-  --paper: #f3ece0;
-  --card: #f7f2e7;
-  --light: #fbf8f1;
-  --lighter: #fefcf8;
-  --note: #efe6d3;
-  --sand: #e7dbc8;
+  --paper: #f2efe9;
+  --card: #f8f6f1;
+  --light: #fbfaf7;
+  --lighter: #ffffff;
+  --note: #e5eeee;
+  --sand: #dde9ea;
 
   /* Lines */
-  --line: #e4d9c4;
-  --line-2: #e7dbc4;
-  --line-3: #d9cdb8;
-  --line-4: #d3c6ae;
-  --line-chip: #c9bba0;
+  --line: #dde3e0;
+  --line-2: #e1e5e2;
+  --line-3: #cdd6d4;
+  --line-4: #c3cdcb;
+  --line-chip: #b9c6c4;
 
-  /* Gold */
-  --gold: #b08e55;
-  --gold-hover: #987839;
-  --gold-dark: #8f7040;
-  --gold-deep: #8a6b34;
-  --bronze: #7a5c2f;
-  --gold-light: #c9b48a;
-  --highlight: #e7c98f;
-  --gold-chip: #e7d6b4;
+  /* Brass (the historic token names say "gold") */
+  --gold: #b8894a;
+  --gold-hover: #a0733a;
+  --gold-dark: #8c6532;
+  --gold-deep: #87612d;
+  --bronze: #7c5726;
+  --gold-light: #dcbd8d;
+  --highlight: #ead1a1;
+  --gold-chip: #eadcc3;
+  /* Keyboard focus ring: a brass at least 3:1 on both stone and lake teal.
+     Dark containers (footer, menu, heroes, sticky bar) switch it to --gold-light. */
+  --focus-ring: #a3773c;
 
-  /* Dark */
-  --dark: #241a12;
-  --deeper: #17110b;
-  --on-gold: #231a10;
-  --cream: #f5eee1;
-  --cream-2: #f7f1e7;
-  --footer-text: #e9dfcb;
+  /* Lake (the historic token names say "dark") */
+  --dark: #0f3b3f;
+  --deeper: #0a2a2d;
+  --on-gold: #10201f;
+  --cream: #eef4f3;
+  --cream-2: #f6f9f8;
+  --footer-text: #d9e6e5;
 
-  /* Type — the --font-bodoni / --font-jost variables come from next/font */
-  --font-display: var(--font-bodoni), "Bodoni Moda", Georgia, serif;
-  --font-text: var(--font-jost), "Jost", system-ui, sans-serif;
+  /* Lakeside accents */
+  --teal: #0f3b3f;
+  --teal-2: #17565b;
+  --lake: #2f7176;
+  --glacier: #cfe3e6;
+  --mist: #e9f2f3;
+
+  /* Type — the --font-fraunces / --font-manrope variables come from next/font */
+  --font-display: var(--font-fraunces), "Fraunces", Georgia, serif;
+  --font-text: var(--font-manrope), "Manrope", system-ui, sans-serif;
+
+  /* Shape */
+  --r-sm: 10px;
+  --r-md: 14px;
+  --r-lg: 20px;
+  --r-xl: 28px;
+  --r-pill: 999px;
+
+  /* Depth and glass */
+  --shadow-soft: 0 12px 40px rgba(12, 44, 48, 0.08);
+  --shadow-lift: 0 30px 80px rgba(12, 44, 48, 0.16);
+  --glass: rgba(251, 250, 247, 0.72);
+  --glass-strong: rgba(251, 250, 247, 0.88);
+  --glass-dark: rgba(8, 36, 39, 0.55);
+  --glass-line: rgba(255, 255, 255, 0.55);
 
   /* Layout */
-  --gutter: clamp(24px, 6vw, 120px);
-  --gutter-tight: clamp(20px, 6vw, 120px);
-  --section-y: clamp(70px, 9vw, 140px);
+  --gutter: clamp(20px, 5vw, 96px);
+  --gutter-tight: clamp(16px, 5vw, 96px);
+  --section-y: clamp(72px, 9vw, 136px);
   --max: 1280px;
   --max-narrow: 1180px;
 
@@ -123,14 +149,15 @@ textarea:focus {
 }
 
 :where(a, button, summary, [tabindex]):focus-visible {
-  outline: 2px solid var(--gold);
+  outline: 2px solid var(--focus-ring);
   outline-offset: 3px;
 }
 
+/* The arrow is --muted (#5f7071); CSS variables don't reach into data URIs. */
 :where(select) {
   -webkit-appearance: none;
   appearance: none;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path d='M1 1l4 4 4-4' stroke='%238f8272' fill='none' stroke-width='1.3'/></svg>");
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path d='M1 1l4 4 4-4' stroke='%235f7071' fill='none' stroke-width='1.3'/></svg>");
   background-repeat: no-repeat;
   background-position: right 14px center;
 }
@@ -140,7 +167,7 @@ textarea:focus {
   appearance: none;
   height: 2px;
   background: var(--line-3);
-  border-radius: 2px;
+  border-radius: var(--r-sm);
 }
 
 input[type="range"]::-webkit-slider-thumb {
@@ -150,7 +177,7 @@ input[type="range"]::-webkit-slider-thumb {
   border-radius: 50%;
   background: var(--gold);
   cursor: pointer;
-  box-shadow: 0 2px 6px rgba(120, 90, 50, 0.3);
+  box-shadow: 0 2px 6px rgba(40, 86, 90, 0.3);
 }
 
 input[type="range"]::-moz-range-thumb {
@@ -164,11 +191,11 @@ input[type="range"]::-moz-range-thumb {
 
 /* The focus reset above leaves sliders without a visible focus; ring the thumb. */
 input[type="range"]:focus-visible::-webkit-slider-thumb {
-  box-shadow: 0 0 0 3px var(--paper), 0 0 0 5px var(--gold);
+  box-shadow: 0 0 0 3px var(--paper), 0 0 0 5px var(--focus-ring);
 }
 
 input[type="range"]:focus-visible::-moz-range-thumb {
-  box-shadow: 0 0 0 3px var(--paper), 0 0 0 5px var(--gold);
+  box-shadow: 0 0 0 3px var(--paper), 0 0 0 5px var(--focus-ring);
 }
 
 /* iOS zooms into any field under 16px on focus — keep touch devices at 16px. */
@@ -191,9 +218,9 @@ input[type="range"]:focus-visible::-moz-range-thumb {
   transform: translateX(-50%);
   padding: 14px 18px;
   background: var(--dark);
-  border: 1px solid rgba(247, 241, 231, 0.18);
+  border: 1px solid rgba(246, 249, 248, 0.18);
   border-left: 2px solid var(--gold);
-  border-radius: 3px;
+  border-radius: var(--r-md);
   box-shadow: 0 18px 50px rgba(0, 0, 0, 0.3);
   color: var(--cream);
   font: 400 14px/1.5 var(--font-text);
@@ -264,6 +291,7 @@ input[type="range"]:focus-visible::-moz-range-thumb {
   [data-delay="120"] { transition-delay: 120ms; }
   [data-delay="140"] { transition-delay: 140ms; }
   [data-delay="160"] { transition-delay: 160ms; }
+  [data-delay="180"] { transition-delay: 180ms; }
   [data-delay="200"] { transition-delay: 200ms; }
   [data-delay="210"] { transition-delay: 210ms; }
   [data-delay="220"] { transition-delay: 220ms; }

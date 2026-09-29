@@ -35,3 +35,19 @@ export function prefillMessage({ room, checkin, checkout, guests, total }: Conta
   const rate = total ? ` — direct rate ${total}` : "";
   return `I’d like to reserve${what}${dates}${who}${rate}.`;
 }
+
+/**
+ * The held stay as short chips above the form, e.g. ["Presidential Suite",
+ * "28 Oct – 30 Oct · 2 nights", "2 Adults", "Direct rate €1,564"]. Empty when
+ * the visitor did not arrive from a rate.
+ */
+export function staySummary({ room, checkin = "", checkout = "", guests, total }: ContactPrefill): string[] {
+  const parts: string[] = [];
+  if (room) parts.push(room);
+  const nights = isIsoDate(checkin) && isIsoDate(checkout) ? nightsBetween(checkin, checkout) : 0;
+  if (nights > 0) parts.push(`${shortDate(checkin)} – ${shortDate(checkout)} · ${plural(nights, "night")}`);
+  else if (isIsoDate(checkin)) parts.push(`From ${shortDate(checkin)}`);
+  if (guests) parts.push(guests);
+  if (total) parts.push(`Direct rate ${total}`);
+  return parts;
+}

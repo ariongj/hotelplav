@@ -3,6 +3,7 @@
 import { useState } from "react";
 
 import { Photo } from "@/components/ui/Photo";
+import { PhotoCredit } from "@/components/ui/PhotoCredit";
 import { cx } from "@/lib/cx";
 
 import { gallery, galleryFilters, type GalleryCategory } from "./content";
@@ -32,12 +33,24 @@ export function Gallery() {
           .map((item) => (
             <figure key={item.src} className={styles.galleryItem}>
               <div style={{ aspectRatio: item.ratio }}>
-                <Photo src={item.src} alt={item.alt} sizes="(max-width: 600px) 100vw, (max-width: 1100px) 50vw, 300px" />
+                <Photo
+                  src={item.src}
+                  alt={item.alt}
+                  position={item.position}
+                  sizes="(max-width: 600px) 50vw, (max-width: 1100px) 33vw, 300px"
+                />
               </div>
               <figcaption className={styles.galleryCaption}>
                 {galleryFilters.find((chip) => chip.key === item.category)?.label}
               </figcaption>
             </figure>
+          ))}
+      </div>
+      <div className={styles.galleryCredits}>
+        {gallery
+          .filter((item) => item.credit)
+          .map((item) => (
+            <PhotoCredit key={item.src} credit={item.credit} tone="dark" />
           ))}
       </div>
     </>

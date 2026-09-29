@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import { exploreNav, mainNav, site, type Cta } from "@/config/site";
 import { cx } from "@/lib/cx";
@@ -21,6 +21,8 @@ export function SiteNav({ cta, menuCta }: SiteNavProps) {
   const pathname = usePathname();
   const solid = useNavSolid();
   const [menuOpen, setMenuOpen] = useState(false);
+  // Stable, so re-renders while the menu is open don't re-run its focus effect.
+  const closeMenu = useCallback(() => setMenuOpen(false), []);
   const isHome = pathname === "/";
 
   return (
@@ -62,7 +64,7 @@ export function SiteNav({ cta, menuCta }: SiteNavProps) {
               className={styles.burger}
               aria-label="Menu"
               aria-expanded={menuOpen}
-              aria-controls="site-menu"
+              aria-controls={menuOpen ? "site-menu" : undefined}
               onClick={() => setMenuOpen((open) => !open)}
             >
               <span />
@@ -73,12 +75,13 @@ export function SiteNav({ cta, menuCta }: SiteNavProps) {
         </nav>
       </header>
 
-      {menuOpen && <MobileMenu cta={menuCta} onClose={() => setMenuOpen(false)} />}
+      {menuOpen && <MobileMenu cta={menuCta} onClose={closeMenu} />}
     </>
   );
 }
 
 function MobileMenu({ cta, onClose }: { cta: Cta; onClose: () => void }) {
+  const menuRef = useRef<HTMLDivElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
@@ -88,6 +91,21 @@ function MobileMenu({ cta, onClose }: { cta: Cta; onClose: () => void }) {
     document.body.style.overflow = "hidden";
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
+      // A modal dialog: Tab cycles through the menu instead of the page behind it.
+      if (e.key === "Tab") {
+        const items = menuRef.current?.querySelectorAll<HTMLElement>("a[href], button");
+        if (!items?.length) return;
+        const first = items[0];
+        const last = items[items.length - 1];
+        const inside = menuRef.current?.contains(document.activeElement);
+        if (e.shiftKey && (document.activeElement === first || !inside)) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && (document.activeElement === last || !inside)) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
     };
     window.addEventListener("keydown", onKey);
     return () => {
@@ -98,7 +116,7 @@ function MobileMenu({ cta, onClose }: { cta: Cta; onClose: () => void }) {
   }, [onClose]);
 
   return (
-    <div id="site-menu" className={styles.menu} role="dialog" aria-modal="true" aria-label="Site menu">
+    <div ref={menuRef} id="site-menu" className={styles.menu} role="dialog" aria-modal="true" aria-label="Site menu">
       <div className={styles.menuHead}>
         <Link href="/" className={styles.menuLogo} onClick={onClose}>
           {site.wordmark}

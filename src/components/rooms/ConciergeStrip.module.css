@@ -1,40 +1,95 @@
 .section {
-  padding: clamp(60px, 7vw, 110px) var(--gutter);
-  background: var(--dark);
+  padding: var(--section-y) var(--gutter);
+  background:
+    radial-gradient(60% 90% at 90% 10%, rgba(47, 113, 118, 0.5), transparent 65%),
+    radial-gradient(50% 70% at 0% 100%, rgba(23, 86, 91, 0.45), transparent 70%),
+    var(--deeper);
   color: var(--cream);
-  text-align: center;
 }
 
 .inner {
-  max-width: 720px;
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(36px, 6vw, 96px);
+  max-width: var(--max);
   margin: 0 auto;
 }
 
-.kicker {
-  margin: 0 0 24px;
+.title {
+  margin-top: 22px;
+  max-width: 14ch;
+  text-wrap: balance;
 }
 
-.title {
-  margin: 0 0 30px;
-  font: 400 clamp(28px, 4vw, 52px) / 1.1 var(--font-display);
+.title em {
+  font-style: italic;
+  color: var(--highlight);
+}
+
+.lead {
+  margin-top: 22px;
+  max-width: 52ch;
+}
+
+/* ---------- contact card ---------- */
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: clamp(22px, 3vw, 34px);
+  border-radius: var(--r-xl);
+}
+
+.cardTitle {
+  margin: 0 0 6px;
+  font: 400 clamp(22px, 2vw, 28px) / 1.15 var(--font-display);
+  letter-spacing: -0.015em;
   color: var(--cream-2);
 }
 
-.cta {
-  display: inline-flex;
-  align-items: center;
-  gap: 11px;
-  padding: 17px 36px;
-  background: var(--gold);
-  color: var(--on-gold);
-  font: 600 12px/1 var(--font-text);
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  border-radius: 2px;
-  transition: background-color 0.3s;
+.line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 4px 16px;
+  padding: 16px 18px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(238, 244, 243, 0.12);
+  border-radius: var(--r-md);
+  color: var(--cream-2);
+  transition:
+    background-color 0.3s,
+    border-color 0.3s;
 }
 
-.cta:hover {
-  background: var(--gold-hover);
-  color: var(--on-gold);
+.line:hover {
+  background: rgba(255, 255, 255, 0.11);
+  border-color: rgba(238, 244, 243, 0.28);
+  color: var(--cream-2);
+}
+
+.lineLabel {
+  font: 700 11px/1 var(--font-text);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gold-light);
+}
+
+.lineValue {
+  min-width: 0;
+  font: 600 16px/1.3 var(--font-text);
+  overflow-wrap: anywhere;
+}
+
+.cta {
+  margin-top: 10px;
+}
+
+@media (max-width: 860px) {
+  .inner {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }

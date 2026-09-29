@@ -11,6 +11,10 @@ type FooterAside =
   | { kind: "text"; title: string; text: string; link?: { label: string; href: string } }
   | { kind: "list"; title: string; items: readonly string[] };
 
+// Links still at the "#" placeholder in site.ts stay hidden until they point somewhere.
+const socialLinks = site.social.filter((item) => item.href !== "#");
+const legalLinks = site.legal.filter((item) => item.href !== "#");
+
 type SiteFooterProps = {
   /** Which desk's address to show. */
   email?: keyof typeof site.email;
@@ -32,6 +36,7 @@ export function SiteFooter({
   isHome = false,
 }: SiteFooterProps) {
   const address = site.email[email];
+  const showSocial = social && socialLinks.length > 0;
 
   return (
     <footer id="contact" className={cx(styles.footer, divider && styles.divider)}>
@@ -44,10 +49,10 @@ export function SiteFooter({
               {site.wordmark}
             </Link>
           )}
-          <p className={cx(styles.tagline, social && styles.taglineSpaced)}>{site.tagline}</p>
-          {social && (
+          <p className={cx(styles.tagline, showSocial && styles.taglineSpaced)}>{site.tagline}</p>
+          {showSocial && (
             <div className={styles.social}>
-              {site.social.map((item) => (
+              {socialLinks.map((item) => (
                 <a key={item.short} href={item.href} className={styles.socialLink} aria-label={item.label}>
                   {item.short}
                 </a>
@@ -57,7 +62,7 @@ export function SiteFooter({
         </div>
 
         <div>
-          <div className={styles.heading}>Explore</div>
+          <h2 className={styles.heading}>Explore</h2>
           <div className={styles.list}>
             {exploreNav.map((item) => (
               <Link key={item.href} href={item.href} className={styles.listLink}>
@@ -68,7 +73,7 @@ export function SiteFooter({
         </div>
 
         <div>
-          <div className={styles.heading}>Contact</div>
+          <h2 className={styles.heading}>Contact</h2>
           <address className={styles.contact}>
             <span>
               {site.address.line1}
@@ -87,14 +92,14 @@ export function SiteFooter({
         <div>
           {aside.kind === "newsletter" && (
             <>
-              <div className={styles.heading}>Newsletter</div>
-              <p className={styles.note}>Quiet notes from the mountains, a few times a year.</p>
+              <h2 className={styles.heading}>Newsletter</h2>
+              <p className={styles.note}>Quiet notes from the lake, a few times a year.</p>
               <NewsletterForm />
             </>
           )}
           {aside.kind === "text" && (
             <>
-              <div className={styles.heading}>{aside.title}</div>
+              <h2 className={styles.heading}>{aside.title}</h2>
               <p className={styles.note}>{aside.text}</p>
               {aside.link && (
                 <Link href={aside.link.href} className={styles.asideLink}>
@@ -105,7 +110,7 @@ export function SiteFooter({
           )}
           {aside.kind === "list" && (
             <>
-              <div className={styles.heading}>{aside.title}</div>
+              <h2 className={styles.heading}>{aside.title}</h2>
               <div className={styles.contact}>
                 {aside.items.map((item) => (
                   <span key={item}>{item}</span>
@@ -116,15 +121,19 @@ export function SiteFooter({
         </div>
       </div>
 
+      <div className={styles.mega} aria-hidden="true">
+        {site.name}
+      </div>
+
       <div className={styles.bottom}>
         <span>
           &copy; {site.copyrightYear} {site.name}. All rights reserved.
         </span>
         <div className={styles.legal}>
-          {site.legal.map((item) => (
-            <a key={item.label} href={item.href}>
+          {legalLinks.map((item) => (
+            <Link key={item.label} href={item.href}>
               {item.label}
-            </a>
+            </Link>
           ))}
         </div>
       </div>

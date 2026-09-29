@@ -26,7 +26,8 @@ export function StickyBar({ children, layout = "center" }: StickyBarProps) {
   useEffect(() => {
     const bar = barRef.current;
     if (!bar || typeof ResizeObserver === "undefined") return;
-    const ro = new ResizeObserver(() => setHeight(bar.offsetHeight));
+    // The bar floats 12px above the edge; leave room for that too.
+    const ro = new ResizeObserver(() => setHeight(bar.offsetHeight + 24));
     ro.observe(bar);
     return () => ro.disconnect();
   }, []);

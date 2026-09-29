@@ -1,4 +1,5 @@
 .hero {
+  --focus-ring: var(--gold-light);
   min-height: 78vh;
   display: flex;
   flex-direction: column;
@@ -26,7 +27,7 @@
   margin: 0;
   max-width: 44ch;
   font: 300 clamp(15px, 1.2vw, 18px) / 1.8 var(--font-text);
-  color: rgba(245, 238, 225, 0.72);
+  color: rgba(238, 244, 243, 0.72);
 }
 
 .actions {

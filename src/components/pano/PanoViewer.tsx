@@ -1,6 +1,14 @@
 "use client";
 
-import { useEffect, useImperativeHandle, useRef, type ReactNode, type Ref } from "react";
+import {
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useSyncExternalStore,
+  type KeyboardEvent,
+  type ReactNode,
+  type Ref,
+} from "react";
 
 import { cx } from "@/lib/cx";
 
@@ -9,6 +17,16 @@ import styles from "./PanoViewer.module.css";
 
 export type { PanoScene, PanoView } from "./panoEngine";
 export { projectToView } from "./panoEngine";
+
+/** Degrees one arrow-key press turns the view. */
+const KEY_TURN = 10;
+
+const subscribeNoop = () => () => {};
+
+/** iPhone Safari has no element fullscreen: don't offer a button that does nothing there. */
+function fullscreenSupported(): boolean {
+  return !!document.fullscreenEnabled && typeof HTMLElement.prototype.requestFullscreen === "function";
+}
 
 export type PanoHandle = {
   /** Switch panorama and/or camera; cross-fades when the image changes. */
@@ -35,9 +53,12 @@ type PanoViewerProps = PanoScene & {
 };
 
 /**
- * 360° equirectangular viewer: drag to look, pinch/double-tap to zoom,
- * ctrl+wheel zoom, fullscreen, auto-rotate. Changing `src` (or yaw/pitch/
- * fov/label) switches scene.
+ * 360° equirectangular viewer: drag (or arrow keys) to look, pinch/double-tap
+ * or + / − to zoom, ctrl+wheel zoom, fullscreen, auto-rotate. Changing `src`
+ * (or yaw/pitch/fov/label) switches scene.
+ *
+ * The host carries data-pano, so page-level arrow-key shortcuts can leave
+ * keys pressed inside the viewer to it.
  */
 export function PanoViewer({
   src,
@@ -63,6 +84,7 @@ export function PanoViewer({
   const engineRef = useRef<PanoEngine | null>(null);
   const initialScene = useRef<PanoScene>({ src, yaw, pitch, fov, label });
   const autorotateRef = useRef(autorotate);
+  const canFullscreen = useSyncExternalStore(subscribeNoop, fullscreenSupported, () => false);
 
   useEffect(() => {
     const engine = new PanoEngine(
@@ -114,6 +136,26 @@ export function PanoViewer({
     [],
   );
 
+  // Arrow keys look around and + / − zoom while the viewer (or a hotspot in
+  // it) has focus — but not inside a dialog or form field drawn over it.
+  function onKeyDown(e: KeyboardEvent<HTMLDivElement>) {
+    const engine = engineRef.current;
+    if (!engine || e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey) return;
+    const target = e.target as HTMLElement;
+    if (target.closest('[role="dialog"], input, select, textarea')) return;
+    const turn: Record<string, [number, number]> = {
+      ArrowLeft: [-KEY_TURN, 0],
+      ArrowRight: [KEY_TURN, 0],
+      ArrowUp: [0, KEY_TURN],
+      ArrowDown: [0, -KEY_TURN],
+    };
+    if (turn[e.key]) engine.turnBy(...turn[e.key]);
+    else if (e.key === "+" || e.key === "=") engine.zoomBy(-12);
+    else if (e.key === "-" || e.key === "_") engine.zoomBy(12);
+    else return;
+    e.preventDefault();
+  }
+
   return (
     <div
       ref={hostRef}
@@ -121,6 +163,10 @@ export function PanoViewer({
       role="region"
       aria-roledescription="360° panorama"
       aria-label={label ? `360° view — ${label}` : "360° view"}
+      aria-keyshortcuts="ArrowLeft ArrowRight ArrowUp ArrowDown"
+      tabIndex={0}
+      data-pano=""
+      onKeyDown={onKeyDown}
     >
       <div ref={wrapRef} className={styles.wrap} style={{ touchAction }}>
         <canvas ref={canvasRef} className={styles.canvas} />
@@ -144,11 +190,13 @@ export function PanoViewer({
           <button type="button" className={styles.control} title="Zoom in" aria-label="Zoom in" onClick={() => engineRef.current?.zoomBy(-12)}>
             +
           </button>
-          <button type="button" className={styles.control} title="Fullscreen" aria-label="Fullscreen" onClick={() => engineRef.current?.toggleFullscreen()}>
-            <svg width="13" height="13" viewBox="0 0 14 14" aria-hidden="true">
-              <path d="M1 5V1h4M9 1h4v4M13 9v4H9M5 13H1V9" stroke="currentColor" fill="none" strokeWidth="1.6" />
-            </svg>
-          </button>
+          {canFullscreen && (
+            <button type="button" className={styles.control} title="Fullscreen" aria-label="Fullscreen" onClick={() => engineRef.current?.toggleFullscreen()}>
+              <svg width="13" height="13" viewBox="0 0 14 14" aria-hidden="true">
+                <path d="M1 5V1h4M9 1h4v4M13 9v4H9M5 13H1V9" stroke="currentColor" fill="none" strokeWidth="1.6" />
+              </svg>
+            </button>
+          )}
         </div>
         <div ref={loaderRef} className={styles.loader}>
           <div className={styles.spinner} />

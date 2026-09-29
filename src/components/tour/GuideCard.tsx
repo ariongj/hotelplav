@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { useLayoutEffect, useRef, type Ref, type RefObject } from "react";
 
 import { cx } from "@/lib/cx";
 
@@ -21,6 +22,9 @@ type GuideCardProps = {
   onTogglePlay: () => void;
   onToggleVoice: () => void;
   onExit: () => void;
+  /** Where focus goes when the card closes while it holds focus (the tour's start/end button). */
+  returnFocusRef?: RefObject<HTMLElement | null>;
+  ref?: Ref<HTMLDivElement>;
 };
 
 /** The narrator's card for the guided tour, docked over the stage. */
@@ -39,34 +43,73 @@ export function GuideCard({
   onTogglePlay,
   onToggleVoice,
   onExit,
+  returnFocusRef,
+  ref,
 }: GuideCardProps) {
+  const rootRef = useRef<HTMLDivElement>(null);
+
+  // Ending the tour from inside the card (×, Done, Escape) unmounts the
+  // focused button: hand focus to the toolbar button instead of <body>.
+  useLayoutEffect(() => {
+    const root = rootRef.current;
+    const returnTo = returnFocusRef?.current;
+    return () => {
+      if (root?.contains(document.activeElement)) returnTo?.focus({ preventScroll: true });
+    };
+  }, [returnFocusRef]);
+
   return (
-    <div className={styles.card} role="region" aria-label="Guided tour">
+    <div
+      ref={(el) => {
+        rootRef.current = el;
+        if (typeof ref === "function") ref(el);
+        else if (ref) ref.current = el;
+      }}
+      className={styles.card}
+      role="region"
+      aria-label="Guided tour"
+    >
       <div className={styles.head}>
+        <span className={styles.badge}>
+          <span className={styles.pulse} aria-hidden="true" />
+          Guided tour
+        </span>
         <span className={styles.count}>
-          Guided tour &middot; {index + 1} / {total}
+          <span className="visually-hidden">Stop </span>
+          {index + 1}
+          <span aria-hidden="true"> / </span>
+          <span className="visually-hidden"> of </span>
+          {total}
         </span>
         <button type="button" className={styles.exit} aria-label="End the guided tour" onClick={onExit}>
-          &times;
+          <svg width="11" height="11" viewBox="0 0 12 12" aria-hidden="true">
+            <path d="M2 2l8 8M10 2l-8 8" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
+          </svg>
         </button>
       </div>
 
       <div aria-live="polite" aria-atomic="true">
-        <div className={styles.kicker}>{stop.kicker}</div>
-        <h3 className={styles.title}>{stop.title}</h3>
-        <p className={styles.text}>{stop.text}</p>
+        {/* Keyed so each stop eases in; the live region itself stays put. */}
+        <div key={index} className={styles.swap}>
+          <div className={styles.kicker}>{stop.kicker}</div>
+          <h2 className={styles.title}>{stop.title}</h2>
+          <p className={styles.text}>{stop.text}</p>
+        </div>
       </div>
 
       {stop.link && (
         <Link href={stop.link.href} className={styles.link}>
-          {stop.link.label} &rarr;
+          {stop.link.label}
+          <svg width="12" height="12" viewBox="0 0 14 14" aria-hidden="true">
+            <path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+          </svg>
         </Link>
       )}
 
       <div className={styles.controls}>
         <button type="button" className={styles.round} aria-label="Previous stop" disabled={index === 0} onClick={onBack}>
           <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true">
-            <path d="M8.5 2.5 4 7l4.5 4.5" stroke="currentColor" strokeWidth="1.6" fill="none" />
+            <path d="M8.5 2.5 4 7l4.5 4.5" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" fill="none" />
           </svg>
         </button>
         <button
@@ -77,30 +120,48 @@ export function GuideCard({
         >
           {playing ? (
             <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true">
-              <path d="M4 2.5v9M10 2.5v9" stroke="currentColor" strokeWidth="2" />
+              <path d="M4.5 2.5v9M9.5 2.5v9" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" />
             </svg>
           ) : (
             <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true">
-              <path d="M4.5 2.5v9l7-4.5z" fill="currentColor" />
+              <path d="M4.5 2.3v9.4l7.2-4.7z" fill="currentColor" />
             </svg>
           )}
         </button>
-        <button type="button" className={cx(styles.round, isLast && styles.finish)} aria-label={isLast ? "Finish the tour" : "Next stop"} onClick={onNext}>
+        <button
+          type="button"
+          className={cx(styles.round, isLast && styles.finish)}
+          aria-label={isLast ? undefined : "Next stop"}
+          onClick={onNext}
+        >
           {isLast ? (
             "Done"
           ) : (
             <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true">
-              <path d="M5.5 2.5 10 7l-4.5 4.5" stroke="currentColor" strokeWidth="1.6" fill="none" />
+              <path d="M5.5 2.5 10 7l-4.5 4.5" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" fill="none" />
             </svg>
           )}
         </button>
         {voiceAvailable && (
-          <button type="button" className={cx(styles.voice, voice && styles.voiceOn)} aria-pressed={voice} onClick={onToggleVoice}>
+          <button
+            type="button"
+            className={cx(styles.voice, voice && styles.voiceOn)}
+            aria-pressed={voice}
+            onClick={onToggleVoice}
+          >
             <svg width="15" height="15" viewBox="0 0 16 16" aria-hidden="true">
               <path d="M2.5 6v4h2.8L9 13V3L5.3 6z" fill="currentColor" />
-              {voice && <path d="M11 5.2a3.6 3.6 0 0 1 0 5.6M12.8 3.4a6.2 6.2 0 0 1 0 9.2" stroke="currentColor" strokeWidth="1.3" fill="none" />}
+              {voice && (
+                <path
+                  d="M11 5.2a3.6 3.6 0 0 1 0 5.6M12.8 3.4a6.2 6.2 0 0 1 0 9.2"
+                  stroke="currentColor"
+                  strokeWidth="1.3"
+                  strokeLinecap="round"
+                  fill="none"
+                />
+              )}
             </svg>
-            Voice {voice ? "on" : "off"}
+            Voice
           </button>
         )}
       </div>

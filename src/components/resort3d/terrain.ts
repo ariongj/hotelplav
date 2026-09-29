@@ -1,10 +1,11 @@
 /*
- * Procedural terrain for the illustrative 3D resort map. Pure maths (no
+ * Procedural terrain for the illustrative 3D map of Plav Hotel on Lake Plav. Pure maths (no
  * three.js) so it is cheap to import and deterministic: the same valley is
  * generated on every visit.
  *
- * Orientation: x runs east–west along the valley, −z is north. The hotel sits
- * at the foot of the northern slope facing south; the Sharr peaks rise behind.
+ * Orientation (illustrative, not to scale): x runs along the valley and −z
+ * climbs away from the water. The hotel sits at the foot of the high ground
+ * behind it, facing across the lake; no compass direction is implied.
  */
 
 export const WORLD_SIZE = 260;
@@ -62,24 +63,30 @@ const PEAKS: readonly Peak[] = [
   { x: 62, z: 112, h: 11, r: 30 },
 ];
 
-/** Where the lake sits (a dip below the water line). */
-export const LAKE = { x: -40, z: 32, radius: 17 };
+/** Lake Plav: an ellipse in front of the hotel (a dip below the water line). */
+export const LAKE = { x: 2, z: 40, rx: 36, rz: 21 };
+
+/** Distance from the lake centre in lake radii (1 = the shoreline). */
+export function lakeDistance(x: number, z: number): number {
+  return Math.hypot((x - LAKE.x) / LAKE.rx, (z - LAKE.z) / LAKE.rz);
+}
 
 /** Flat building plots: centre, half extents, blend distance. */
 export type Pad = { x: number; z: number; hw: number; hd: number; blend: number };
 
-export const PADS: Record<"hotel" | "chapel" | "liftBase" | "liftTop", Pad> = {
+export const PADS: Record<"hotel" | "chapel" | "trailHead" | "viewpoint", Pad> = {
   hotel: { x: 8, z: -7, hw: 30, hd: 15, blend: 9 },
   chapel: { x: -38, z: -20, hw: 8, hd: 10, blend: 7 },
-  liftBase: { x: 46, z: -28, hw: 6, hd: 6, blend: 6 },
-  liftTop: { x: 82, z: -104, hw: 6, hd: 6, blend: 6 },
+  trailHead: { x: 46, z: -28, hw: 6, hd: 6, blend: 6 },
+  viewpoint: { x: 82, z: -104, hw: 6, hd: 6, blend: 6 },
 };
 
 function rawHeight(x: number, z: number): number {
-  const north = Math.pow(smoothstep(-22, -125, z), 1.25) * 44;
-  const south = smoothstep(54, 130, z) * 15;
+  // High ground behind the hotel, low hills across the water, rising at both ends.
+  const behind = Math.pow(smoothstep(-22, -125, z), 1.25) * 44;
+  const across = smoothstep(54, 130, z) * 15;
   const ends = smoothstep(82, 130, Math.abs(x)) * 22;
-  let h = north + south + ends;
+  let h = behind + across + ends;
 
   for (const p of PEAKS) {
     const d2 = ((x - p.x) ** 2 + (z - p.z) ** 2) / (p.r * p.r);
@@ -91,8 +98,7 @@ function rawHeight(x: number, z: number): number {
   const ridged = 1 - Math.abs(fbm(x * 0.021, z * 0.021, 4));
   h += fbm(x * 0.035, z * 0.035) * (1.1 + alpine * 6) + ridged * ridged * alpine * 7;
 
-  const lake = Math.hypot(x - LAKE.x, z - LAKE.z);
-  h -= 4.4 * Math.exp(-((lake / 13) ** 2));
+  h -= 5.6 * Math.exp(-((lakeDistance(x, z) / 0.78) ** 2));
 
   return h;
 }
@@ -141,6 +147,6 @@ export function random(seed: number): () => number {
 
 /** True when (x, z) is on (or next to) a building plot or in the lake. */
 export function isReserved(x: number, z: number, margin = 3): boolean {
-  if (Math.hypot(x - LAKE.x, z - LAKE.z) < LAKE.radius + margin) return true;
+  if (lakeDistance(x, z) < 1 + margin / LAKE.rz) return true;
   return Object.values(PADS).some((pad) => padDistance(pad, x, z) < margin);
 }

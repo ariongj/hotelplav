@@ -1,26 +1,43 @@
 .section {
   padding: 0 var(--gutter-tight);
-  background: var(--paper);
 }
 
 .panel {
   max-width: var(--max-narrow);
-  margin: 26px auto 0;
+  margin: 28px auto 0;
   overflow: hidden;
   background: var(--light);
   border: 1px solid var(--line-2);
-  border-radius: 4px;
-  box-shadow: 0 20px 50px rgba(70, 46, 22, 0.08);
+  border-radius: var(--r-xl);
+  box-shadow: var(--shadow-soft);
+  animation: rates-in 0.5s var(--ease-soft);
+}
+
+/* Opacity only: a transform would throw off the scroll-into-view measurement. */
+@keyframes rates-in {
+  from {
+    opacity: 0;
+  }
 }
 
 .error {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
   max-width: var(--max-narrow);
-  margin: 26px auto 0;
-  padding: 16px 20px;
+  margin: 28px auto 0;
+  padding: 18px 22px 18px 24px;
   background: var(--note);
-  border-left: 2px solid var(--gold);
+  border: 1px solid var(--line-2);
+  border-radius: var(--r-lg);
+  box-shadow: inset 4px 0 0 var(--gold);
   color: var(--text-2);
   font: 400 15px/1.6 var(--font-text);
+}
+
+.errorTitle {
+  font-weight: 700;
+  color: var(--ink);
 }
 
 /* ---------- head ---------- */
@@ -31,27 +48,68 @@
   align-items: flex-end;
   justify-content: space-between;
   gap: 16px 24px;
-  padding: 24px clamp(20px, 2.6vw, 32px);
-  background: #f7f0e2;
+  padding: clamp(20px, 2.6vw, 30px) clamp(18px, 2.8vw, 34px);
+  background:
+    radial-gradient(80% 140% at 100% 0%, rgba(47, 113, 118, 0.14), transparent 60%),
+    var(--mist);
   border-bottom: 1px solid var(--line-2);
 }
 
 .kicker {
   margin: 0 0 10px;
-  font: 500 11px/1 var(--font-text);
-  letter-spacing: 0.24em;
+  font: 700 12px/1 var(--font-text);
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--muted-2);
+  color: var(--lake);
 }
 
-.stay {
-  font: 400 clamp(20px, 2.1vw, 27px) / 1.25 var(--font-display);
+/* Focus only lands here from code (after clearing the filters). */
+.kicker:focus {
+  outline: none;
+}
+
+.dates {
+  margin: 0;
+  font: 400 clamp(26px, 3vw, 38px) / 1.1 var(--font-display);
+  letter-spacing: -0.02em;
   color: var(--ink);
 }
 
+.facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 14px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.facts li {
+  padding: 7px 12px;
+  background: var(--lighter);
+  border: 1px solid var(--line-2);
+  border-radius: var(--r-pill);
+  font: 600 13px/1 var(--font-text);
+  color: var(--text-2);
+}
+
 .season {
-  font: 400 13px/1.5 var(--font-text);
-  letter-spacing: 0.04em;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  margin: 0;
+  font: 400 14px/1.4 var(--font-text);
+  color: var(--text-soft);
+}
+
+.seasonName {
+  padding: 7px 12px;
+  background: var(--gold-chip);
+  border-radius: var(--r-pill);
+  font: 700 11px/1 var(--font-text);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
   color: var(--bronze);
 }
 
@@ -64,79 +122,100 @@
 }
 
 .row {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, auto) auto;
   align-items: center;
-  gap: 16px 26px;
-  padding: 22px clamp(20px, 2.6vw, 32px);
-  border-bottom: 1px solid var(--note);
+  gap: 18px clamp(18px, 2.6vw, 34px);
+  padding: 22px clamp(18px, 2.8vw, 34px);
+  border-bottom: 1px solid var(--line-2);
+  transition: background-color 0.3s;
+}
+
+.row:hover {
+  background: var(--card);
 }
 
 .room {
-  flex: 1 1 230px;
-  min-width: 190px;
+  min-width: 0;
 }
 
 .roomName {
-  font: 400 22px/1.2 var(--font-display);
+  margin: 0;
+  font: 400 clamp(22px, 2vw, 26px) / 1.15 var(--font-display);
+  letter-spacing: -0.015em;
   color: var(--ink);
 }
 
 .roomMeta {
-  margin-top: 7px;
-  font: 400 12px/1.5 var(--font-text);
-  letter-spacing: 0.02em;
+  margin: 7px 0 0;
+  font: 400 14px/1.5 var(--font-text);
   color: var(--muted);
 }
 
-.ota {
-  flex: 0 1 150px;
-}
-
-.otaLabel {
-  margin-bottom: 8px;
-  font: 400 11px/1 var(--font-text);
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--muted-2);
-}
-
-.otaPrice {
-  font: 400 18px/1.2 var(--font-display);
-  color: var(--muted-2);
-  text-decoration: line-through;
-  text-decoration-thickness: 1px;
-}
-
-.direct {
-  flex: 0 1 190px;
-}
-
-.directLabel {
-  margin-bottom: 8px;
-  font: 600 11px/1 var(--font-text);
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
+.left {
+  display: inline-block;
+  margin-top: 10px;
+  font: 700 13px/1.3 var(--font-text);
   color: var(--bronze);
 }
 
+/* Booking sites (struck) → direct price → saving badge. */
+.compare {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 22px;
+  min-width: 0;
+}
+
+.ota,
+.direct {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.priceLabel {
+  font: 700 11px/1 var(--font-text);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.direct .priceLabel {
+  color: var(--lake);
+}
+
+.otaPrice {
+  font: 400 19px/1.1 var(--font-display);
+  color: var(--muted);
+  text-decoration-thickness: 1.5px;
+}
+
 .directPrice {
-  font: 400 25px/1.2 var(--font-display);
+  font: 400 30px/1 var(--font-display);
+  letter-spacing: -0.02em;
   color: var(--ink);
 }
 
-.directNote {
-  margin-top: 5px;
-  font: 300 12px/1.5 var(--font-text);
+.perNight {
+  font: 400 13px/1.3 var(--font-text);
   color: var(--text-soft);
+}
+
+.save {
+  padding: 9px 14px;
+  background: var(--teal);
+  border-radius: var(--r-pill);
+  font: 700 13px/1 var(--font-text);
+  color: var(--cream-2);
+  white-space: nowrap;
 }
 
 .actions {
   display: flex;
-  flex: 0 0 auto;
   align-items: center;
-  gap: 12px;
-  margin-left: auto;
+  gap: 8px;
 }
 
 .reserve,
@@ -145,45 +224,145 @@
   align-items: center;
   justify-content: center;
   min-height: 48px;
-  font: 600 11px/1 var(--font-text);
-  border-radius: 2px;
+  padding: 0 22px;
+  border-radius: var(--r-pill);
+  font: 700 14px/1 var(--font-text);
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  transition:
+    background-color 0.3s,
+    border-color 0.3s,
+    color 0.3s,
+    transform 0.3s var(--ease-soft);
 }
 
 .reserve {
-  padding: 15px 26px;
-  background: var(--ink);
-  color: var(--paper);
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
+  background: var(--gold);
+  color: var(--on-gold);
+  box-shadow: 0 10px 24px rgba(184, 137, 74, 0.26);
+}
+
+.reserve:hover {
+  background: var(--gold-hover);
+  color: var(--on-gold);
+  transform: translateY(-1px);
 }
 
 .pano {
-  padding: 15px 18px;
-  border: 1px solid var(--line-chip);
+  padding: 0 18px;
+  border: 1.5px solid var(--line-3);
   color: var(--ink);
-  letter-spacing: 0.14em;
+}
+
+.pano:hover {
+  border-color: var(--ink);
+  color: var(--ink);
 }
 
 .emptyRow {
-  padding: 22px clamp(20px, 2.6vw, 32px);
-  border-bottom: 1px solid var(--note);
-  font: 300 15px/1.65 var(--font-text);
+  padding: 22px clamp(18px, 2.8vw, 34px);
+  border-bottom: 1px solid var(--line-2);
+  font: 400 15px/1.65 var(--font-text);
   color: var(--text-soft);
 }
 
 .emptyLink {
   color: var(--ink);
-  border-bottom: 1px solid var(--gold);
+  border-bottom: 1.5px solid var(--gold);
 }
 
 .emptyLink:hover {
-  color: var(--bronze);
+  color: var(--lake);
+}
+
+/* "Showing the room types that match your filters" and "Show all N". */
+.filterNote,
+.more {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 12px;
+  margin: 0;
+  padding: 14px clamp(18px, 2.8vw, 34px);
+  font: 400 14px/1.5 var(--font-text);
+  color: var(--text-soft);
+}
+
+.filterNote {
+  background: var(--note);
+  border-bottom: 1px solid var(--line-2);
+}
+
+.more {
+  justify-content: space-between;
+  border-bottom: 1px solid var(--line-2);
+}
+
+/* A link-styled button, inline in the copy. */
+.textButton {
+  padding: 0;
+  background: transparent;
+  border: none;
+  border-bottom: 1.5px solid var(--gold);
+  font: 700 14px/1.5 var(--font-text);
+  color: var(--ink);
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.textButton:hover {
+  color: var(--lake);
+}
+
+/* In the empty row it reads like the "speak with us" link beside it. */
+.emptyRow .textButton {
+  font: inherit;
 }
 
 .footnote {
   margin: 0;
-  padding: 20px clamp(20px, 2.6vw, 32px);
-  font: 300 13px/1.65 var(--font-text);
+  padding: 18px clamp(18px, 2.8vw, 34px) 22px;
+  font: 400 13px/1.65 var(--font-text);
   color: var(--muted);
   text-wrap: pretty;
+}
+
+/* ---------- smaller screens ---------- */
+
+@media (max-width: 900px) {
+  .row {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .room {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 600px) {
+  .row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+  }
+
+  /* Prices sit in their own soft tile on phones. */
+  .compare {
+    padding: 14px 16px;
+    background: var(--mist);
+    border-radius: var(--r-md);
+  }
+
+  .actions > * {
+    flex: 1 1 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .panel {
+    animation: none;
+  }
+
+  .reserve:hover {
+    transform: none;
+  }
 }

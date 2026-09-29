@@ -1,65 +1,89 @@
 import Link from "next/link";
 
 import { Photo } from "@/components/ui/Photo";
+import { PhotoCredit } from "@/components/ui/PhotoCredit";
+import { fromRate } from "@/lib/booking/pricing";
 import type { RoomType } from "@/lib/booking/rooms";
 import { cx } from "@/lib/cx";
-import { euro, plural } from "@/lib/format";
-import ui from "@/styles/ui.module.css";
+import { euro } from "@/lib/format";
 
 import styles from "./RoomCard.module.css";
 
-/* One column below ~850px, two up to ~1290px, then three across 1280px. */
-const PHOTO_SIZES = "(max-width: 850px) 100vw, (max-width: 1290px) 50vw, 420px";
+/* One column below ~790px, two up to ~1190px, then three across 1280px. */
+const PHOTO_SIZES = "(max-width: 790px) 100vw, (max-width: 1190px) 50vw, 420px";
 
-export function RoomCard({ room }: { room: RoomType }) {
+type RoomCardProps = {
+  room: RoomType;
+  /** This is the room the tour's 360° panorama shows (the others link to it as "a typical room"). */
+  inTour: boolean;
+};
+
+export function RoomCard({ room, inTour }: RoomCardProps) {
   return (
     <article className={styles.card}>
       <div className={styles.media}>
-        <Photo src={room.image.src} alt={room.image.alt} sizes={PHOTO_SIZES} />
+        <Photo src={room.image.src} alt={room.image.alt} position={room.image.position} sizes={PHOTO_SIZES} />
         {room.badge && (
           <span className={cx(styles.badge, room.badge.tone === "gold" ? styles.badgeGold : styles.badgeDark)}>
             {room.badge.label}
           </span>
         )}
-        <Link
-          href="/tour#room"
-          className={styles.pano}
-          title="Stand inside this room in 360°"
-          aria-label={`360° view — ${room.name}`}
-        >
-          360&deg; VIEW
-        </Link>
-        {/* Gallery counter from the design; there is no gallery viewer yet. */}
-        <span className={styles.counter} aria-hidden="true">
-          1 / {room.photoCount}
-        </span>
+        {inTour && (
+          <Link href="/tour#room" className={styles.pano} title="Stand inside this room in 360°">
+            360&deg;<span className="visually-hidden"> view of the {room.name}</span>
+          </Link>
+        )}
+        {room.image.credit && <PhotoCredit credit={room.image.credit} className={styles.credit} />}
       </div>
 
       <div className={styles.body}>
-        <div className={styles.titleRow}>
-          <h3 className={styles.name}>{room.name}</h3>
-          <span className={styles.from}>
-            from <strong className={styles.fromPrice}>{euro(room.baseRate)}</strong>
-          </span>
-        </div>
-        <p className={styles.meta}>
-          {room.size} m² · {plural(room.sleeps, "guest")} · {room.bedLabel} · {room.view} view
-        </p>
-        <p className={styles.description}>{room.description}</p>
-        <ul className={styles.highlights}>
-          {room.highlights.map((item) => (
-            <li key={item} className={styles.highlight}>
-              {item}
-            </li>
-          ))}
+        <h3 className={styles.name}>{room.name}</h3>
+        <ul className={styles.facts} aria-label="Key facts">
+          <li>{room.size} m²</li>
+          <li>Sleeps {room.sleeps}</li>
+          <li>{room.bedLabel}</li>
+          <li>{room.view} view</li>
         </ul>
-        <div className={styles.actions}>
-          <a href="#book" className={styles.book}>
-            Book<span className="visually-hidden"> the {room.name}</span>
-          </a>
-          <a href="#book" className={cx(ui.linkUnderline, styles.details)}>
-            View details<span className="visually-hidden"> of the {room.name}</span>
-          </a>
+        <p className={styles.description}>{room.description}</p>
+
+        <div className={styles.footer}>
+          <p className={styles.price}>
+            <span className={styles.from}>from</span>{" "}
+            <strong className={styles.amount}>{euro(fromRate(room.baseRate))}</strong>{" "}
+            <span className={styles.from}>/ night</span>
+          </p>
+          <div className={styles.actions}>
+            {/* Native disclosure: works without JavaScript and announces its state.
+                The open panel lays itself over the photo. */}
+            <details className={styles.more}>
+              <summary className={styles.moreToggle}>
+                <span className={styles.whenClosed}>Details</span>
+                <span className={styles.whenOpen}>Close</span>
+                <span className="visually-hidden"> — {room.name}</span>
+              </summary>
+              <div className={styles.moreBody}>
+                <p className={styles.moreTitle}>In the room</p>
+                <ul className={styles.highlights}>
+                  {room.highlights.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+                <p className={styles.moreNote}>Book direct and breakfast, spa access and all taxes are included.</p>
+                <Link href="/tour#room" className={styles.moreLink}>
+                  {inTour ? (
+                    <>
+                      Step inside in 360&deg;<span className="visually-hidden"> — {room.name}</span>
+                    </>
+                  ) : (
+                    "See a typical room in 360°"
+                  )}
+                </Link>
+              </div>
+            </details>
+            <a href="#book" className={styles.book}>
+              Book<span className="visually-hidden"> the {room.name}</span>
+            </a>
+          </div>
         </div>
       </div>
     </article>

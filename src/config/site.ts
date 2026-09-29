@@ -4,41 +4,44 @@
  */
 
 export const site = {
-  name: "Brezovica Hotel & SPA",
-  wordmark: "BREZOVICA",
+  name: "Plav Hotel",
+  wordmark: "PLAV HOTEL",
   description:
-    "A five-star alpine resort in Brezovica, beneath the Sharr Mountains — suites with a view, three restaurants, a thermal spa and direct-booking rates with no fees.",
+    "A lakeside hotel and spa on Lake Plav in eastern Montenegro, beneath the Prokletije mountains — rooms and suites with a view, a restaurant, a lounge and a bar, pools and a Finnish sauna, and direct-booking rates with no fees.",
   tagline:
-    "An alpine sanctuary in the Sharr Mountains — where mountain grandeur meets a warmth that feels like your own.",
+    "A lakeside retreat in Plav, Montenegro — where a glacial lake meets the Accursed Mountains, and every stay is shaped around you.",
   /** Public URL (no trailing slash), used for canonical URLs, sitemap and structured data. */
-  url: (process.env.NEXT_PUBLIC_SITE_URL ?? "https://brezovicahotel.com").replace(/\/+$/, ""),
+  url: (process.env.NEXT_PUBLIC_SITE_URL ?? "https://plavhotel.com").replace(/\/+$/, ""),
   address: {
-    line1: "Brezovica Ski Resort",
-    locality: "Štrpce",
-    country: "Kosovo",
-    countryCode: "XK",
+    line1: "Lake Plav",
+    locality: "Plav",
+    country: "Montenegro",
+    countryCode: "ME",
   },
-  /** "Get directions" — opens Google Maps routing to the resort. */
-  directionsUrl: "https://www.google.com/maps/dir/?api=1&destination=Brezovica%20Ski%20Resort%2C%20%C5%A0trpce%2C%20Kosovo",
-  phone: { display: "+383 49 30 10 30", href: "tel:+38349301030" },
+  /** "Get directions" — opens Google Maps routing to Plav. */
+  directionsUrl: "https://www.google.com/maps/dir/?api=1&destination=Lake%20Plav%2C%20Plav%2C%20Montenegro",
+  // TODO(content): placeholders until the hotel's real number and mailboxes are set up.
+  phone: { display: "+382 00 000 000", href: "tel:+38200000000" },
   email: {
-    stay: "stay@brezovicahotel.com",
-    dine: "dine@brezovicahotel.com",
-    spa: "spa@brezovicahotel.com",
-    events: "events@brezovicahotel.com",
+    stay: "stay@plavhotel.com",
+    dine: "dine@plavhotel.com",
+    spa: "spa@plavhotel.com",
+    events: "events@plavhotel.com",
   },
-  // TODO(content): real profile URLs.
+  // TODO(content): real profile URLs. The footer hides links left at "#".
   social: [
     { short: "in", label: "LinkedIn", href: "#" },
     { short: "ig", label: "Instagram", href: "#" },
     { short: "fb", label: "Facebook", href: "#" },
   ],
-  // TODO(content): these pages don't exist in the design yet.
+  // TODO(content): Privacy, Terms, Cancellation and FAQ pages don't exist yet;
+  // the footer hides links left at "#" until they do.
   legal: [
     { label: "Privacy", href: "#" },
     { label: "Terms", href: "#" },
     { label: "Cancellation", href: "#" },
     { label: "FAQ", href: "#" },
+    { label: "Photo credits", href: "/credits" },
   ],
   copyrightYear: 2026,
 } as const;
@@ -55,11 +58,11 @@ export type NavItem = {
 };
 
 export const mainNav: readonly NavItem[] = [
-  { key: "rooms", label: "Rooms", longLabel: "Rooms & Suites", href: "/rooms" },
-  { key: "dining", label: "Dining", longLabel: "Dining", href: "/dining" },
+  { key: "rooms", label: "Stay", longLabel: "Rooms & Suites", href: "/rooms" },
+  { key: "dining", label: "Dine", longLabel: "Dining", href: "/dining" },
   { key: "spa", label: "Spa", longLabel: "Spa & Wellness", href: "/spa" },
   { key: "experiences", label: "Experiences", longLabel: "Experiences", href: "/experiences" },
-  { key: "tour", label: "Virtual Tour", longLabel: "Virtual Tour · 3D & 360°", href: "/tour" },
+  { key: "tour", label: "Virtual tour", longLabel: "Virtual Tour · 3D & 360°", href: "/tour" },
   { key: "events", label: "Events", longLabel: "Events & Weddings", href: "/events" },
   { key: "contact", label: "Contact", longLabel: "Contact", href: "/contact" },
 ];

@@ -1,7 +1,16 @@
 /**
- * Copy and data for the spa page (design/Spa.dc.html).
+ * Copy and data for the spa page.
  * Photography is placeholder — swap the URLs for the hotel's licensed images.
  */
+
+import type { SceneId } from "@/components/tour/content";
+
+/* ------------------------------------------------------------------- hero */
+
+export const HERO_IMAGE = {
+  src: "https://static.wixstatic.com/media/1de95c_424350ad23d241d988255f926572dd10~mv2.jpg/v1/fill/w_1920,h_1080,al_c,q_85,enc_avif,quality_auto/1de95c_424350ad23d241d988255f926572dd10~mv2.jpg",
+  alt: "The indoor pool in the evening, loungers along the glass and the forest outside",
+};
 
 /* ------------------------------------------------------ treatment booking */
 
@@ -9,42 +18,42 @@ export const SPA_TIMES = ["09:00", "10:00", "11:00", "12:00", "14:00", "15:00", 
 
 export const DEFAULT_SPA_TIME = "15:00";
 
-/** Treatments offered in the booking bar (as in the design — a subset of the menu). */
-export const BOOKABLE_TREATMENTS = [
-  "Signature Alpine Massage",
-  "Hot Stone Ritual",
-  "Glacial Botanical Facial",
-  "Thermal Sauna Ritual",
-  "Forest Body Wrap",
-  "Two-Day Wellness Retreat",
-] as const;
-
 export const SPA_GUESTS = ["1 Guest", "2 Guests"] as const;
 
-/* ---------------------------------------------------------- thermal baths */
+/** Window event (detail: a treatment name) that pre-selects the treatment in the #book form. */
+export const CHOOSE_TREATMENT_EVENT = "plav:choose-treatment";
+
+/* ----------------------------------------------------------- pools & sauna */
+
+export const BATHS_IMAGE = {
+  src: "https://static.wixstatic.com/media/1de95c_03adb94268124caf858cfba9e9710b7b~mv2.jpg/v1/fill/w_1000,h_1200,al_c,q_85,enc_avif,quality_auto/1de95c_03adb94268124caf858cfba9e9710b7b~mv2.jpg",
+  alt: "The indoor pool, with the forest beyond the glass walls",
+};
 
 export const BATH_FEATURES = [
-  "Pools · Adults & children",
-  "Finnish sauna · 90°",
+  "Indoor pools for adults & children",
+  "Outdoor pool in summer",
+  "Finnish sauna",
   "Steam room",
-  "Cold-water pool",
-  "Massage center",
+  "Cold plunge pool",
+  "Massage rooms",
   "Fitness studio",
 ] as const;
 
 export const BATH_STATS = [
-  { value: "1,100", label: "m altitude" },
-  { value: "3", label: "Pools" },
-  { value: "08–22", label: "Open daily" },
+  { value: "906", unit: "m", label: "Lake Plav above sea level" },
+  { value: "3", label: "Pools, indoors and out" },
+  { value: "90°", label: "Finnish sauna" },
+  { value: "08–22", label: "Open daily to every hotel guest" },
 ] as const;
 
 /* ------------------------------------------------------------- treatments */
 
-export const TREATMENT_CATEGORIES = ["Massage", "Facial", "Body", "Thermal", "Retreats"] as const;
+export const TREATMENT_CATEGORIES = ["Massage", "Facial", "Body", "Sauna", "Retreats"] as const;
 
 export type TreatmentCategory = (typeof TREATMENT_CATEGORIES)[number];
 
-export const TREATMENT_SORTS = ["Recommended", "Price ↑", "Price ↓", "Duration"] as const;
+export const TREATMENT_SORTS = ["Recommended", "Lowest price", "Highest price", "Longest first"] as const;
 
 export type TreatmentSort = (typeof TREATMENT_SORTS)[number];
 
@@ -64,22 +73,26 @@ export type Treatment = {
   rank: number;
   badge?: string;
   description: string;
+  /** Placeholder mood photo, shown decoratively — the card's heading names the treatment. */
   image: string;
-  /** Dark card, gold button (the retreat). */
+  /** Dark card, brass button (the retreat). */
   dark?: boolean;
 };
 
+/** The guided bathing circuit, offered again under the ritual's steps (see BathingRitual). */
+export const GUIDED_RITUAL_ID = "guided-sauna-ritual";
+
 export const TREATMENTS: readonly Treatment[] = [
   {
-    id: "signature-alpine-massage",
-    name: "Signature Alpine Massage",
+    id: "signature-lakeside-massage",
+    name: "Signature Lakeside Massage",
     category: "Massage",
     price: 185,
     minutes: 80,
     duration: "80 min",
     rank: 1,
     badge: "Signature",
-    description: "Warm alpine oils and long, grounding strokes to release the mountains from your shoulders.",
+    description: "Warm oils and long, grounding strokes that lift a day on the trails right off your shoulders.",
     image:
       "https://static.wixstatic.com/media/1de95c_4a4d5d4db4cd4e75a9012191010d5218~mv2.jpg/v1/fill/w_800,h_500,al_c,q_85,enc_avif,quality_auto/1de95c_4a4d5d4db4cd4e75a9012191010d5218~mv2.jpg",
   },
@@ -91,9 +104,9 @@ export const TREATMENTS: readonly Treatment[] = [
     minutes: 60,
     duration: "60 min",
     rank: 4,
-    description: "Focused, firm work for tired legs and backs — made for the day after the slopes.",
+    description: "Focused, firm work for tired legs and backs — made for the day after a long mountain walk.",
     image:
-      "https://static.wixstatic.com/media/f9d3d7_7313371891564ee0acd22c9eecf0e2fc~mv2.jpg/v1/fill/w_800,h_500,al_c,q_85,enc_avif,quality_auto/f9d3d7_7313371891564ee0acd22c9eecf0e2fc~mv2.jpg",
+      "https://static.wixstatic.com/media/1de95c_4e2e9d02251244f4b5809e52393e1e0b~mv2.jpg/v1/fill/w_800,h_500,al_c,q_85,enc_avif,quality_auto/1de95c_4e2e9d02251244f4b5809e52393e1e0b~mv2.jpg",
   },
   {
     id: "hot-stone-ritual",
@@ -103,7 +116,7 @@ export const TREATMENTS: readonly Treatment[] = [
     minutes: 90,
     duration: "90 min",
     rank: 5,
-    description: "Warmed river stones and slow pressure — the deepest kind of stillness.",
+    description: "Warmed river stones and slow, even pressure — the deepest kind of stillness.",
     image:
       "https://static.wixstatic.com/media/1de95c_fe69aecf6c0a4c3e89f1b8d5afc6d93b~mv2.jpg/v1/fill/w_800,h_500,al_c,q_85,enc_avif,quality_auto/1de95c_fe69aecf6c0a4c3e89f1b8d5afc6d93b~mv2.jpg",
   },
@@ -115,21 +128,21 @@ export const TREATMENTS: readonly Treatment[] = [
     minutes: 60,
     duration: "60 min",
     rank: 3,
-    description: "Cool mountain botanicals and glacial water to wake the skin and calm the mind.",
+    description: "Cool compresses and mountain botanicals to wake the skin and quiet the mind.",
     image:
-      "https://static.wixstatic.com/media/1de95c_424350ad23d241d988255f926572dd10~mv2.jpg/v1/fill/w_800,h_500,al_c,q_85,enc_avif,quality_auto/1de95c_424350ad23d241d988255f926572dd10~mv2.jpg",
+      "https://static.wixstatic.com/media/f9d3d7_b639006d90ee42128eea2062999299ee~mv2.jpg/v1/fill/w_800,h_500,al_c,q_85,enc_avif,quality_auto/f9d3d7_b639006d90ee42128eea2062999299ee~mv2.jpg",
   },
   {
-    id: "radiance-alpine-facial",
-    name: "Radiance Alpine Facial",
+    id: "wild-herb-radiance-facial",
+    name: "Wild Herb Radiance Facial",
     category: "Facial",
     price: 175,
     minutes: 75,
     duration: "75 min",
     rank: 6,
-    description: "A lifting, brightening ritual with mountain-herb serums and a lymphatic massage.",
+    description: "A lifting, brightening ritual with herbal serums and a gentle lymphatic massage.",
     image:
-      "https://static.wixstatic.com/media/f9d3d7_d9f5264f63fb46e8b4fa9c093c43dd22~mv2.jpg/v1/fill/w_800,h_500,al_c,q_85,enc_avif,quality_auto/f9d3d7_d9f5264f63fb46e8b4fa9c093c43dd22~mv2.jpg",
+      "https://static.wixstatic.com/media/1de95c_caf15c194f104ecda6e934c4a9f280fa~mv2.jpg/v1/fill/w_800,h_500,al_c,q_85,enc_avif,quality_auto/1de95c_caf15c194f104ecda6e934c4a9f280fa~mv2.jpg",
   },
   {
     id: "forest-body-wrap",
@@ -139,21 +152,21 @@ export const TREATMENTS: readonly Treatment[] = [
     minutes: 70,
     duration: "70 min",
     rank: 7,
-    description: "A warm pine-and-spruce cocoon that softens the skin and quiets the whole body.",
+    description: "A warm cocoon of pine, honey and wild blueberry that softens the skin and slows everything down.",
     image:
       "https://static.wixstatic.com/media/1de95c_4a4d5d4db4cd4e75a9012191010d5218~mv2.jpg/v1/fill/w_800,h_500,al_c,q_85,enc_avif,quality_auto/1de95c_4a4d5d4db4cd4e75a9012191010d5218~mv2.jpg",
   },
   {
-    id: "thermal-sauna-ritual",
-    name: "Thermal Sauna Ritual",
-    category: "Thermal",
+    id: GUIDED_RITUAL_ID,
+    name: "Guided Sauna Ritual",
+    category: "Sauna",
     price: 90,
     minutes: 45,
     duration: "45 min",
     rank: 2,
-    description: "A guided löyly circuit — sauna, herbal steam and cold plunge, led by our bath master.",
+    description: "A guided circuit — sauna, herbal steam and a cold plunge — led by our bath master.",
     image:
-      "https://static.wixstatic.com/media/1de95c_03adb94268124caf858cfba9e9710b7b~mv2.jpg/v1/fill/w_800,h_500,al_c,q_85,enc_avif,quality_auto/1de95c_03adb94268124caf858cfba9e9710b7b~mv2.jpg",
+      "https://static.wixstatic.com/media/1de95c_fe69aecf6c0a4c3e89f1b8d5afc6d93b~mv2.jpg/v1/fill/w_800,h_500,al_c,q_85,enc_avif,quality_auto/1de95c_fe69aecf6c0a4c3e89f1b8d5afc6d93b~mv2.jpg",
   },
   {
     id: "two-day-wellness-retreat",
@@ -165,27 +178,41 @@ export const TREATMENTS: readonly Treatment[] = [
     duration: "2 days",
     rank: 8,
     badge: "Retreat",
-    description: "Two massages, a facial, daily thermal access and a private movement session — reset, completely.",
+    description:
+      "Two massages, a facial, daily time in the pools and sauna and a slow morning walk by the lake — reset, completely.",
     image:
       "https://static.wixstatic.com/media/f9d3d7_8e43ab231f06460bb4c777f660a4ef54~mv2.jpg/v1/fill/w_800,h_500,al_c,q_85,enc_avif,quality_auto/f9d3d7_8e43ab231f06460bb4c777f660a4ef54~mv2.jpg",
     dark: true,
   },
 ];
 
+/** Every treatment on the menu, in recommended order, for the booking card's select. */
+export const BOOKABLE_TREATMENTS: readonly string[] = [...TREATMENTS]
+  .sort((a, b) => a.rank - b.rank)
+  .map((treatment) => treatment.name);
+
+/** EUR — the cheapest treatment, for "Treatments from …". */
+export const LOWEST_TREATMENT_PRICE = Math.min(...TREATMENTS.map((treatment) => treatment.price));
+
 /* --------------------------------------------------------- bathing ritual */
 
+/** About 45 minutes in all — the length of the Guided Sauna Ritual. */
 export const RITUAL_STEPS = [
-  { title: "Warm", text: "Ten minutes in the Finnish sauna to open and soften." },
-  { title: "Steam", text: "Move to the herbal steam room and breathe the mountain in." },
-  { title: "Plunge", text: "A brief, bright dip in the cold-water pool to wake the blood." },
-  { title: "Rest", text: "Wrap up in the relaxation loft with alpine tea. Then begin again." },
+  { title: "Warm", time: "15 min", text: "Fifteen minutes in the Finnish sauna to open up and soften." },
+  { title: "Steam", time: "10 min", text: "Move to the herbal steam room and slow your breathing right down." },
+  { title: "Plunge", time: "Under a minute", text: "A brief, bright dip in the cold plunge pool — lake-cold and wide awake." },
+  { title: "Rest", time: "20 min", text: "Wrap up with a mountain-herb tea and let the warmth come back. Then begin again." },
+] as const;
+
+/* -------------------------------------------------------------- concierge */
+
+export const CONCIERGE_HELP = [
+  "A spa day for one, or for two",
+  "Treatments paired with time in the pools",
+  "A retreat planned around your stay",
 ] as const;
 
 /* --------------------------------------------------------------- 360 tour */
 
-/** Deep links into scenes of the virtual tour. */
-export const TOUR_SCENES = [
-  { name: "The Grand Hall", href: "/tour#hall" },
-  { name: "The Alpine Room", href: "/tour#room" },
-  { name: "The Sharr Valley", href: "/tour#valley" },
-] as const;
+/** Scenes of the virtual tour to deep-link to, in order; names and links come from the tour itself. */
+export const TOUR_SCENE_IDS: readonly SceneId[] = ["hall", "room", "valley"];

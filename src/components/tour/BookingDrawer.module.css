@@ -11,24 +11,39 @@
   pointer-events: none;
 }
 
+/* Frosted glass over the panorama. */
 .panel {
   width: 100%;
-  max-width: 430px;
+  max-width: 420px;
   /* Scrolls rather than losing its top edge in a short (landscape) viewer. */
   max-height: 100%;
   overflow-y: auto;
   overscroll-behavior: contain;
-  padding: clamp(20px, 2.4vw, 26px);
-  background: rgba(20, 14, 9, 0.93);
-  -webkit-backdrop-filter: blur(16px);
-  backdrop-filter: blur(16px);
-  border: 1px solid rgba(247, 241, 231, 0.18);
-  border-radius: 4px;
-  box-shadow: 0 26px 60px rgba(0, 0, 0, 0.45);
-  color: var(--cream);
+  padding: clamp(18px, 2.2vw, 24px);
+  background: var(--glass-strong);
+  -webkit-backdrop-filter: saturate(160%) blur(22px);
+  backdrop-filter: saturate(160%) blur(22px);
+  border: 1px solid var(--glass-line);
+  border-radius: var(--r-xl);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.35);
+  color: var(--ink);
   /* The viewer shows a grab cursor; the panel is not draggable. */
   cursor: default;
   pointer-events: auto;
+  animation: panel-in 0.45s var(--ease-soft);
+}
+
+@keyframes panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .panel {
+    animation: none;
+  }
 }
 
 .head {
@@ -39,35 +54,41 @@
 }
 
 .kicker {
-  margin-bottom: 11px;
-  font: 500 10px/1 var(--font-text);
-  letter-spacing: 0.26em;
-  text-transform: uppercase;
-  color: var(--gold-light);
+  margin-bottom: 8px;
+  font: 600 13px/1.2 var(--font-text);
+  color: var(--lake);
 }
 
 .name {
   margin: 0;
-  font: 400 25px/1.15 var(--font-display);
-  color: var(--cream-2);
+  font: 400 26px/1.12 var(--font-display);
+  letter-spacing: -0.01em;
+  color: var(--ink);
 }
 
 .close {
   flex: 0 0 auto;
   width: 44px;
   height: 44px;
-  background: transparent;
-  border: 1px solid rgba(247, 241, 231, 0.24);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  background: rgba(15, 59, 63, 0.07);
+  border: none;
   border-radius: 50%;
-  color: var(--cream);
-  font-size: 19px;
+  color: var(--ink);
+  transition: background-color 0.3s;
+}
+
+.close:hover {
+  background: rgba(15, 59, 63, 0.14);
 }
 
 .meta {
-  margin: 10px 0 20px;
-  font: 400 12px/1.5 var(--font-text);
-  letter-spacing: 0.04em;
-  color: rgba(245, 238, 225, 0.6);
+  margin: 8px 0 18px;
+  font: 400 13px/1.5 var(--font-text);
+  color: var(--text-soft);
 }
 
 /* ---------- nights ---------- */
@@ -77,99 +98,136 @@
   align-items: center;
   justify-content: space-between;
   gap: 14px;
-  padding: 14px 0;
-  border-top: 1px solid rgba(247, 241, 231, 0.14);
-  border-bottom: 1px solid rgba(247, 241, 231, 0.14);
+  margin-bottom: 12px;
 }
 
 .nightsLabel {
-  font: 500 11px/1 var(--font-text);
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: rgba(245, 238, 225, 0.68);
+  font: 600 15px/1 var(--font-text);
+  color: var(--ink);
 }
 
 .stepper {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 2px;
+  padding: 3px;
+  background: var(--mist);
+  border-radius: var(--r-pill);
 }
 
 .step {
   width: 44px;
   height: 44px;
-  background: transparent;
-  border: 1px solid rgba(247, 241, 231, 0.24);
-  border-radius: 2px;
-  color: var(--cream);
-  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  background: var(--lighter);
+  border: none;
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(12, 44, 48, 0.1);
+  color: var(--teal);
+  font: 500 20px/1 var(--font-text);
+  transition:
+    background-color 0.3s,
+    color 0.3s;
 }
 
-.count {
-  min-width: 42px;
-  text-align: center;
-  font: 400 21px/1 var(--font-display);
+.step:hover {
+  background: var(--teal);
   color: var(--cream-2);
 }
 
+.count {
+  min-width: 40px;
+  text-align: center;
+  font: 400 22px/1 var(--font-display);
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+}
+
 /* ---------- price ---------- */
+
+.price {
+  margin-bottom: 16px;
+  padding: 16px 18px;
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid var(--line-2);
+  border-radius: var(--r-lg);
+}
 
 .total {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
   gap: 14px;
-  padding: 16px 0 6px;
+  margin-bottom: 10px;
+}
+
+/* Flat-priced items show the total alone. */
+.total:last-child {
+  margin-bottom: 0;
 }
 
 .totalLabel {
-  font: 600 11px/1 var(--font-text);
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--gold-light);
+  font: 600 14px/1 var(--font-text);
+  color: var(--text);
 }
 
 .totalValue {
-  font: 400 30px/1 var(--font-display);
-  color: var(--cream-2);
+  font: 400 32px/1 var(--font-display);
+  letter-spacing: -0.01em;
+  color: var(--ink);
 }
 
 .row {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   justify-content: space-between;
   gap: 14px;
-  font: 300 13px/1.6 var(--font-text);
-  color: rgba(245, 238, 225, 0.6);
+  font: 400 13.5px/1.7 var(--font-text);
+  color: var(--text-soft);
 }
 
 .keep {
-  margin-bottom: 20px;
-  color: var(--gold-light);
+  margin-top: 4px;
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.saving {
+  padding: 5px 11px;
+  background: var(--gold-chip);
+  border-radius: var(--r-pill);
+  color: var(--bronze);
+  font: 700 13px/1 var(--font-text);
 }
 
 /* ---------- actions ---------- */
 
 .confirm {
   width: 100%;
-  min-height: 54px;
+  min-height: 52px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 17px 26px;
+  padding: 0 26px;
   background: var(--gold);
   border: none;
-  border-radius: 2px;
+  border-radius: var(--r-pill);
+  box-shadow: 0 10px 26px rgba(184, 137, 74, 0.3);
   color: var(--on-gold);
-  font: 600 12px/1 var(--font-text);
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  transition: background-color 0.3s;
+  font: 700 15px/1 var(--font-text);
+  letter-spacing: 0.01em;
+  transition:
+    background-color 0.3s,
+    transform 0.3s var(--ease-soft);
 }
 
 .confirm:hover:not(:disabled) {
   background: var(--gold-hover);
   color: var(--on-gold);
+  transform: translateY(-1px);
 }
 
 .confirm:disabled {
@@ -179,23 +237,38 @@
 
 .error {
   margin: 12px 0 0;
-  font: 300 13px/1.6 var(--font-text);
-  color: var(--highlight);
+  font: 500 13px/1.6 var(--font-text);
+  color: #a0422e;
   text-align: center;
 }
 
 .note {
   margin: 12px 0 0;
-  font: 300 12px/1.6 var(--font-text);
-  color: rgba(245, 238, 225, 0.5);
+  font: 400 12.5px/1.6 var(--font-text);
+  color: var(--text-soft);
   text-align: center;
 }
 
 .done {
-  margin: 16px 0 22px;
-  font: 300 15px/1.7 var(--font-text);
-  color: rgba(245, 238, 225, 0.86);
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin: 16px 0 20px;
+  font: 400 15px/1.65 var(--font-text);
+  color: var(--text);
   text-wrap: pretty;
+}
+
+.doneIcon {
+  flex: 0 0 auto;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--teal);
+  color: var(--cream-2);
 }
 
 /* Focused only so screen readers read the confirmation. */

@@ -16,8 +16,16 @@ export type Season = {
 const SEASONS: Record<SeasonKey, Season> = {
   peak: { key: "peak", name: "Peak season", multiplier: 1.15, note: "peak rates apply" },
   shoulder: { key: "shoulder", name: "Shoulder season", multiplier: 1, note: "13% below peak" },
-  quiet: { key: "quiet", name: "Quiet season", multiplier: 0.86, note: "14% below peak" },
+  quiet: { key: "quiet", name: "Quiet season", multiplier: 0.86, note: "25% below peak" },
 };
+
+/** Lowest seasonal multiplier: "from €X" labels use it, so a real quote never undercuts them. */
+export const LOWEST_SEASON_MULTIPLIER = Math.min(...Object.values(SEASONS).map((season) => season.multiplier));
+
+/** The lowest nightly rate a room is ever quoted at (quiet season, no promo), for "from €X" labels. */
+export function fromRate(baseRate: number): number {
+  return Math.round(baseRate * LOWEST_SEASON_MULTIPLIER);
+}
 
 const PEAK_MONTHS = [7, 8, 12, 1];
 const QUIET_MONTHS = [4, 11];
@@ -112,7 +120,7 @@ export function localTodayIso(now = new Date()): string {
 
 export const STAY_ERRORS = {
   order: "Choose a check-out date after your check-in and we will price the stay directly — always at or below any booking site.",
-  tooLong: "Stays beyond 21 nights are arranged personally — our reservations team will build the rate with you.",
+  tooLong: `Stays beyond ${MAX_ONLINE_NIGHTS} nights are arranged personally — our reservations team will build the rate with you.`,
   past: "Choose a check-in date from today onwards and we will price the stay directly.",
 } as const;
 

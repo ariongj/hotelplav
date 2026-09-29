@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Bodoni_Moda, Jost } from "next/font/google";
+import { Fraunces, Manrope } from "next/font/google";
 import type { ReactNode } from "react";
 
 import { RevealObserver } from "@/components/ui/RevealObserver";
@@ -7,34 +7,43 @@ import { site } from "@/config/site";
 
 import "./globals.css";
 
-const bodoni = Bodoni_Moda({
+const fraunces = Fraunces({
   subsets: ["latin", "latin-ext"],
   style: ["normal", "italic"],
-  axes: ["opsz"],
-  variable: "--font-bodoni",
+  axes: ["opsz", "SOFT"],
+  variable: "--font-fraunces",
   display: "swap",
 });
 
-const jost = Jost({
+const manrope = Manrope({
   subsets: ["latin", "latin-ext"],
-  variable: "--font-jost",
+  variable: "--font-manrope",
   display: "swap",
 });
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
   title: {
-    default: `${site.name} — Five-star alpine resort in the Sharr Mountains`,
+    default: `${site.name} — Lakeside hotel & spa in Plav, Montenegro`,
     template: `%s · ${site.name}`,
   },
   description: site.description,
   applicationName: site.name,
+  // No og:title / og:description here: Next fills them from each page's own
+  // title and description (a value set here would override every page's).
   openGraph: {
     type: "website",
     siteName: site.name,
     locale: "en_GB",
-    title: site.name,
-    description: site.description,
+    // Lake Plav, as on the home page (Wikimedia Commons; credited there and on /credits).
+    images: [
+      {
+        url: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c0/Plav_Lake_in_Montenegro_02.jpg/1280px-Plav_Lake_in_Montenegro_02.jpg",
+        width: 1280,
+        height: 964,
+        alt: "Lake Plav perfectly still, the mountains and clouds mirrored in the water",
+      },
+    ],
   },
   twitter: { card: "summary_large_image" },
   formatDetection: { telephone: false },
@@ -43,12 +52,14 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#241a12",
+  themeColor: "#0f3b3f",
 };
 
 export default function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
   return (
-    <html lang="en" className={`${bodoni.variable} ${jost.variable}`}>
+    // data-scroll-behavior: page-to-page navigation jumps to the top instead of
+    // smooth-scrolling there (globals.css keeps smooth in-page anchors).
+    <html lang="en" data-scroll-behavior="smooth" className={`${fraunces.variable} ${manrope.variable}`}>
       <body>
         {children}
         <RevealObserver />

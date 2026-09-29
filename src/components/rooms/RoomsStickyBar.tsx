@@ -3,7 +3,7 @@
 import { StickyBar } from "@/components/layout/StickyBar";
 import { useHydrated } from "@/lib/booking/client";
 import { nightsBetween, seasonFor } from "@/lib/booking/pricing";
-import { lowestBaseRate } from "@/lib/booking/rooms";
+import { lowestBaseRate, lowestFromRate } from "@/lib/booking/rooms";
 import { euro, plural } from "@/lib/format";
 
 import { useRoomsBooking } from "./RoomsBooking";
@@ -32,7 +32,7 @@ export function RoomsStickyBar() {
         ) : (
           <>
             <div className={styles.rate}>
-              Rooms from <em>{euro(lowestBaseRate)} / night</em>
+              Rooms from <em>{euro(lowestFromRate)} / night</em>
             </div>
             <div className={styles.dates}>Best rate guaranteed &mdash; direct only</div>
           </>

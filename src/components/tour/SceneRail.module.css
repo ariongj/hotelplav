@@ -1,6 +1,8 @@
+/* Continues the dark band under the stage. The extra bottom padding sits
+   behind the rounded top of the scene details, which overlap it. */
 .rail {
-  padding: 0 clamp(16px, 4vw, 60px);
-  background: #1c140d;
+  padding: clamp(14px, 1.8vw, 22px) clamp(10px, 4vw, 60px) calc(clamp(22px, 3vw, 36px) + var(--r-xl));
+  background: var(--deeper);
 }
 
 .inner {
@@ -9,46 +11,120 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  padding: 10px 0;
+  gap: 10px;
 }
 
 .arrow {
   flex: 0 0 auto;
-  width: 44px;
-  min-height: 44px;
-  background: transparent;
-  border: 1px solid rgba(233, 223, 203, 0.22);
-  border-radius: 2px;
-  color: var(--footer-text);
-  font-size: 16px;
+  width: 46px;
+  height: 46px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(207, 227, 230, 0.2);
+  border-radius: 50%;
+  color: var(--cream-2);
+  transition:
+    background-color 0.3s,
+    border-color 0.3s,
+    color 0.3s;
 }
 
+.arrow:hover {
+  background: var(--cream-2);
+  border-color: var(--cream-2);
+  color: var(--ink);
+}
+
+/* One pill track; scrolls sideways when the tabs don't fit. */
 .tabs {
+  position: relative;
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 6px;
+  gap: 4px;
   min-width: 0;
+  padding: 4px;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x proximity;
+  scrollbar-width: none;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(207, 227, 230, 0.14);
+  border-radius: var(--r-pill);
+}
+
+.tabs::-webkit-scrollbar {
+  display: none;
 }
 
 .tab {
-  padding: 14px 20px;
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 0 18px 0 6px;
   background: transparent;
-  border: 1px solid transparent;
-  border-radius: 2px;
-  font: 500 11px/1 var(--font-text);
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: rgba(233, 223, 203, 0.62);
+  border: none;
+  border-radius: var(--r-pill);
+  color: rgba(238, 244, 243, 0.74);
+  font: 600 14px/1 var(--font-text);
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  scroll-snap-align: center;
   transition:
-    color 0.3s,
     background-color 0.3s,
-    border-color 0.3s;
+    color 0.3s,
+    box-shadow 0.3s;
 }
 
-.active {
+/* The track clips anything outside it, so keep the focus ring inside. */
+.tab:focus-visible {
+  outline-offset: 0;
+}
+
+.tab:hover {
+  color: var(--cream-2);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.num {
+  flex: 0 0 auto;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--gold-light);
+  font: 700 12px/1 var(--font-text);
+  font-variant-numeric: tabular-nums;
+  transition:
+    background-color 0.3s,
+    color 0.3s;
+}
+
+.active,
+.active:hover {
+  background: var(--cream-2);
+  color: var(--ink);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.22);
+}
+
+.active .num {
   background: var(--gold);
-  border-color: var(--gold);
   color: var(--on-gold);
+}
+
+@media (max-width: 599.98px) {
+  .inner {
+    gap: 6px;
+  }
+
+  .arrow {
+    width: 44px;
+    height: 44px;
+  }
 }

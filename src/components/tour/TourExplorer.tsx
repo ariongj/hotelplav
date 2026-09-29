@@ -11,7 +11,7 @@ import { cx } from "@/lib/cx";
 import { BookingDrawer, DEFAULT_NIGHTS } from "./BookingDrawer";
 import { sceneIndex, sceneIndexFromHash, sceneLabel, scenes, type Hotspot, type SceneId, type TourOffer } from "./content";
 import { GuideCard } from "./GuideCard";
-import { guideStops, type GuideStop } from "./guide";
+import { guideMinutes, guideStops, type GuideStop } from "./guide";
 import { preloadPanoramas } from "./preload";
 import { SceneDetails } from "./SceneDetails";
 import { SceneRail } from "./SceneRail";
@@ -23,17 +23,23 @@ import { useGuidedTour } from "./useGuidedTour";
 const AUTOROTATE = 1.6;
 /** How long an info hotspot's note stays up. */
 const CAPTION_MS = 7000;
-/** Room left above the viewer for the fixed nav when scrolling to it. */
-const NAV_CLEARANCE = 72;
+/** Room left above the viewer for the fixed nav when scrolling to it (matches html scroll-padding-top). */
+const NAV_CLEARANCE = 84;
 
-/** "map": the illustrated 3D resort. "space": the 360° panoramas. */
+/** "map": the illustrated 3D map of the hotel and lake. "space": the 360° panoramas. */
 type Mode = "map" | "space";
 
 /** A hotspot button and the direction it is pinned to. */
 type Pin = { el: HTMLButtonElement; yaw: number; pitch: number };
 
+/** The map place a guide stop is about — none for the wide views. */
+function stopPlace(stop: GuideStop): PoiId | null {
+  if (stop.kind !== "map" || stop.view === "overview" || stop.view === "hero") return null;
+  return stop.view;
+}
+
 /**
- * The interactive tour: a stage that shows either the 3D resort map or the
+ * The interactive tour: a stage that shows either the 3D map or the
  * 360° spaces (with hotspots, caption and booking drawer), a guided tour that
  * moves between the two, then the scene rail, the current space's details and
  * the "Four spaces" grid.
@@ -49,6 +55,9 @@ export function TourExplorer() {
   const [nights, setNights] = useState(DEFAULT_NIGHTS);
 
   const viewerRef = useRef<HTMLElement>(null);
+  const stageRef = useRef<HTMLDivElement>(null);
+  const guideCardRef = useRef<HTMLDivElement>(null);
+  const guideButtonRef = useRef<HTMLButtonElement>(null);
   const panoRef = useRef<PanoHandle>(null);
   /** Mirror `mode` and `index` for event handlers and the frame loop. */
   const modeRef = useRef<Mode>("map");
@@ -56,6 +65,7 @@ export function TourExplorer() {
   const pins = useRef<(Pin | null)[]>([]);
   const bookingCount = useRef(0);
   const warmed = useRef(false);
+  const stopPreload = useRef<(() => void) | null>(null);
 
   const scene = scenes[index];
 
@@ -96,6 +106,9 @@ export function TourExplorer() {
   const flyMap = useCallback(
     (id: ViewId) => {
       showMode("map");
+      // A drawer or note left open in the hidden 360° layer would reappear later.
+      setBooking(null);
+      setCaption(null);
       setMapFocus((focus) => ({ id, nonce: focus.nonce + 1 }));
     },
     [showMode],
@@ -129,6 +142,12 @@ export function TourExplorer() {
     openSpace(sceneIndex(id));
   }
 
+  /** The visitor picks a space themselves: the guide stops moving the stage. */
+  function userOpenSpace(target: number, scroll = false) {
+    if (touring) pauseGuide();
+    openSpace(target, scroll);
+  }
+
   const closeBooking = useCallback(() => setBooking(null), []);
 
   // Runs after every rendered frame: pin the hotspots by writing CSS variables
@@ -153,11 +172,15 @@ export function TourExplorer() {
       warmed.current = true;
       const from = indexRef.current;
       const others = scenes.map((_, k) => scenes[(from + 1 + k) % scenes.length].src).slice(0, -1);
-      void preloadPanoramas(others);
+      stopPreload.current = preloadPanoramas(others);
     }
   }, []);
 
+  // Leaving the page stops the warm-up before the next multi-megabyte panorama.
+  useEffect(() => () => stopPreload.current?.(), []);
+
   function onHotspot(hotspot: Hotspot) {
+    if (touring) pauseGuide();
     if (hotspot.kind === "nav") {
       openSpace(sceneIndex(hotspot.target));
       return;
@@ -188,7 +211,8 @@ export function TourExplorer() {
     return () => clearTimeout(timer);
   }, [caption]);
 
-  // ← / → switch 360° spaces from anywhere on the page, except in form fields.
+  // ← / → switch 360° spaces from anywhere on the page, except in form fields
+  // and inside the viewer itself, where the arrows look around.
   // (During the guided tour the guide takes the arrow keys first.)
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -196,6 +220,7 @@ export function TourExplorer() {
       if (modeRef.current !== "space") return;
       if (e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey) return;
       const target = e.target;
+      if (target instanceof Element && target.closest("[data-pano]")) return;
       if (target instanceof HTMLElement && (/^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName) || target.isContentEditable)) {
         return;
       }
@@ -222,12 +247,56 @@ export function TourExplorer() {
     return () => clearTimeout(timer);
   }, [openSpace, scrollToViewer, startGuide]);
 
-  const guidePlace = touring && guide.stop.kind === "map" && guide.stop.view !== "overview" ? guide.stop.view : null;
+  // The 360° viewer's fullscreen hides the guide card: hold the tour until it's back.
+  useEffect(() => {
+    if (!touring) return;
+    const onChange = () => {
+      if (document.fullscreenElement) pauseGuide();
+    };
+    document.addEventListener("fullscreenchange", onChange);
+    return () => document.removeEventListener("fullscreenchange", onChange);
+  }, [touring, pauseGuide]);
+
+  // The booking drawer takes the stage's attention (and its space on tablets);
+  // the paused guide card comes back when it closes.
+  const guideCardShown = touring && !booking;
+
+  // On phones the card docks under the stage, and the stage leaves room for it
+  // (--guide-h). Keeps the tallest height seen at this width, so the stage
+  // doesn't resize with every stop's text.
+  useEffect(() => {
+    const stage = stageRef.current;
+    const card = guideCardRef.current;
+    if (!guideCardShown || !stage || !card || typeof ResizeObserver === "undefined") return;
+    let width = 0;
+    let tallest = 0;
+    const ro = new ResizeObserver(() => {
+      if (card.offsetWidth !== width) {
+        width = card.offsetWidth;
+        tallest = 0;
+      }
+      if (card.offsetHeight > tallest) {
+        tallest = card.offsetHeight;
+        stage.style.setProperty("--guide-h", `${tallest}px`);
+      }
+    });
+    ro.observe(card);
+    return () => {
+      ro.disconnect();
+      stage.style.removeProperty("--guide-h");
+    };
+  }, [guideCardShown]);
+
+  const guidePlace = touring ? stopPlace(guide.stop) : null;
+  const nextScene = scenes[(index + 1) % scenes.length];
+  // No snow on the summer lake stop.
+  const snow = !(touring && guide.stop.kind === "map" && guide.stop.view === "lake");
 
   return (
     <>
-      <div className={styles.toolbar}>
-        <div className={styles.toolbarInner}>
+      {/* The nav's scroll anchor: it turns solid once the stage has scrolled away. */}
+      <div className={styles.band} data-nav-anchor>
+        <div className={styles.toolbar}>
           <div className={styles.modes} role="group" aria-label="Choose a view">
             <button
               type="button"
@@ -235,7 +304,16 @@ export function TourExplorer() {
               aria-pressed={mode === "map"}
               onClick={() => chooseMode("map")}
             >
-              3D resort map
+              <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
+                <path
+                  d="M1.8 3.6 5.6 2l4.8 1.8L14.2 2.2v10.2l-3.8 1.6-4.8-1.8-3.8 1.6zM5.6 2v10.2M10.4 3.8V14"
+                  stroke="currentColor"
+                  strokeWidth="1.3"
+                  strokeLinejoin="round"
+                  fill="none"
+                />
+              </svg>
+              3D map
             </button>
             <button
               type="button"
@@ -243,130 +321,158 @@ export function TourExplorer() {
               aria-pressed={mode === "space"}
               onClick={() => chooseMode("space")}
             >
+              <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
+                <ellipse cx="8" cy="8" rx="6.4" ry="2.9" stroke="currentColor" strokeWidth="1.3" fill="none" />
+                <path d="M8 1.6v2.2M8 12.2v2.2" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />
+                <circle cx="8" cy="8" r="1.3" fill="currentColor" />
+              </svg>
               360&deg; spaces
             </button>
           </div>
-          <p className={styles.toolbarNote}>Explore freely &mdash; or let us show you around.</p>
+          <p className={styles.toolbarNote}>
+            Explore freely &mdash; or take the {guideStops.length}-stop guided tour, about {guideMinutes} min.
+          </p>
           <button
+            ref={guideButtonRef}
             type="button"
             className={cx(styles.guideButton, touring && styles.guideButtonActive)}
             onClick={touring ? guide.exit : startTour}
           >
             {touring ? (
-              "End guided tour"
+              <>
+                <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true">
+                  <path d="M2 2l8 8M10 2l-8 8" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+                </svg>
+                End guided tour
+              </>
             ) : (
               <>
-                <svg width="12" height="12" viewBox="0 0 14 14" aria-hidden="true">
-                  <path d="M3.5 1.8v10.4L12 7z" fill="currentColor" />
-                </svg>
+                <span className={styles.playDisc} aria-hidden="true">
+                  <svg width="10" height="10" viewBox="0 0 14 14">
+                    <path d="M3.5 1.8v10.4L12 7z" fill="currentColor" />
+                  </svg>
+                </span>
                 Start guided tour
               </>
             )}
           </button>
         </div>
-      </div>
 
-      {/* The guide card overlays the stage on larger screens and docks below it on phones. */}
-      <div className={cx(styles.stage, touring && styles.touring)}>
-        <section ref={viewerRef} className={styles.viewer} data-nav-anchor aria-label="Virtual tour">
-          <div className={styles.layer} hidden={mode !== "map"}>
-            <ResortMap
-              focus={mapFocus}
-              touring={touring}
-              selected={touring ? guidePlace : place}
-              onSelect={(id) => {
-                setPlace(id);
-                flyMap(id);
-              }}
-              onCloseSelected={() => setPlace(null)}
-              onEnter360={enterSpace}
+        {/* The guide card overlays the stage on larger screens and docks below it on phones. */}
+        <div ref={stageRef} className={cx(styles.stage, guideCardShown && styles.touring)}>
+          <section ref={viewerRef} className={styles.viewer} aria-label="Virtual tour">
+            <div className={styles.layer} hidden={mode !== "map"}>
+              <ResortMap
+                focus={mapFocus}
+                touring={touring}
+                snow={snow}
+                selected={touring ? guidePlace : place}
+                onSelect={(id) => {
+                  setPlace(id);
+                  flyMap(id);
+                }}
+                onCloseSelected={() => setPlace(null)}
+                onEnter360={enterSpace}
+              />
+            </div>
+
+            <div className={styles.layer} hidden={mode !== "space"}>
+              {spaceMounted && (
+                <PanoViewer
+                  ref={panoRef}
+                  className={styles.pano}
+                  src={scene.src}
+                  yaw={scene.yaw}
+                  pitch={scene.pitch}
+                  fov={scene.fov}
+                  label={sceneLabel(scene)}
+                  autorotate={AUTOROTATE}
+                  onFrame={onFrame}
+                >
+                  <div className={styles.hotspots}>
+                    {scene.hotspots.map((hotspot, i) => (
+                      // Keyed by position: the buttons are reused across scenes, so a
+                      // focused hotspot keeps focus when it switches scene.
+                      <button
+                        key={i}
+                        ref={(el) => {
+                          pins.current[i] = el ? { el, yaw: hotspot.yaw, pitch: hotspot.pitch } : null;
+                        }}
+                        type="button"
+                        className={cx(
+                          styles.hotspot,
+                          hotspot.kind === "book" && styles.hotspotBook,
+                          hotspot.kind === "info" && styles.hotspotInfo,
+                        )}
+                        aria-label={hotspot.label}
+                        aria-haspopup={hotspot.kind === "book" ? "dialog" : undefined}
+                        onClick={() => onHotspot(hotspot)}
+                        onFocus={(e) => revealHotspot(hotspot, e.currentTarget)}
+                      >
+                        <span className={styles.hotspotIcon} aria-hidden="true">
+                          {hotspot.icon}
+                        </span>
+                        {hotspot.label}
+                      </button>
+                    ))}
+                  </div>
+
+                  <div className={styles.captionSlot} role="status">
+                    {caption && <div className={styles.caption}>{caption.note}</div>}
+                  </div>
+
+                  {booking && (
+                    <BookingDrawer
+                      key={booking.id}
+                      offer={booking.offer}
+                      scene={scene.name}
+                      nights={nights}
+                      onNights={setNights}
+                      onClose={closeBooking}
+                    />
+                  )}
+                </PanoViewer>
+              )}
+            </div>
+
+            {/* Announces scene changes, e.g. from the arrow keys. */}
+            <p className="visually-hidden" aria-live="polite">
+              {mode === "space" ? sceneLabel(scene) : ""}
+            </p>
+          </section>
+
+          {guideCardShown && (
+            <GuideCard
+              ref={guideCardRef}
+              returnFocusRef={guideButtonRef}
+              stop={guide.stop}
+              index={guide.index}
+              total={guide.total}
+              isLast={guide.isLast}
+              playing={guide.playing}
+              voice={guide.voice}
+              voiceAvailable={guide.voiceAvailable}
+              runKey={guide.runKey}
+              duration={guide.duration}
+              onBack={guide.back}
+              onNext={guide.next}
+              onTogglePlay={guide.togglePlay}
+              onToggleVoice={guide.toggleVoice}
+              onExit={guide.exit}
             />
-          </div>
-
-          <div className={styles.layer} hidden={mode !== "space"}>
-            {spaceMounted && (
-              <PanoViewer
-                ref={panoRef}
-                className={styles.pano}
-                src={scene.src}
-                yaw={scene.yaw}
-                pitch={scene.pitch}
-                fov={scene.fov}
-                label={sceneLabel(scene)}
-                autorotate={AUTOROTATE}
-                onFrame={onFrame}
-              >
-                <div className={styles.hotspots}>
-                  {scene.hotspots.map((hotspot, i) => (
-                    // Keyed by position: the buttons are reused across scenes, so a
-                    // focused hotspot keeps focus when it switches scene.
-                    <button
-                      key={i}
-                      ref={(el) => {
-                        pins.current[i] = el ? { el, yaw: hotspot.yaw, pitch: hotspot.pitch } : null;
-                      }}
-                      type="button"
-                      className={styles.hotspot}
-                      aria-label={hotspot.label}
-                      aria-haspopup={hotspot.kind === "book" ? "dialog" : undefined}
-                      onClick={() => onHotspot(hotspot)}
-                      onFocus={(e) => revealHotspot(hotspot, e.currentTarget)}
-                    >
-                      <span className={styles.hotspotIcon} aria-hidden="true">
-                        {hotspot.icon}
-                      </span>
-                      {hotspot.label}
-                    </button>
-                  ))}
-                </div>
-
-                <div className={styles.captionSlot} role="status">
-                  {caption && <div className={styles.caption}>{caption.note}</div>}
-                </div>
-
-                {booking && (
-                  <BookingDrawer
-                    key={booking.id}
-                    offer={booking.offer}
-                    scene={scene.name}
-                    nights={nights}
-                    onNights={setNights}
-                    onClose={closeBooking}
-                  />
-                )}
-              </PanoViewer>
-            )}
-          </div>
-
-          {/* Announces scene changes, e.g. from the arrow keys. */}
-          <p className="visually-hidden" aria-live="polite">
-            {mode === "space" ? sceneLabel(scene) : ""}
-          </p>
-        </section>
-
-        {touring && (
-          <GuideCard
-            stop={guide.stop}
-            index={guide.index}
-            total={guide.total}
-            isLast={guide.isLast}
-            playing={guide.playing}
-            voice={guide.voice}
-            voiceAvailable={guide.voiceAvailable}
-            runKey={guide.runKey}
-            duration={guide.duration}
-            onBack={guide.back}
-            onNext={guide.next}
-            onTogglePlay={guide.togglePlay}
-            onToggleVoice={guide.toggleVoice}
-            onExit={guide.exit}
-          />
-        )}
+          )}
+        </div>
       </div>
 
-      <SceneRail scenes={scenes} current={index} onSelect={openSpace} onStep={(delta) => openSpace(index + delta)} />
-      <SceneDetails scene={scene} />
-      <SpacesGrid scenes={scenes} onEnter={(i) => openSpace(i, true)} />
+      <SceneRail
+        scenes={scenes}
+        current={index}
+        active={mode === "space"}
+        onSelect={(i) => userOpenSpace(i)}
+        onStep={(delta) => userOpenSpace(index + delta)}
+      />
+      <SceneDetails scene={scene} next={nextScene} onNext={() => userOpenSpace(index + 1, true)} />
+      <SpacesGrid scenes={scenes} onEnter={(i) => userOpenSpace(i, true)} />
     </>
   );
 }

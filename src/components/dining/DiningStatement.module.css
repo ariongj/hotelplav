@@ -1,21 +1,113 @@
 .statement {
-  padding: clamp(64px, 8vw, 120px) var(--gutter) clamp(20px, 3vw, 40px);
+  padding: clamp(72px, 9vw, 128px) var(--gutter) clamp(40px, 5vw, 72px);
   background: var(--paper);
-  text-align: center;
 }
 
 .inner {
-  max-width: 900px;
+  display: grid;
+  gap: clamp(36px, 5vw, 72px);
+  max-width: var(--max);
   margin: 0 auto;
 }
 
+@media (min-width: 960px) {
+  .inner {
+    grid-template-columns: 1.15fr 1fr;
+    align-items: center;
+  }
+}
+
 .eyebrow {
-  margin-bottom: 28px;
+  margin-bottom: 22px;
+}
+
+.title {
+  margin: 0 0 22px;
+  max-width: 14ch;
+  font: 400 clamp(36px, 4.8vw, 66px) / 1.02 var(--font-display);
+  letter-spacing: -0.022em;
+  color: var(--ink);
+  text-wrap: balance;
+}
+
+.title em {
+  font-style: italic;
+  color: var(--lake);
 }
 
 .text {
   margin: 0;
-  font: 400 clamp(24px, 3.4vw, 46px) / 1.34 var(--font-display);
+  max-width: 50ch;
+  font: 400 clamp(16px, 1.25vw, 18px) / 1.7 var(--font-text);
+  color: var(--text-soft);
+}
+
+/* ---------- provenance cards ---------- */
+
+.cards {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.card {
+  display: flex;
+  gap: 18px;
+  padding: 22px 24px;
+  background: var(--light);
+  border: 1px solid var(--line-2);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-soft);
+  transition:
+    transform 0.4s var(--ease-soft),
+    box-shadow 0.4s;
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lift);
+  }
+}
+
+/* The middle card steps in a little — a quiet, staggered stack. */
+@media (min-width: 960px) {
+  .item:nth-child(2) {
+    margin-left: 36px;
+  }
+}
+
+.index {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--mist);
+  color: var(--lake);
+  font: 400 17px/1 var(--font-display);
+}
+
+.kicker {
+  margin-bottom: 8px;
+  font: 700 11px/1 var(--font-text);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gold-dark);
+}
+
+.cardTitle {
+  margin: 0 0 6px;
+  font: 400 22px/1.15 var(--font-display);
+  letter-spacing: -0.015em;
   color: var(--ink);
-  text-wrap: balance;
+}
+
+.cardText {
+  margin: 0;
+  font: 400 15px/1.6 var(--font-text);
+  color: var(--text-soft);
 }

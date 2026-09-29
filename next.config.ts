@@ -16,9 +16,9 @@ const nextConfig: NextConfig = {
     // Static hosting can't optimise images on request; the placeholder
     // photos are already sized and compressed by their CDN.
     unoptimized: staticExport,
-    // Placeholder photography from the design handoff is hot-linked from these
-    // hosts. Once the hotel's licensed photography lives in /public (or a CMS),
-    // remove the hosts that are no longer used.
+    // Placeholder interiors (Wix) and credited Wikimedia Commons photos are
+    // hot-linked from these hosts. Once the hotel's licensed photography lives
+    // in /public (or a CMS), remove the hosts that are no longer used.
     remotePatterns: [
       { protocol: "https", hostname: "static.wixstatic.com", pathname: "/media/**" },
       { protocol: "https", hostname: "upload.wikimedia.org", pathname: "/wikipedia/commons/**" },

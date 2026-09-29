@@ -119,6 +119,8 @@ export function useGuidedTour(stops: readonly GuideStop[], onStop: (stop: GuideS
   }, [active, voice, voiceAvailable, playing]);
 
   // Arrow keys step through the tour (capture phase, ahead of page shortcuts).
+  // Keys pressed in a dialog (the booking drawer: Escape closes just that) and
+  // arrows pressed inside the 360° viewer (they look around) are left alone.
   useEffect(() => {
     if (!active) return;
     const onKey = (e: KeyboardEvent) => {
@@ -126,6 +128,10 @@ export function useGuidedTour(stops: readonly GuideStop[], onStop: (stop: GuideS
       const target = e.target;
       if (target instanceof HTMLElement && (/^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName) || target.isContentEditable)) {
         return;
+      }
+      if (target instanceof Element) {
+        if (target.closest('[role="dialog"]')) return;
+        if (e.key !== "Escape" && target.closest("[data-pano]")) return;
       }
       if (e.key === "ArrowRight") {
         e.preventDefault();

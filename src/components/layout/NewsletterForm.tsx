@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 
 import { submitEnquiry } from "@/lib/enquiry-client";
 
@@ -9,6 +9,15 @@ import styles from "./SiteFooter.module.css";
 export function NewsletterForm() {
   const [status, setStatus] = useState<"idle" | "sending" | "done">("idle");
   const [error, setError] = useState("");
+  /** The static preview has nowhere to send the sign-up (see lib/enquiry-client). */
+  const [preview, setPreview] = useState(false);
+  const doneRef = useRef<HTMLParagraphElement>(null);
+
+  // The form (and its focused button) is replaced by the thank-you line; move
+  // focus there so keyboard and screen-reader users aren't dropped to <body>.
+  useEffect(() => {
+    if (status === "done") doneRef.current?.focus();
+  }, [status]);
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -21,6 +30,7 @@ export function NewsletterForm() {
       company: String(data.get("company") ?? ""),
     });
     if (res.ok) {
+      setPreview(Boolean(res.preview));
       setStatus("done");
       form.reset();
     } else {
@@ -31,8 +41,10 @@ export function NewsletterForm() {
 
   if (status === "done") {
     return (
-      <p className={styles.newsletterDone} role="status">
-        Thank you — you&rsquo;re on the list.
+      <p ref={doneRef} tabIndex={-1} className={styles.newsletterDone} role="status">
+        {preview
+          ? "This is a preview site, so nothing was sent. On the live site, this adds you to the list."
+          : "Thank you — you’re on the list."}
       </p>
     );
   }

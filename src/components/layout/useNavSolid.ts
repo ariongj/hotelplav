@@ -36,7 +36,9 @@ function isPastHero(): boolean {
   if (!anchor) return window.scrollY > vh * 0.6;
   const raw = anchor.dataset.navOffset ?? "90";
   const offset = raw.endsWith("vh") ? (parseFloat(raw) / 100) * vh : parseFloat(raw) || 90;
-  return window.scrollY > anchor.offsetTop + anchor.offsetHeight - offset;
+  // The viewport rect, not offsetTop: the anchor may sit inside a positioned
+  // parent (the /tour stage), which offsetTop is measured from.
+  return anchor.getBoundingClientRect().bottom < offset;
 }
 
 export function useNavSolid(): boolean {

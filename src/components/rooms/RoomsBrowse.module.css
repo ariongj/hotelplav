@@ -1,0 +1,8 @@
+.section {
+  padding: clamp(64px, 8vw, 120px) var(--gutter-tight) clamp(72px, 9vw, 136px);
+}
+
+.inner {
+  max-width: var(--max);
+  margin: 0 auto;
+}

@@ -22,19 +22,30 @@
 
 /* ---------- type ---------- */
 
-/* Small uppercase kicker above headings. */
-.eyebrow {
-  font: 500 12px/1 var(--font-text);
-  letter-spacing: 0.4em;
+/* Small kicker above headings, with a short rule before it. */
+.eyebrow,
+.eyebrowLight {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font: 700 12px/1 var(--font-text);
+  letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: var(--gold);
+  color: var(--lake);
 }
 
 .eyebrowLight {
-  font: 500 12px/1 var(--font-text);
-  letter-spacing: 0.4em;
-  text-transform: uppercase;
   color: var(--gold-light);
+}
+
+.eyebrow::before,
+.eyebrowLight::before {
+  content: "";
+  width: 22px;
+  height: 1.5px;
+  border-radius: 2px;
+  background: currentColor;
+  opacity: 0.7;
 }
 
 /* Reset heading/paragraph margins without out-ranking page classes. */
@@ -43,33 +54,35 @@
 }
 
 /* Section heading (h2). */
-.h2 {
-  font: 400 clamp(32px, 4.4vw, 62px) / 1.05 var(--font-display);
+.h2,
+.h2Light {
+  font: 400 clamp(34px, 4.6vw, 64px) / 1.04 var(--font-display);
+  letter-spacing: -0.015em;
   color: var(--ink);
 }
 
 .h2Light {
-  font: 400 clamp(32px, 4.4vw, 62px) / 1.05 var(--font-display);
-  color: var(--cream);
+  color: var(--cream-2);
 }
 
 /* Intro paragraph under a section heading. */
-.lead {
-  font: 300 clamp(15px, 1.2vw, 18px) / 1.8 var(--font-text);
+.lead,
+.leadLight {
+  font: 400 clamp(16px, 1.2vw, 18px) / 1.7 var(--font-text);
   color: var(--text-soft);
 }
 
 .leadLight {
-  font: 300 clamp(15px, 1.2vw, 18px) / 1.8 var(--font-text);
-  color: rgba(245, 238, 225, 0.72);
+  color: rgba(238, 244, 243, 0.76);
 }
 
-/* Small uppercase field label (booking bars, forms). */
+/* Small field label (booking bars, forms). --text-soft keeps 11px text above
+   4.5:1 on paper and white (--muted is too light at this size). */
 .label {
-  font: 500 11px/1 var(--font-text);
-  letter-spacing: 0.22em;
+  font: 700 11px/1 var(--font-text);
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--muted);
+  color: var(--text-soft);
 }
 
 /* ---------- actions ---------- */
@@ -81,32 +94,36 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 11px;
-  padding: 16px 32px;
-  font: 600 12px/1 var(--font-text);
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  border-radius: 2px;
+  gap: 10px;
+  min-height: 50px;
+  padding: 0 26px;
+  font: 700 15px/1 var(--font-text);
+  letter-spacing: 0.01em;
+  border-radius: var(--r-pill);
   transition:
     background-color 0.3s,
     color 0.3s,
-    border-color 0.3s;
+    border-color 0.3s,
+    transform 0.3s var(--ease-soft),
+    box-shadow 0.3s;
 }
 
 .btnGold {
   background: var(--gold);
   color: var(--on-gold);
   border: none;
+  box-shadow: 0 10px 26px rgba(184, 137, 74, 0.28);
 }
 
 .btnGold:hover {
   background: var(--gold-hover);
   color: var(--on-gold);
+  transform: translateY(-1px);
 }
 
 .btnOutline {
   background: transparent;
-  border: 1px solid var(--ink);
+  border: 1.5px solid var(--ink);
   color: var(--ink);
 }
 
@@ -116,40 +133,68 @@
 }
 
 .btnOutlineLight {
-  background: transparent;
-  border: 1px solid rgba(245, 238, 225, 0.5);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1.5px solid rgba(238, 244, 243, 0.45);
   color: var(--cream);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
 }
 
 .btnOutlineLight:hover {
   border-color: var(--cream);
   color: var(--cream);
+  background: rgba(255, 255, 255, 0.12);
 }
 
 .btnCream {
   background: var(--cream-2);
-  color: var(--on-gold);
+  color: var(--ink);
   border: none;
 }
 
 .btnCream:hover {
   background: #fff;
-  color: var(--on-gold);
+  color: var(--ink);
+  transform: translateY(-1px);
 }
 
-/* Text link with a gold underline: "View all rooms →", "Discover". */
+/* Text link with an underline: "View all rooms", "Discover". */
 .linkUnderline {
-  font: 500 11px/1 var(--font-text);
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font: 700 14px/1 var(--font-text);
+  letter-spacing: 0.01em;
   color: var(--ink);
-  border-bottom: 1px solid var(--gold);
-  padding-bottom: 5px;
+  border-bottom: 1.5px solid var(--gold);
+  padding-bottom: 6px;
   transition:
     color 0.3s,
-    border-color 0.3s;
+    gap 0.3s var(--ease-soft);
 }
 
 .linkUnderline:hover {
-  color: var(--bronze);
+  color: var(--lake);
+  gap: 12px;
+}
+
+/* ---------- surfaces ---------- */
+
+/* Frosted panel for content over imagery or 3D. */
+.glass {
+  background: var(--glass);
+  -webkit-backdrop-filter: saturate(160%) blur(18px);
+  backdrop-filter: saturate(160%) blur(18px);
+  border: 1px solid var(--glass-line);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-soft);
+}
+
+.glassDark {
+  background: var(--glass-dark);
+  -webkit-backdrop-filter: saturate(150%) blur(16px);
+  backdrop-filter: saturate(150%) blur(16px);
+  border: 1px solid rgba(238, 244, 243, 0.14);
+  border-radius: var(--r-lg);
+  color: var(--cream);
 }

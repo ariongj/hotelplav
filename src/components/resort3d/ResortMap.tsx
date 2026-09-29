@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type KeyboardEvent, type ReactNode } from "react";
 
 import type { SceneId } from "@/components/tour/content";
 import { cx } from "@/lib/cx";
@@ -13,10 +13,18 @@ import styles from "./ResortMap.module.css";
 export type MapFocus = { id: ViewId; nonce: number };
 
 type ResortMapProps = {
+  /**
+   * "explore": drag, zoom, place markers and cards (tour page).
+   * "hero": a living backdrop — the camera drifts on its own, nothing to
+   * operate, and the page scrolls straight past it (home page).
+   */
+  variant?: "explore" | "hero";
   /** Where the camera should be; a new object (nonce) flies there again. */
-  focus: MapFocus;
+  focus?: MapFocus;
   /** A guided tour is running: gentle orbit, explore controls hidden. */
   touring?: boolean;
+  /** Falling snow, where the season has it (see ResortEngine.setSnow). */
+  snow?: boolean;
   /** Highlighted place; in explore mode its card is shown. */
   selected?: PoiId | null;
   onSelect?: (id: PoiId) => void;
@@ -31,9 +39,13 @@ type ResortMapProps = {
  * Illustrative 3D map of the resort. three.js and the scene are loaded on
  * mount (code-split), so pages without the map never download them.
  */
+const HERO_FOCUS: MapFocus = { id: "hero", nonce: 0 };
+
 export function ResortMap({
-  focus,
+  variant = "explore",
+  focus = HERO_FOCUS,
   touring = false,
+  snow = true,
   selected = null,
   onSelect,
   onCloseSelected,
@@ -43,8 +55,13 @@ export function ResortMap({
 }: ResortMapProps) {
   const hostRef = useRef<HTMLDivElement>(null);
   const pinRefs = useRef<Partial<Record<PoiId, HTMLButtonElement | null>>>({});
+  const cardRef = useRef<HTMLDivElement>(null);
+  /** The pin was pressed from the keyboard: move focus to the card it opens. */
+  const focusCard = useRef(false);
   const engineRef = useRef<ResortEngine | null>(null);
   const focusRef = useRef(focus);
+  const hero = variant === "hero";
+  const heroRef = useRef(hero);
   const [status, setStatus] = useState<"loading" | "ready" | "failed">("loading");
   const [interacted, setInteracted] = useState(false);
 
@@ -60,6 +77,8 @@ export function ResortMap({
         el.style.setProperty("--py", `${pin.y.toFixed(2)}%`);
         el.style.setProperty("--po", pin.visible ? "1" : "0");
         el.style.setProperty("--pe", pin.visible ? "auto" : "none");
+        // Off-screen pins leave the tab order too, so focus never lands on one it can't show.
+        el.inert = !pin.visible;
       }
     };
 
@@ -71,13 +90,16 @@ export function ResortMap({
           setStatus("failed");
           return;
         }
+        const isHero = heroRef.current;
         engine = new ResortEngine(host, {
           reducedMotion: matchMedia("(prefers-reduced-motion: reduce)").matches,
-          onPins: placePins,
+          interactive: !isHero,
+          initialView: isHero ? "hero" : "overview",
+          onPins: isHero ? undefined : placePins,
           onInteract: () => setInteracted(true),
         });
         engineRef.current = engine;
-        if (focusRef.current.id !== "overview") engine.flyTo(focusRef.current.id);
+        if (!isHero && focusRef.current.id !== "overview") engine.flyTo(focusRef.current.id);
         setStatus("ready");
       })
       .catch(() => {
@@ -94,53 +116,64 @@ export function ResortMap({
   // Fly whenever the requested focus changes.
   useEffect(() => {
     focusRef.current = focus;
-    engineRef.current?.flyTo(focus.id);
+    if (!heroRef.current) engineRef.current?.flyTo(focus.id);
   }, [focus]);
 
   useEffect(() => {
     engineRef.current?.setTourMode(touring);
   }, [touring, status]);
 
-  const card = !touring && selected ? getPoi(selected) : null;
+  useEffect(() => {
+    engineRef.current?.setSnow(snow);
+  }, [snow, status]);
+
+  const card = !hero && !touring && selected ? getPoi(selected) : null;
+  const controlsShown = status === "ready" && !touring && !hero;
+
+  useEffect(() => {
+    if (card && focusCard.current) cardRef.current?.focus({ preventScroll: true });
+    focusCard.current = false;
+  }, [card]);
+
+  // Closing the card from inside it hands focus back to its pin.
+  function closeCard() {
+    const pin = selected ? pinRefs.current[selected] : null;
+    const hadFocus = !!cardRef.current?.contains(document.activeElement);
+    onCloseSelected?.();
+    if (hadFocus) pin?.focus({ preventScroll: true });
+  }
+
+  function onKeyDown(e: KeyboardEvent<HTMLDivElement>) {
+    if (e.key === "Escape" && card) closeCard();
+  }
 
   return (
-    <div className={cx(styles.map, className)}>
+    <div
+      className={cx(styles.map, hero && styles.hero, status === "ready" && styles.ready, className)}
+      onKeyDown={hero ? undefined : onKeyDown}
+    >
+      {/* In the hero the map is a decorative backdrop: the headline carries the message. */}
       <div
         ref={hostRef}
         className={styles.canvas}
-        role="img"
-        aria-label="Illustrated 3D map of the resort: the hotel, spa, dining terrace, chapel, lake and ski lift in the Sharr valley"
+        role={hero ? undefined : "img"}
+        aria-label={
+          hero
+            ? undefined
+            : "Illustrated 3D map of Plav Hotel on Lake Plav: the hotel, spa, lake terrace and chapel, with a trail through the pines up to a mountain viewpoint"
+        }
+        aria-hidden={hero || undefined}
       />
 
-      {status === "ready" && (
-        <div className={cx(styles.pins, touring && styles.pinsTouring)}>
-          {pois.map((poi) => (
-            <button
-              key={poi.id}
-              ref={(el) => {
-                pinRefs.current[poi.id] = el;
-              }}
-              type="button"
-              className={cx(styles.pin, selected === poi.id && styles.pinActive)}
-              aria-label={`${poi.name}: show on the map`}
-              aria-pressed={selected === poi.id}
-              tabIndex={touring ? -1 : undefined}
-              onClick={() => onSelect?.(poi.id)}
-            >
-              <span className={styles.pinLabel}>{poi.name}</span>
-              <span className={styles.pinDot} aria-hidden="true" />
-            </button>
-          ))}
-        </div>
-      )}
-
+      {/* Non-modal, and ahead of the pins in the tab order. A pin pressed from the
+          keyboard moves focus here; Escape or Close hands it back to the pin. */}
       {card && (
-        <div className={styles.card} role="dialog" aria-label={card.name}>
-          <button type="button" className={styles.cardClose} aria-label="Close" onClick={onCloseSelected}>
+        <div ref={cardRef} className={styles.card} role="region" aria-label={card.name} tabIndex={-1}>
+          <button type="button" className={styles.cardClose} aria-label="Close" onClick={closeCard}>
             &times;
           </button>
           <div className={styles.cardKicker}>On the map</div>
-          <h3 className={styles.cardTitle}>{card.name}</h3>
+          <h2 className={styles.cardTitle}>{card.name}</h2>
           <p className={styles.cardText}>{card.blurb}</p>
           <div className={styles.cardActions}>
             {card.scene && (
@@ -155,10 +188,35 @@ export function ResortMap({
         </div>
       )}
 
-      {status === "ready" && !touring && (
+      {status === "ready" && !hero && (
+        <div className={cx(styles.pins, touring && styles.pinsTouring)}>
+          {pois.map((poi) => (
+            <button
+              key={poi.id}
+              ref={(el) => {
+                pinRefs.current[poi.id] = el;
+              }}
+              type="button"
+              className={cx(styles.pin, selected === poi.id && styles.pinActive)}
+              aria-label={`${poi.name}: show on the map`}
+              aria-pressed={selected === poi.id}
+              tabIndex={touring ? -1 : undefined}
+              onClick={(e) => {
+                focusCard.current = e.detail === 0;
+                onSelect?.(poi.id);
+              }}
+            >
+              <span className={styles.pinLabel}>{poi.name}</span>
+              <span className={styles.pinDot} aria-hidden="true" />
+            </button>
+          ))}
+        </div>
+      )}
+
+      {controlsShown && (
         <>
           <div className={cx(styles.hint, interacted && styles.hintHidden)} aria-hidden="true">
-            Drag to explore &middot; pinch or scroll to zoom
+            Drag to explore &middot; pinch or ctrl + scroll to zoom
           </div>
           <div className={styles.controls}>
             <button type="button" className={styles.control} aria-label="Zoom out" onClick={() => engineRef.current?.zoomBy(1.25)}>
@@ -185,19 +243,26 @@ export function ResortMap({
         </>
       )}
 
-      {status === "loading" && (
+      {status === "loading" && !hero && (
         <div className={styles.loader}>
           <div className={styles.spinner} />
           <div className={styles.loaderText}>Building the valley</div>
         </div>
       )}
 
-      {status === "failed" && (
+      {/* The hero just keeps its sky-to-lake poster. */}
+      {status === "failed" && !hero && (
         <div className={styles.failed} role="alert">
           <p>The 3D map needs WebGL, which is switched off in this browser.</p>
-          <button type="button" className={styles.cardPrimary} onClick={() => onEnter360?.("hall")}>
-            Open the 360&deg; spaces
-          </button>
+          {onEnter360 ? (
+            <button type="button" className={styles.cardPrimary} onClick={() => onEnter360("hall")}>
+              Open the 360&deg; spaces
+            </button>
+          ) : (
+            <Link href="/tour#hall" className={styles.cardPrimary}>
+              Open the 360&deg; spaces
+            </Link>
+          )}
         </div>
       )}
 

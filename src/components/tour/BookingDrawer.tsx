@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { useEffect, useId, useLayoutEffect, useRef, useState } from "react";
 
-import { quoteStay, seasonFor, type Season } from "@/lib/booking/pricing";
+import { MAX_ONLINE_NIGHTS, quoteStay, seasonFor, type Season } from "@/lib/booking/pricing";
 import { contactHref } from "@/lib/contact-link";
 import { cx } from "@/lib/cx";
 import { submitEnquiry } from "@/lib/enquiry-client";
@@ -12,24 +12,26 @@ import type { TourOffer } from "./content";
 
 export const DEFAULT_NIGHTS = 2;
 const MIN_NIGHTS = 1;
-const MAX_NIGHTS = 14;
+/** Same limit as the booking engine: longer stays are arranged personally. */
+const MAX_NIGHTS = MAX_ONLINE_NIGHTS;
 /** The in-tour quote is for two guests (booking-site breakfast is per guest). */
 const GUESTS = 2;
-/** Booking sites' mark-up on flat-priced items such as a ceremony. */
-const FLAT_OTA_MARKUP = 1.12;
 
-function quote(offer: TourOffer, nights: number, season: Season): { direct: number; ota: number } {
-  if (offer.flat) {
-    const direct = offer.rate * season.multiplier;
-    return { direct, ota: direct * FLAT_OTA_MARKUP };
-  }
+/**
+ * Direct price, and for stays the booking-site price it beats. Flat items
+ * (a ceremony) aren't sold on booking sites, so they get no comparison.
+ */
+function quote(offer: TourOffer, nights: number, season: Season): { direct: number; ota: number | null } {
+  if (offer.flat) return { direct: offer.rate * season.multiplier, ota: null };
   const { direct, ota } = quoteStay({ baseRate: offer.rate, nights, guests: GUESTS, season });
   return { direct, ota };
 }
 
+const nightsLabel = (nights: number) => `${nights} ${nights === 1 ? "night" : "nights"}`;
+
 type BookingDrawerProps = {
   offer: TourOffer;
-  /** Scene the hold is made from, sent with the enquiry. */
+  /** Scene the request is made from, sent with the enquiry. */
   scene: string;
   nights: number;
   onNights: (nights: number) => void;
@@ -37,9 +39,10 @@ type BookingDrawerProps = {
 };
 
 /**
- * "Reserve from inside the room": direct rate vs booking sites and a rate
- * hold, over the panorama. Rendered inside the viewer so it also shows in
- * fullscreen.
+ * "Book from inside the room": the direct rate (vs booking sites for a stay),
+ * sent to the team as a rate request, over the panorama. The quote uses the
+ * current season — the visitor's dates, added on the contact form, set the
+ * final price. Rendered inside the viewer so it also shows in fullscreen.
  */
 export function BookingDrawer({ offer, scene, nights, onNights, onClose }: BookingDrawerProps) {
   const [season] = useState(() => seasonFor());
@@ -54,6 +57,7 @@ export function BookingDrawer({ offer, scene, nights, onNights, onClose }: Booki
 
   const { direct, ota } = quote(offer, nights, season);
   const total = euro(direct);
+  const team = offer.topic === "events" ? "events" : "reservations";
 
   // Focus the first control on open. On close, hand focus back to the hotspot
   // that opened the drawer — unless the visitor has already moved on.
@@ -122,25 +126,39 @@ export function BookingDrawer({ offer, scene, nights, onNights, onClose }: Booki
         <div className={styles.head}>
           <div>
             <div id={kickerId} className={styles.kicker}>
-              Reserve from inside the room
+              Book from inside the tour
             </div>
             <h2 id={titleId} className={styles.name}>
               {offer.name}
             </h2>
           </div>
           <button ref={closeRef} type="button" className={styles.close} aria-label="Close" onClick={onClose}>
-            &times;
+            <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true">
+              <path d="M2 2l8 8M10 2l-8 8" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+            </svg>
           </button>
         </div>
 
         {status === "done" ? (
           <>
             <p ref={doneRef} className={styles.done} tabIndex={-1}>
-              Held for thirty minutes at {total}. Our reservations team will confirm by email, or finish now and keep
-              the rate.
+              <span className={styles.doneIcon} aria-hidden="true">
+                <svg width="14" height="14" viewBox="0 0 14 14">
+                  <path d="M2.5 7.5 5.5 10.5 11.5 3.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+                </svg>
+              </span>
+              <span>
+                Rate noted: {total}
+                {offer.flat ? "" : ` for ${nightsLabel(nights)}`}. Add your dates and email on the next page and our{" "}
+                {team} team will confirm.
+              </span>
             </p>
             <Link
-              href={contactHref({ topic: offer.topic, room: offer.name, total })}
+              href={contactHref({
+                topic: offer.topic,
+                room: offer.flat ? offer.name : `${offer.name} · ${nightsLabel(nights)}`,
+                total,
+              })}
               className={styles.confirm}
             >
               Complete reservation
@@ -178,17 +196,23 @@ export function BookingDrawer({ offer, scene, nights, onNights, onClose }: Booki
                 </div>
               </div>
             )}
-            <div className={styles.total}>
-              <span className={styles.totalLabel}>Direct total</span>
-              <span className={styles.totalValue}>{total}</span>
-            </div>
-            <div className={styles.row}>
-              <span>Booking sites</span>
-              <s>{euro(ota)}</s>
-            </div>
-            <div className={cx(styles.row, styles.keep)}>
-              <span>You keep</span>
-              <span>{euro(ota - direct)}</span>
+            <div className={styles.price}>
+              <div className={styles.total}>
+                <span className={styles.totalLabel}>{offer.flat ? "Total" : "Direct total"}</span>
+                <span className={styles.totalValue}>{total}</span>
+              </div>
+              {ota !== null && (
+                <>
+                  <div className={styles.row}>
+                    <span>Booking sites</span>
+                    <s>{euro(ota)}</s>
+                  </div>
+                  <div className={cx(styles.row, styles.keep)}>
+                    <span>You keep</span>
+                    <span className={styles.saving}>{euro(ota - direct)}</span>
+                  </div>
+                </>
+              )}
             </div>
             <button
               type="button"
@@ -196,7 +220,7 @@ export function BookingDrawer({ offer, scene, nights, onNights, onClose }: Booki
               disabled={status === "sending"}
               onClick={() => void hold()}
             >
-              Hold this rate
+              {status === "sending" ? "Sending…" : "Request this rate"}
             </button>
             {error && (
               <p className={styles.error} role="alert">
@@ -204,7 +228,9 @@ export function BookingDrawer({ offer, scene, nights, onNights, onClose }: Booki
               </p>
             )}
             <p className={styles.note}>
-              {season.name} &middot; breakfast and spa included &middot; free cancellation to 48h
+              {offer.flat
+                ? `${season.name} rate — your date sets the final price. No obligation until our events team confirms.`
+                : `${season.name} rate — your dates set the final price. Breakfast and spa included, free cancellation to 48 h.`}
             </p>
           </>
         )}

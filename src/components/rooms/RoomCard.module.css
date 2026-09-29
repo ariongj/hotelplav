@@ -1,26 +1,53 @@
 .card {
+  position: relative;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  padding: 10px;
   background: var(--light);
-  border-radius: 4px;
+  border: 1px solid var(--line-2);
+  border-radius: var(--r-xl);
+  /* Card-width queries for the actions row. (Containment also makes the card
+     the containing block for the details panel, which it already is.) */
+  container-type: inline-size;
+  transition:
+    transform 0.45s var(--ease-soft),
+    box-shadow 0.45s var(--ease-soft),
+    border-color 0.45s;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  border-color: transparent;
+  box-shadow: var(--shadow-lift);
 }
 
 /* ---------- photo ---------- */
 
 .media {
   position: relative;
-  aspect-ratio: 16 / 11;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border-radius: var(--r-lg);
+  background: var(--sand);
+}
+
+.media img {
+  transition: transform 0.9s var(--ease-soft);
+}
+
+.card:hover .media img {
+  transform: scale(1.04);
 }
 
 .badge {
   position: absolute;
-  top: 16px;
-  left: 16px;
+  top: 14px;
+  left: 14px;
+  z-index: 2;
   padding: 8px 12px;
-  border-radius: 2px;
-  font: 600 10px/1 var(--font-text);
-  letter-spacing: 0.2em;
+  border-radius: var(--r-pill);
+  font: 700 11px/1 var(--font-text);
+  letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 
@@ -30,38 +57,54 @@
 }
 
 .badgeDark {
-  background: var(--ink);
-  color: var(--paper);
-}
-
-.pano,
-.counter {
-  position: absolute;
-  right: 14px;
-  background: rgba(26, 18, 12, 0.55);
-  -webkit-backdrop-filter: blur(4px);
-  backdrop-filter: blur(4px);
+  background: var(--glass-dark);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
   color: var(--cream-2);
-  border-radius: 40px;
 }
 
 .pano {
-  top: 14px;
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 2;
+  display: inline-grid;
+  place-items: center;
+  min-width: 48px;
   min-height: 44px;
-  padding: 0 15px;
-  border: 1px solid rgba(247, 241, 231, 0.28);
-  font: 600 10px/1 var(--font-text);
-  letter-spacing: 0.14em;
+  padding: 0 14px;
+  background: rgba(251, 250, 247, 0.82);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  border-radius: var(--r-pill);
+  font: 700 13px/1 var(--font-text);
+  color: var(--ink);
+  transition: background-color 0.3s;
 }
 
-.counter {
-  bottom: 14px;
-  padding: 7px 11px;
-  font: 500 10px/1 var(--font-text);
-  letter-spacing: 0.12em;
+.pano:hover {
+  background: var(--lighter);
+  color: var(--ink);
+}
+
+/* Commons attribution, small along the bottom of the photo. The shade is solid
+   under the text line, so it stays at least 4.5:1 even over white bed linen. */
+.credit {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+  padding: 26px 14px 9px;
+  background: linear-gradient(180deg, rgba(8, 32, 35, 0), rgba(8, 32, 35, 0.8) 45%);
+}
+
+.media .credit {
+  color: var(--cream-2);
+}
+
+.media .credit a:hover {
+  color: var(--gold-light);
 }
 
 /* ---------- text ---------- */
@@ -70,89 +113,237 @@
   display: flex;
   flex: 1;
   flex-direction: column;
-  padding: 28px 28px 30px;
-}
-
-.titleRow {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 12px;
+  padding: 20px 12px 8px;
 }
 
 .name {
   margin: 0;
-  font: 400 27px/1.05 var(--font-display);
+  font: 400 clamp(25px, 2.2vw, 30px) / 1.1 var(--font-display);
+  letter-spacing: -0.02em;
   color: var(--ink);
 }
 
-.from {
-  font: 400 14px var(--font-text);
-  color: var(--text-soft);
-  white-space: nowrap;
-}
-
-.fromPrice {
-  font: 400 22px var(--font-display);
-  color: var(--bronze);
-}
-
-/* The design sets this at line-height 1 with 12px/16px margins; 1.45 with
-   the margins trimmed to match keeps a wrapped line (phones) readable. */
-.meta {
-  margin: 9px 0 13px;
-  font: 400 13px/1.45 var(--font-text);
-  letter-spacing: 0.02em;
-  color: var(--muted);
-}
-
-.description {
-  margin: 0 0 20px;
-  font: 300 15px/1.65 var(--font-text);
-  color: var(--text-soft);
-}
-
-.highlights {
+.facts {
   display: flex;
   flex-wrap: wrap;
-  gap: 7px;
-  margin: 0 0 24px;
+  gap: 6px;
+  margin: 14px 0 0;
   padding: 0;
   list-style: none;
 }
 
-.highlight {
+.facts li {
   padding: 7px 11px;
-  border-radius: 40px;
-  background: var(--note);
-  color: #7a6f5c;
-  font: 400 11px/1 var(--font-text);
-  letter-spacing: 0.04em;
+  background: var(--mist);
+  border-radius: var(--r-pill);
+  font: 600 13px/1 var(--font-text);
+  color: var(--teal-2);
 }
 
-/* ---------- actions ---------- */
+.description {
+  margin: 14px 0 20px;
+  font: 400 15.5px/1.65 var(--font-text);
+  color: var(--text-soft);
+}
+
+/* ---------- price + actions ---------- */
+
+.footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 14px;
+  margin-top: auto;
+  padding-top: 16px;
+  border-top: 1px solid var(--line-2);
+}
+
+.price {
+  margin: 0;
+  white-space: nowrap;
+}
+
+.from {
+  font: 400 14px var(--font-text);
+  color: var(--muted);
+}
+
+.amount {
+  font: 400 28px/1 var(--font-display);
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
 
 .actions {
   display: flex;
   align-items: center;
-  gap: 18px;
-  margin-top: auto;
+  gap: 8px;
+}
+
+.book,
+.moreToggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 46px;
+  padding: 0 22px;
+  border-radius: var(--r-pill);
+  font: 700 14px/1 var(--font-text);
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  transition:
+    background-color 0.3s,
+    border-color 0.3s,
+    color 0.3s;
 }
 
 .book {
-  display: inline-flex;
-  flex: 1;
-  align-items: center;
-  justify-content: center;
-  padding: 14px 22px;
-  background: var(--ink);
-  color: var(--paper);
-  font: 600 11px/1 var(--font-text);
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  border-radius: 2px;
+  background: var(--teal);
+  color: var(--cream-2);
 }
 
-.details {
-  white-space: nowrap;
+.book:hover {
+  background: var(--teal-2);
+  color: var(--cream-2);
+}
+
+/* On narrow cards the actions take their own full-width row. */
+@container (max-width: 400px) {
+  .actions {
+    flex: 1 1 100%;
+  }
+
+  .more,
+  .book {
+    flex: 1 1 0;
+  }
+
+  .moreToggle {
+    width: 100%;
+  }
+}
+
+/* ---------- details (over the photo) ---------- */
+
+.moreToggle {
+  padding: 0 18px;
+  border: 1.5px solid var(--line-3);
+  color: var(--ink);
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+}
+
+.moreToggle::-webkit-details-marker {
+  display: none;
+}
+
+.moreToggle:hover {
+  border-color: var(--ink);
+}
+
+.more[open] .moreToggle {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--paper);
+}
+
+.whenOpen,
+.more[open] .whenClosed {
+  display: none;
+}
+
+.more[open] .whenOpen {
+  display: inline;
+}
+
+/* Sits exactly over the photo: same inset as the card padding, same ratio. */
+.moreBody {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  right: 10px;
+  z-index: 4;
+  aspect-ratio: 4 / 3;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  padding: clamp(16px, 5cqi, 24px);
+  background: rgba(10, 42, 45, 0.9);
+  -webkit-backdrop-filter: saturate(150%) blur(16px);
+  backdrop-filter: saturate(150%) blur(16px);
+  border-radius: var(--r-lg);
+  color: var(--cream);
+  animation: details-in 0.35s var(--ease-soft);
+}
+
+@keyframes details-in {
+  from {
+    opacity: 0;
+  }
+}
+
+.moreTitle {
+  margin: 0;
+  font: 700 12px/1 var(--font-text);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gold-light);
+}
+
+.highlights {
+  display: grid;
+  gap: 5px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.highlights li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font: 400 clamp(16px, 5.2cqi, 20px) / 1.25 var(--font-display);
+  color: var(--cream-2);
+}
+
+.highlights li::before {
+  content: "";
+  flex: 0 0 auto;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--gold-light);
+}
+
+.moreNote {
+  margin: auto 0 0;
+  font: 400 13.5px/1.45 var(--font-text);
+  color: rgba(238, 244, 243, 0.78);
+}
+
+.moreLink {
+  align-self: flex-start;
+  font: 700 14px/1 var(--font-text);
+  color: var(--cream-2);
+  border-bottom: 1.5px solid var(--gold-light);
+  padding-bottom: 5px;
+}
+
+.moreLink:hover {
+  color: var(--gold-light);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card:hover,
+  .card:hover .media img {
+    transform: none;
+  }
+
+  .moreBody {
+    animation: none;
+  }
 }

@@ -1,33 +1,29 @@
 import type { Metadata } from "next";
 
-import { BookingPanel } from "@/components/home/BookingPanel";
-import { heroImages } from "@/components/home/content";
+import { BookingResults } from "@/components/home/BookingResults";
+import { intro } from "@/components/home/content";
 import { HomeBookingProvider } from "@/components/home/HomeBooking";
 import { HomeHero } from "@/components/home/HomeHero";
 import { HomeStickyBar } from "@/components/home/HomeStickyBar";
 import {
-  DiningTeaser,
-  EventsTeaser,
+  Duo,
   FinalCta,
   GallerySection,
+  Intro,
   Location,
-  Offers,
   Reviews,
-  RoomsTeaser,
-  SpaTeaser,
-  Statement,
-  TourTeaser,
-  TrustStrip,
+  Seasons,
+  Stay,
+  TourBand,
 } from "@/components/home/sections";
-import sections from "@/components/home/sections.module.css";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SiteNav } from "@/components/layout/SiteNav";
 import { site } from "@/config/site";
-import { lowestBaseRate } from "@/lib/booking/rooms";
+import { lowestFromRate } from "@/lib/booking/rooms";
 import { euro } from "@/lib/format";
 
 export const metadata: Metadata = {
-  alternates: { canonical: `${site.url}/` },
+  alternates: { canonical: "/" },
 };
 
 const hotelJsonLd = {
@@ -36,47 +32,44 @@ const hotelJsonLd = {
   name: site.name,
   description: site.description,
   url: site.url,
-  image: heroImages.exterior.src,
+  image: intro.image.src,
   telephone: site.phone.display,
   email: site.email.stay,
-  priceRange: `From ${euro(lowestBaseRate)} per night`,
-  starRating: { "@type": "Rating", ratingValue: "5" },
+  priceRange: `From ${euro(lowestFromRate)} per night`,
   address: {
     "@type": "PostalAddress",
     streetAddress: site.address.line1,
     addressLocality: site.address.locality,
     addressCountry: site.address.countryCode,
   },
-  amenityFeature: ["Thermal spa", "Finnish sauna", "Restaurant", "Bar", "Valet parking", "EV charging"].map((name) => ({
-    "@type": "LocationFeatureSpecification",
-    name,
-    value: true,
-  })),
+  amenityFeature: ["Spa", "Finnish sauna", "Restaurant", "Bar", "Lake access", "Parking", "EV charging"].map(
+    (name) => ({
+      "@type": "LocationFeatureSpecification",
+      name,
+      value: true,
+    }),
+  ),
 };
 
 export default function HomePage() {
   return (
     <HomeBookingProvider>
-      <SiteNav cta={{ label: "Book", href: "#book" }} menuCta={{ label: "Reserve your stay", href: "#book" }} />
+      <SiteNav cta={{ label: "Book", href: "#book" }} menuCta={{ label: "Check availability", href: "#book" }} />
       <main id="top">
         <HomeHero />
-        <section id="book" className={sections.book}>
-          <BookingPanel />
-        </section>
-        <TrustStrip />
-        <Statement />
-        <RoomsTeaser />
-        <DiningTeaser />
-        <SpaTeaser />
-        <TourTeaser />
-        <EventsTeaser />
+        <BookingResults />
+        <Intro />
+        <Stay />
+        <Seasons />
+        <Duo />
+        <TourBand />
         <GallerySection />
-        <Offers />
         <Reviews />
         <Location />
         <FinalCta />
       </main>
-      <SiteFooter isHome social />
+      {/* No social row until the profiles exist (site.social links are still "#"). */}
+      <SiteFooter isHome />
       <HomeStickyBar />
       <script
         type="application/ld+json"

@@ -1,20 +1,32 @@
-import { getRoom } from "@/lib/booking/rooms";
+import type { Credit } from "@/components/ui/PhotoCredit";
+import { getRoom, rooms } from "@/lib/booking/rooms";
 import type { ContactTopic } from "@/lib/contact-link";
 
 /*
- * Scenes of the 360° tour and the hotspots inside them (design/Tour.dc.html).
+ * Scenes of the 360° tour and the hotspots inside them.
  * Directions are degrees in panorama space, the viewer's own convention.
  *
- * TODO(content): the panoramas are Wikimedia Commons placeholders (CC BY-SA)
- * — replace them with the hotel's own captures (≥ 8K equirectangular, 2:1).
+ * TODO(content): the panoramas are Wikimedia Commons placeholders, each
+ * credited with its own author and licence — replace them with Plav Hotel's
+ * own captures (≥ 8K equirectangular, 2:1) and drop the credits.
  */
+
+const COMMONS = "https://upload.wikimedia.org/wikipedia/commons/thumb";
+
+/** A Commons panorama at full viewer size, plus a card-sized thumbnail of the same file. */
+function commonsPano(path: string, file: string): { src: string; thumb: string } {
+  return {
+    src: `${COMMONS}/${path}/${file}/3840px-${file}`,
+    thumb: `${COMMONS}/${path}/${file}/960px-${file}`,
+  };
+}
 
 export type SceneId = "valley" | "hall" | "room" | "chapel";
 
-/** Something that can be held from inside the tour (the booking drawer). */
+/** Something that can be priced and requested from inside the tour (the booking drawer). */
 export type TourOffer = {
   name: string;
-  /** One line under the name: size, bed, aspect… */
+  /** One line under the name: size, bed, view… */
   meta: string;
   /** EUR before the season multiplier — per night, or the whole price when `flat`. */
   rate: number;
@@ -26,7 +38,7 @@ export type TourOffer = {
 type HotspotBase = {
   yaw: number;
   pitch: number;
-  /** Glyph in the gold disc. */
+  /** Glyph in the brass disc. */
   icon: string;
   label: string;
 };
@@ -40,12 +52,17 @@ export type Scene = {
   id: SceneId;
   num: string;
   name: string;
+  /** Short line naming what the space is for, e.g. "Rooms & suites". */
   kicker: string;
   description: string;
   facts: readonly { label: string; value: string }[];
   cta: { label: string; href: string };
   /** Equirectangular panorama. */
   src: string;
+  /** Small image of the same panorama for the "Four spaces" cards, so they never pull the full file. */
+  thumb: string;
+  /** Author and licence of the panorama (Wikimedia Commons). */
+  credit: Credit;
   /** Opening view: direction and vertical field of view. */
   yaw: number;
   pitch: number;
@@ -55,38 +72,58 @@ export type Scene = {
   hotspots: readonly Hotspot[];
 };
 
-// The prototype sold an "Alpine Room" at 58 m²; the catalogue's Deluxe
-// Alpine Room (42 m², €420) is the room this panorama stands for.
-const alpineRoom = getRoom("deluxe-alpine-room");
+/** The room the room panorama stands for — named and priced from the catalogue. */
+export const tourRoom = getRoom("deluxe-alpine-room");
+
+function range(values: readonly number[]): string {
+  const min = Math.min(...values);
+  const max = Math.max(...values);
+  return min === max ? String(min) : `${min}–${max}`;
+}
 
 export const scenes: readonly Scene[] = [
   {
     id: "valley",
     num: "01",
-    name: "The Sharr Valley",
-    kicker: "Scene 01 — Above the resort",
+    // A sample aerial of another lake (the Chiemsee) until Lake Plav is captured:
+    // named and described so it is never passed off as Lake Plav itself.
+    name: "The lake from above",
+    kicker: "The lake",
     description:
-      "Begin a thousand metres up. A full-circle view over the valley, the lake and the ridgelines that cradle the hotel — the landscape every window frames.",
+      "A sample aerial panorama, standing in for our own. Lake Plav itself is a glacial lake some ten thousand years old, with Visitor across the water to the west and the Prokletije rising to the south.",
     facts: [
-      { label: "Altitude", value: "1,100 m" },
-      { label: "Best light", value: "Sunrise" },
-      { label: "Capture", value: "Aerial, mid-summer" },
+      { label: "Lake level", value: "906 m" },
+      { label: "Length", value: "About 2.2 km" },
+      { label: "Age", value: "~10,000 years" },
     ],
     cta: { label: "Plan your days", href: "/experiences" },
-    src: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/Chiemsee_bei_Seebruck_Luftbild.jpg/3840px-Chiemsee_bei_Seebruck_Luftbild.jpg",
+    ...commonsPano("5/5d", "Chiemsee_bei_Seebruck_Luftbild.jpg"),
+    credit: {
+      author: "SimonWaldherr",
+      license: "CC BY-SA 4.0",
+      href: "https://commons.wikimedia.org/wiki/File:Chiemsee_bei_Seebruck_Luftbild.jpg",
+    },
     yaw: 20,
     pitch: -6,
     fov: 62,
-    thumbAlt: "The Sharr Valley 360 preview",
+    thumbAlt: "Aerial 360° view over a wide lake (sample panorama)",
     hotspots: [
-      { kind: "nav", yaw: 48, pitch: -14, icon: "→", label: "Enter the hotel", target: "hall" },
+      { kind: "nav", yaw: 48, pitch: -14, icon: "→", label: "Step into the Grand Hall", target: "hall" },
       {
         kind: "info",
         yaw: -22,
         pitch: -4,
         icon: "i",
-        label: "The lake",
-        note: "Lake Brezovica, twenty minutes down the valley road. Rowing boats and a lakeside breakfast can be arranged at reception.",
+        label: "About Lake Plav",
+        note: "This sample view shows another lake. Lake Plav is right outside the hotel: kayaks and pedal boats, and breakfast by the water, can be arranged at reception.",
+      },
+      {
+        kind: "info",
+        yaw: 150,
+        pitch: 6,
+        icon: "i",
+        label: "Around Lake Plav",
+        note: "Lake Plav lies between two ranges: Visitor to the west and the Prokletije — the “Accursed Mountains” — to the south. Reception can suggest walks for every pace.",
       },
     ],
   },
@@ -94,20 +131,25 @@ export const scenes: readonly Scene[] = [
     id: "hall",
     num: "02",
     name: "The Grand Hall",
-    kicker: "Scene 02 — Arrival & reception",
+    kicker: "Arrival & reception",
     description:
-      "Marble, brass and nine-metre ceilings. The hall where every stay begins — coats taken, keys presented, the mountains waiting just beyond the doors.",
+      "Marble, brass and nine-metre ceilings. The hall where every stay begins — coats taken, keys presented, and the lake waiting just beyond the doors.",
     facts: [
       { label: "Ceiling height", value: "9 m" },
-      { label: "Style", value: "Belle Époque" },
+      { label: "Style", value: "Stone & brass" },
       { label: "Concierge", value: "24 hours" },
     ],
-    cta: { label: "Reserve your stay", href: "/#book" },
-    src: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/32/Paris,_mairie_du_10e_arrdt,_hall_04.jpg/3840px-Paris,_mairie_du_10e_arrdt,_hall_04.jpg",
+    cta: { label: "Book your stay", href: "/#book" },
+    ...commonsPano("3/32", "Paris,_mairie_du_10e_arrdt,_hall_04.jpg"),
+    credit: {
+      author: "Coyau",
+      license: "CC BY-SA 4.0",
+      href: "https://commons.wikimedia.org/wiki/File:Paris,_mairie_du_10e_arrdt,_hall_04.jpg",
+    },
     yaw: 0,
     pitch: 4,
     fov: 58,
-    thumbAlt: "The Grand Hall 360 preview",
+    thumbAlt: "The Grand Hall 360° preview",
     hotspots: [
       { kind: "nav", yaw: 30, pitch: 2, icon: "→", label: "To the rooms", target: "room" },
       { kind: "nav", yaw: -34, pitch: -2, icon: "→", label: "To the chapel", target: "chapel" },
@@ -117,39 +159,44 @@ export const scenes: readonly Scene[] = [
         pitch: 22,
         icon: "i",
         label: "The ceiling",
-        note: "The original 1904 plasterwork, restored over eleven months by a workshop in Prizren.",
+        note: "Nine metres of hand-finished plaster, lit to glow at dusk.",
       },
     ],
   },
   {
     id: "room",
     num: "03",
-    name: "The Alpine Room",
-    kicker: "Scene 03 — Rooms & suites",
+    name: tourRoom.name,
+    kicker: "Rooms & suites",
     description:
-      "Stand in the middle of the room before you sleep in it. Turn toward the window — that is the view you wake to.",
+      "Stand in the middle of the room before you sleep in it. Turn toward the window — that is the light you wake to.",
     facts: [
-      { label: "Size", value: "42–110 m²" },
-      { label: "Sleeps", value: "2–4 guests" },
-      { label: "Aspect", value: "South ridge" },
+      { label: "Rooms & suites", value: `${range(rooms.map((r) => r.size))} m²` },
+      { label: "Sleeps", value: `${range(rooms.map((r) => r.sleeps))} guests` },
+      { label: "Breakfast", value: "Included" },
     ],
     cta: { label: "Explore rooms & suites", href: "/rooms" },
-    src: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Cerro_Tololo_Hotel_Interior_360_Panorama_(2022_04_08_Pano360_Tololo_Hotel_Room-CC).jpg/3840px-Cerro_Tololo_Hotel_Interior_360_Panorama_(2022_04_08_Pano360_Tololo_Hotel_Room-CC).jpg",
+    ...commonsPano("d/d4", "Cerro_Tololo_Hotel_Interior_360_Panorama_(2022_04_08_Pano360_Tololo_Hotel_Room-CC).jpg"),
+    credit: {
+      author: "NOIRLab/NSF/AURA/P. Horálek",
+      license: "CC BY 4.0",
+      href: "https://commons.wikimedia.org/wiki/File:Cerro_Tololo_Hotel_Interior_360_Panorama_(2022_04_08_Pano360_Tololo_Hotel_Room-CC).jpg",
+    },
     yaw: 180,
     pitch: 0,
     fov: 60,
-    thumbAlt: "Alpine Room 360 preview",
+    thumbAlt: `${tourRoom.name} 360° preview`,
     hotspots: [
       {
         kind: "book",
         yaw: 196,
         pitch: -6,
         icon: "€",
-        label: "Reserve this room",
+        label: "Book this room",
         offer: {
-          name: alpineRoom.name,
-          meta: `${alpineRoom.size} m² · ${alpineRoom.bedLabel} · south ridge · sleeps ${alpineRoom.sleeps}`,
-          rate: alpineRoom.baseRate,
+          name: tourRoom.name,
+          meta: tourRoom.summary,
+          rate: tourRoom.baseRate,
           flat: false,
           topic: "reservation",
         },
@@ -160,7 +207,7 @@ export const scenes: readonly Scene[] = [
         pitch: 4,
         icon: "i",
         label: "The window",
-        note: "Triple-glazed and floor to ceiling. In winter the ridge opposite holds snow until May.",
+        note: "Floor to ceiling and triple-glazed — warm in winter, and wide enough to watch the weather roll over the mountains.",
       },
       { kind: "nav", yaw: 236, pitch: -2, icon: "←", label: "Back to the hall", target: "hall" },
     ],
@@ -169,27 +216,32 @@ export const scenes: readonly Scene[] = [
     id: "chapel",
     num: "04",
     name: "The Chapel",
-    kicker: "Scene 04 — Events & weddings",
+    kicker: "Events & weddings",
     description:
-      "Stone arches and long light — the ceremony space couples cross mountains for. Stand at the altar and look back down the aisle.",
+      "Stone arches and long light, a short, level walk from the hotel — the ceremony space couples cross mountains for. Stand at the altar and look back down the aisle.",
     facts: [
       { label: "Capacity", value: "220 seated" },
       { label: "Ceremonies", value: "Civil & religious" },
       { label: "Season", value: "Year-round" },
     ],
     cta: { label: "Plan an occasion", href: "/events" },
-    src: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Soissons_Cathedral_Interior_360x180,_Picardy,_France_-_Diliff.jpg/3840px-Soissons_Cathedral_Interior_360x180,_Picardy,_France_-_Diliff.jpg",
+    ...commonsPano("a/ab", "Soissons_Cathedral_Interior_360x180,_Picardy,_France_-_Diliff.jpg"),
+    credit: {
+      author: "Diliff",
+      license: "CC BY-SA 3.0",
+      href: "https://commons.wikimedia.org/wiki/File:Soissons_Cathedral_Interior_360x180,_Picardy,_France_-_Diliff.jpg",
+    },
     yaw: 0,
     pitch: 8,
     fov: 56,
-    thumbAlt: "The Chapel 360 preview",
+    thumbAlt: "The Chapel 360° preview",
     hotspots: [
       {
         kind: "book",
         yaw: 26,
         pitch: 4,
         icon: "€",
-        label: "Hold a ceremony date",
+        label: "Price a ceremony",
         offer: {
           name: "Chapel ceremony",
           meta: "220 seated · civil & religious · exclusive use",
@@ -204,15 +256,15 @@ export const scenes: readonly Scene[] = [
         pitch: 0,
         icon: "i",
         label: "The aisle",
-        note: "Twenty-two metres of limestone, laid in 1904. Ceremonies run to forty minutes.",
+        note: "Twenty-two metres of pale stone. Ceremonies run to forty minutes.",
       },
     ],
   },
 ];
 
-/** Viewer label, e.g. "01 — The Sharr Valley". */
+/** Viewer label, e.g. "01 · The lake from above". */
 export function sceneLabel(scene: Scene): string {
-  return `${scene.num} — ${scene.name}`;
+  return `${scene.num} · ${scene.name}`;
 }
 
 export function sceneIndex(id: SceneId): number {

@@ -1,6 +1,6 @@
 /*
  * Illustrative 3D map of the resort: a procedural valley with the hotel,
- * spa, terrace, chapel, lake and ski lift, rendered with three.js. The React
+ * spa, terrace, chapel, lake and a trail to a ridge viewpoint, rendered with three.js. The React
  * wrapper (ResortMap.tsx) loads this module on demand and owns the overlay
  * UI; this class owns WebGL, the camera and the animation loop.
  */
@@ -25,7 +25,6 @@ import {
   HemisphereLight,
   InstancedMesh,
   Line,
-  LineBasicMaterial,
   Material,
   Matrix4,
   Mesh,
@@ -50,9 +49,9 @@ import {
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 
 import type { PoiId } from "./pois";
-import { fbm, heightAt, isReserved, LAKE, PADS, padLevel, random, WATER_LEVEL, WORLD_SIZE } from "./terrain";
+import { fbm, heightAt, isReserved, LAKE, lakeDistance, PADS, padLevel, random, WATER_LEVEL, WORLD_SIZE } from "./terrain";
 
-export type ViewId = PoiId | "overview";
+export type ViewId = PoiId | "overview" | "hero";
 type Vec3 = [number, number, number];
 type CameraView = { position: Vec3; target: Vec3 };
 
@@ -61,15 +60,22 @@ export type PinPosition = { id: PoiId; x: number; y: number; visible: boolean };
 
 export type ResortEngineOptions = {
   reducedMotion: boolean;
+  /** false: no dragging or zooming (the home hero) — the camera drifts on its own and the page scrolls freely. */
+  interactive?: boolean;
+  /** Where the camera starts. */
+  initialView?: ViewId;
   /** Called after every rendered frame with the marker positions. */
   onPins?: (pins: PinPosition[]) => void;
   /** The visitor started dragging or zooming. */
   onInteract?: () => void;
 };
 
-const SKY_TOP = "#93abc2";
-const SKY_HORIZON = "#f0e2c8";
-const SKY_BOTTOM = "#e3d2b6";
+const SKY_TOP = "#8db1c8";
+const SKY_HORIZON = "#e6eeef";
+const SKY_BOTTOM = "#d6e2e3";
+
+/** Months (0 = January) when snow falls on the map. */
+const SNOW_MONTHS = [10, 11, 0, 1, 2];
 
 const clamp = (x: number, a: number, b: number) => Math.max(a, Math.min(b, x));
 const smoothstep = (e0: number, e1: number, x: number) => {
@@ -82,23 +88,32 @@ const easeInOut = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t 
 
 const hotelY = padLevel(PADS.hotel);
 const chapelY = padLevel(PADS.chapel);
-const liftBaseY = padLevel(PADS.liftBase);
-const liftTopY = padLevel(PADS.liftTop);
+const TRAIL_FROM = new Vector3(PADS.trailHead.x, padLevel(PADS.trailHead), PADS.trailHead.z);
+const TRAIL_TO = new Vector3(PADS.viewpoint.x, padLevel(PADS.viewpoint), PADS.viewpoint.z);
 
-const LIFT_FROM = new Vector3(PADS.liftBase.x, liftBaseY, PADS.liftBase.z);
-const LIFT_TO = new Vector3(PADS.liftTop.x, liftTopY, PADS.liftTop.z);
-const liftMid = new Vector3().lerpVectors(LIFT_FROM, LIFT_TO, 0.55);
-liftMid.y = heightAt(liftMid.x, liftMid.z) + 8;
+/** Switchback footpath from the hotel grounds up through the forest to the ridge viewpoint. */
+const TRAIL = (() => {
+  const across = new Vector3().subVectors(TRAIL_TO, TRAIL_FROM).setY(0);
+  across.set(-across.z, 0, across.x).normalize();
+  const bends = 6;
+  const points: Vector3[] = [];
+  for (let i = 0; i <= bends; i++) {
+    const swing = i === 0 || i === bends ? 0 : (i % 2 ? 1 : -1) * 7;
+    points.push(new Vector3().lerpVectors(TRAIL_FROM, TRAIL_TO, i / bends).addScaledVector(across, swing).setY(0));
+  }
+  return new CatmullRomCurve3(points);
+})();
+const TRAIL_SAMPLES = TRAIL.getSpacedPoints(80);
 
-/** The approach road, from the valley entrance to the hotel forecourt. */
+/** The approach road along the near shore to the hotel forecourt. */
 const ROAD = new CatmullRomCurve3(
   [
-    [106, 128],
-    [80, 96],
-    [56, 62],
-    [36, 32],
-    [22, 12],
-    [14, 6],
+    [132, 16],
+    [100, 12],
+    [70, 16],
+    [48, 14],
+    [32, 9],
+    [22, 6],
   ].map(([x, z]) => new Vector3(x, 0, z)),
 );
 const ROAD_SAMPLES = ROAD.getSpacedPoints(90);
@@ -111,19 +126,21 @@ const ANCHORS: Record<PoiId, Vector3> = {
   dining: new Vector3(6, hotelY + 3.2, -1.5),
   chapel: new Vector3(-38, chapelY + 17, -14.5),
   lake: new Vector3(LAKE.x, WATER_LEVEL + 2.5, LAKE.z),
-  ski: liftMid.clone(),
+  ski: TRAIL_TO.clone().setY(TRAIL_TO.y + 7),
 };
 
 const VIEWS: Record<ViewId, CameraView> = {
-  overview: { position: [64, 54, 150], target: [2, 20, -32] },
+  overview: { position: [74, 58, 160], target: [2, 18, -22] },
+  // Home hero: across the lake to the hotel, peaks behind.
+  hero: { position: [62, 26, 132], target: [-40, 22, -20] },
   arrival: { position: [24, hotelY + 24, 54], target: [6, hotelY + 6, -10] },
   rooms: { position: [64, hotelY + 20, 22], target: [29, hotelY + 4, -11] },
   spa: { position: [-42, hotelY + 15, 24], target: [-13, hotelY + 2, -6] },
-  dining: { position: [-16, hotelY + 12, 36], target: [6, hotelY + 3, -3] },
+  dining: { position: [-12, hotelY + 11, 38], target: [6, hotelY + 3, -3] },
   chapel: { position: [-68, chapelY + 20, 12], target: [-38, chapelY + 5, -20] },
-  lake: { position: [-6, 26, 80], target: [LAKE.x, WATER_LEVEL, LAKE.z] },
-  // Low from the south-east: the lift climbs from the resort to the ridge.
-  ski: { position: [140, 40, 30], target: [62, 30, -68] },
+  lake: { position: [-46, 22, 100], target: [LAKE.x, WATER_LEVEL + 2, LAKE.z - 6] },
+  // From low across the slope: the trail climbs from the hotel to the ridge viewpoint.
+  ski: { position: [96, 52, 62], target: [60, 26, -62] },
 };
 
 /* --------------------------------------------------------------- materials */
@@ -136,7 +153,7 @@ function facadeTexture(cols: number, rows: number, seed: number, lit: boolean): 
   canvas.height = rows * rh;
   const ctx = canvas.getContext("2d")!;
   const rand = random(seed);
-  ctx.fillStyle = lit ? "#000000" : "#dccfb8";
+  ctx.fillStyle = lit ? "#000000" : "#e7e1d5";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
   for (let r = 0; r < rows; r++) {
     for (let c = 0; c < cols; c++) {
@@ -145,7 +162,7 @@ function facadeTexture(cols: number, rows: number, seed: number, lit: boolean): 
         if (!on) continue;
         ctx.fillStyle = rand() < 0.5 ? "#ffcf87" : "#ffbf6e";
       } else {
-        ctx.fillStyle = on ? "#e8c48c" : "#3f3831";
+        ctx.fillStyle = on ? "#efcf98" : "#2f3a3c";
       }
       ctx.fillRect(c * cw + 5, r * rh + 5, cw - 10, rh - 9);
     }
@@ -167,7 +184,7 @@ function facadeMaterial(width: number, rows: number, seed: number): MeshStandard
   });
 }
 
-const stone = () => new MeshStandardMaterial({ color: "#dccfb8", roughness: 0.9 });
+const stone = () => new MeshStandardMaterial({ color: "#e7e1d5", roughness: 0.9 });
 
 /* ---------------------------------------------------------------- geometry */
 
@@ -181,6 +198,36 @@ function gableRoofGeometry(width: number, depth: number, height: number): Buffer
   const geometry = new ExtrudeGeometry(shape, { depth: width, bevelEnabled: false });
   geometry.rotateY(-Math.PI / 2);
   geometry.translate(width / 2, 0, 0);
+  return geometry;
+}
+
+/** A flat strip laid over the terrain along a curve (the road and the footpath). */
+function ribbonGeometry(curve: CatmullRomCurve3, halfWidth: number, samples: number): BufferGeometry {
+  const positions: number[] = [];
+  const indices: number[] = [];
+  const point = new Vector3();
+  const tangent = new Vector3();
+  for (let i = 0; i <= samples; i++) {
+    const t = i / samples;
+    curve.getPointAt(t, point);
+    curve.getTangentAt(t, tangent);
+    const px = -tangent.z;
+    const pz = tangent.x;
+    const length = Math.hypot(px, pz) || 1;
+    for (const side of [-1, 1]) {
+      const x = point.x + (px / length) * halfWidth * side;
+      const z = point.z + (pz / length) * halfWidth * side;
+      positions.push(x, heightAt(x, z) + 0.14, z);
+    }
+    if (i < samples) {
+      const a = i * 2;
+      indices.push(a, a + 2, a + 1, a + 1, a + 2, a + 3);
+    }
+  }
+  const geometry = new BufferGeometry();
+  geometry.setAttribute("position", new BufferAttribute(new Float32Array(positions), 3));
+  geometry.setIndex(indices);
+  geometry.computeVertexNormals();
   return geometry;
 }
 
@@ -237,15 +284,30 @@ export class ResortEngine {
   private controls: OrbitControls;
   private sky: Mesh;
   private snow: Points | null = null;
-  private chairs: { mesh: Mesh; path: Vector3[]; lengths: number[]; total: number; offset: number }[] = [];
   private ro: ResizeObserver | null = null;
   private io: IntersectionObserver | null = null;
   private onVisibility = () => this.updateRunning();
+  /**
+   * A plain wheel scrolls the page, as over the 360° viewer; ctrl + wheel (and
+   * trackpad pinch, which arrives as one) or fullscreen zooms. Runs in the
+   * capture phase, before OrbitControls sees the event.
+   */
+  private onWheelCapture = (e: WheelEvent) => {
+    this.controls.enableZoom = e.ctrlKey || !!document.fullscreenElement;
+  };
+  /** Touch pinch zooms as usual. */
+  private onPointerCapture = () => {
+    this.controls.enableZoom = true;
+  };
   private visible = true;
   private running = false;
   private lastTime = 0;
   private lastInteract = 0;
   private tourMode = false;
+  private readonly interactive: boolean;
+  /** Azimuth range the idle drift swings across, and its current direction. */
+  private swing: [number, number] = [-1.2, 1.2];
+  private swingDir = 1;
   private flight: {
     p0: Vector3;
     p1: Vector3;
@@ -262,6 +324,7 @@ export class ResortEngine {
   constructor(container: HTMLElement, options: ResortEngineOptions) {
     this.container = container;
     this.options = options;
+    this.interactive = options.interactive ?? true;
     this.compact = window.innerWidth < 768 || (navigator.hardwareConcurrency ?? 8) <= 4;
 
     const renderer = new WebGLRenderer({ antialias: true, powerPreference: "high-performance" });
@@ -288,9 +351,9 @@ export class ResortEngine {
     this.scene.add(this.buildRoad());
     this.scene.add(this.buildHotel());
     this.scene.add(this.buildChapel());
-    this.scene.add(this.buildLift());
+    this.scene.add(this.buildTrail());
     this.scene.add(this.buildTrees());
-    if (!options.reducedMotion) {
+    if (!options.reducedMotion && SNOW_MONTHS.includes(new Date().getMonth())) {
       this.snow = this.buildSnow();
       this.scene.add(this.snow);
     }
@@ -306,6 +369,10 @@ export class ResortEngine {
     controls.maxDistance = 240;
     controls.minPolarAngle = 0.18;
     controls.maxPolarAngle = 1.38;
+    // Stay on the lake side: the high ground behind the hotel closes off the rest.
+    controls.minAzimuthAngle = -1.35;
+    controls.maxAzimuthAngle = 1.35;
+    controls.enabled = this.interactive;
     controls.addEventListener("start", () => {
       this.lastInteract = performance.now();
       controls.autoRotate = false;
@@ -318,7 +385,15 @@ export class ResortEngine {
       t.y = clamp(t.y, 0, 40);
     });
     this.controls = controls;
-    this.jumpTo(VIEWS.overview);
+    // OrbitControls claims every touch; the hero must let the page scroll.
+    renderer.domElement.style.touchAction = this.interactive ? "none" : "pan-y";
+    container.addEventListener("wheel", this.onWheelCapture, { capture: true, passive: true });
+    container.addEventListener("pointerdown", this.onPointerCapture, { capture: true, passive: true });
+    this.jumpTo(VIEWS[options.initialView ?? "overview"]);
+    if (!this.interactive) {
+      const base = controls.getAzimuthalAngle();
+      this.swing = [base - 0.3, base + 0.3];
+    }
 
     this.resize();
     this.ro = new ResizeObserver(() => this.resize());
@@ -368,6 +443,11 @@ export class ResortEngine {
     this.controls.autoRotate = false;
   }
 
+  /** Show or hide the falling snow (there is none outside the winter months). */
+  setSnow(on: boolean) {
+    if (this.snow) this.snow.visible = on;
+  }
+
   /** Guided tour: keep the camera gently orbiting the current stop. */
   setTourMode(on: boolean) {
     this.tourMode = on;
@@ -379,6 +459,8 @@ export class ResortEngine {
     this.ro?.disconnect();
     this.io?.disconnect();
     document.removeEventListener("visibilitychange", this.onVisibility);
+    this.container.removeEventListener("wheel", this.onWheelCapture, { capture: true });
+    this.container.removeEventListener("pointerdown", this.onPointerCapture, { capture: true });
     this.controls.dispose();
     const textures = new Set<Texture>();
     this.scene.traverse((object) => {
@@ -403,7 +485,7 @@ export class ResortEngine {
     this.flight = null;
     this.camera.position.set(...view.position);
     this.controls.target.set(...view.target);
-    this.controls.enabled = true;
+    this.controls.enabled = this.interactive;
     this.controls.update();
   }
 
@@ -438,23 +520,24 @@ export class ResortEngine {
       this.controls.target.lerpVectors(flight.t0, flight.t1, e);
       if (t >= 1) {
         this.flight = null;
-        this.controls.enabled = true;
+        this.controls.enabled = this.interactive;
         this.lastInteract = now;
       }
     } else if (!this.options.reducedMotion) {
-      if (this.tourMode) {
+      if (this.tourMode || !this.interactive || now - this.lastInteract > 7000) {
+        // Drift back and forth across the lake side (positive speed turns azimuth down).
+        const azimuth = this.controls.getAzimuthalAngle();
+        if (azimuth >= this.swing[1]) this.swingDir = 1;
+        else if (azimuth <= this.swing[0]) this.swingDir = -1;
+        const speed = this.tourMode ? 0.6 : this.interactive ? 0.35 : 0.5;
         this.controls.autoRotate = true;
-        this.controls.autoRotateSpeed = 0.6;
-      } else if (now - this.lastInteract > 7000) {
-        this.controls.autoRotate = true;
-        this.controls.autoRotateSpeed = 0.35;
+        this.controls.autoRotateSpeed = speed * this.swingDir;
       }
     }
     this.controls.update(dt);
 
     this.sky.position.copy(this.camera.position);
     this.animateSnow(dt);
-    this.animateLift(now / 1000);
 
     this.renderer.render(this.scene, this.camera);
     this.emitPins();
@@ -473,7 +556,7 @@ export class ResortEngine {
 
   private animateSnow(dt: number) {
     const snow = this.snow;
-    if (!snow) return;
+    if (!snow?.visible) return;
     const positions = snow.geometry.attributes.position as BufferAttribute;
     const array = positions.array as Float32Array;
     const t = performance.now() / 1000;
@@ -484,22 +567,6 @@ export class ResortEngine {
       if (array[k + 1] < 0) array[k + 1] += 90;
     }
     positions.needsUpdate = true;
-  }
-
-  private animateLift(seconds: number) {
-    for (const chair of this.chairs) {
-      let distance = (((seconds * 2.2 + chair.offset) % chair.total) + chair.total) % chair.total;
-      let i = 0;
-      while (i < chair.lengths.length - 1 && distance > chair.lengths[i]) {
-        distance -= chair.lengths[i];
-        i++;
-      }
-      const a = chair.path[i];
-      const b = chair.path[i + 1];
-      const f = chair.lengths[i] ? distance / chair.lengths[i] : 0;
-      chair.mesh.position.lerpVectors(a, b, f);
-      chair.mesh.position.y -= 1.1;
-    }
   }
 
   /* ---------------------------------------------------------------- world */
@@ -552,8 +619,8 @@ export class ResortEngine {
   }
 
   private buildLights() {
-    this.scene.add(new HemisphereLight("#e6ebef", "#4b3c2d", 0.55));
-    const sun = new DirectionalLight("#ffe5c2", 2.6);
+    this.scene.add(new HemisphereLight("#e9f1f4", "#3d4a44", 0.6));
+    const sun = new DirectionalLight("#fff0da", 2.5);
     sun.position.set(-150, 115, 95);
     sun.target.position.set(0, 0, -12);
     if (!this.compact) {
@@ -587,8 +654,8 @@ export class ResortEngine {
     const meadow = new Color("#7e9656");
     const meadowDeep = new Color("#5c7240");
     const shore = new Color("#bcae88");
-    const rock = new Color("#6f6d6a");
-    const rockDark = new Color("#545351");
+    const rock = new Color("#646b69");
+    const rockDark = new Color("#474e4d");
     const snow = new Color("#f7f8f9");
     const c = new Color();
     const tmp = new Color();
@@ -599,11 +666,10 @@ export class ResortEngine {
       const slope = 1 - normal.getY(i);
       const n = fbm(x * 0.07, z * 0.07, 3);
       c.copy(meadow).lerp(meadowDeep, clamp(0.5 + n * 1.2, 0, 1));
-      const lakeDistance = Math.hypot(x - LAKE.x, z - LAKE.z);
-      if (lakeDistance < LAKE.radius + 6 && h < WATER_LEVEL + 1.4) c.lerp(shore, 0.75);
+      if (lakeDistance(x, z) < 1.2 && h < WATER_LEVEL + 1.4) c.lerp(shore, 0.75);
       const rockT = Math.max(smoothstep(15, 27, h + n * 5), smoothstep(0.34, 0.56, slope));
       c.lerp(tmp.copy(rock).lerp(rockDark, clamp(0.5 - n, 0, 1)), rockT);
-      const snowT = smoothstep(30, 36, h + n * 6) * (1 - smoothstep(0.52, 0.74, slope));
+      const snowT = smoothstep(36, 44, h + n * 6) * (1 - smoothstep(0.34, 0.5, slope));
       c.lerp(snow, snowT);
       colors.set([c.r, c.g, c.b], i * 3);
     }
@@ -618,12 +684,13 @@ export class ResortEngine {
   }
 
   private buildLake(): Mesh {
-    const geometry = new CircleGeometry(LAKE.radius + 4, 72);
+    const geometry = new CircleGeometry(1, 96);
     geometry.rotateX(-Math.PI / 2);
     const lake = new Mesh(
       geometry,
-      new MeshStandardMaterial({ color: "#6f98a8", roughness: 0.08, metalness: 0.1, transparent: true, opacity: 0.95 }),
+      new MeshStandardMaterial({ color: "#3f8088", roughness: 0.06, metalness: 0.15, transparent: true, opacity: 0.95 }),
     );
+    lake.scale.set(LAKE.rx + 6, 1, LAKE.rz + 6);
     lake.position.set(LAKE.x, WATER_LEVEL, LAKE.z);
     lake.receiveShadow = true;
     return lake;
@@ -632,34 +699,7 @@ export class ResortEngine {
   /** Gravel road winding up the valley to a stone forecourt at the hotel. */
   private buildRoad(): Group {
     const group = new Group();
-    const curve = ROAD;
-    const samples = 140;
-    const halfWidth = 1.7;
-    const positions: number[] = [];
-    const indices: number[] = [];
-    const point = new Vector3();
-    const tangent = new Vector3();
-    for (let i = 0; i <= samples; i++) {
-      const t = i / samples;
-      curve.getPointAt(t, point);
-      curve.getTangentAt(t, tangent);
-      const px = -tangent.z;
-      const pz = tangent.x;
-      const length = Math.hypot(px, pz) || 1;
-      for (const side of [-1, 1]) {
-        const x = point.x + (px / length) * halfWidth * side;
-        const z = point.z + (pz / length) * halfWidth * side;
-        positions.push(x, heightAt(x, z) + 0.14, z);
-      }
-      if (i < samples) {
-        const a = i * 2;
-        indices.push(a, a + 2, a + 1, a + 1, a + 2, a + 3);
-      }
-    }
-    const geometry = new BufferGeometry();
-    geometry.setAttribute("position", new BufferAttribute(new Float32Array(positions), 3));
-    geometry.setIndex(indices);
-    geometry.computeVertexNormals();
+    const geometry = ribbonGeometry(ROAD, 1.7, 140);
     const gravel = new MeshStandardMaterial({
       color: "#cdbd9d",
       roughness: 1,
@@ -681,7 +721,7 @@ export class ResortEngine {
   private buildHotel(): Group {
     const hotel = new Group();
     hotel.position.y = hotelY;
-    const roof = new MeshStandardMaterial({ color: "#43352b", roughness: 0.7, metalness: 0.1 });
+    const roof = new MeshStandardMaterial({ color: "#2e3a3c", roughness: 0.7, metalness: 0.1 });
 
     const main = building({ width: 26, height: 10, depth: 11, floors: 3, seed: 11, roof });
     main.position.set(6, 0, -12);
@@ -691,7 +731,7 @@ export class ResortEngine {
     wing.position.set(29, 0, -11);
 
     // Balconies along the rooms wing.
-    const slabMaterial = new MeshStandardMaterial({ color: "#cbbca3", roughness: 0.8 });
+    const slabMaterial = new MeshStandardMaterial({ color: "#d6cfc2", roughness: 0.8 });
     for (const y of [2.9, 5.7]) {
       const slab = new Mesh(new BoxGeometry(16, 0.25, 1.1), slabMaterial);
       slab.position.set(29, y, -6.1);
@@ -724,7 +764,7 @@ export class ResortEngine {
     pool.position.set(-13, 0.36, 0.5);
 
     // Dining terrace with lanterns.
-    const deck = new Mesh(new BoxGeometry(20, 0.5, 5), new MeshStandardMaterial({ color: "#8b6b4b", roughness: 0.8 }));
+    const deck = new Mesh(new BoxGeometry(20, 0.5, 5), new MeshStandardMaterial({ color: "#8a6d52", roughness: 0.8 }));
     deck.position.set(6, 0.25, -3.5);
     const post = new CylinderGeometry(0.1, 0.12, 1.7, 6);
     const bulb = new SphereGeometry(0.28, 12, 8);
@@ -755,8 +795,8 @@ export class ResortEngine {
   private buildChapel(): Group {
     const chapel = new Group();
     chapel.position.set(-38, chapelY, -21);
-    const roof = new MeshStandardMaterial({ color: "#4a3a2e", roughness: 0.75 });
-    const walls = new MeshStandardMaterial({ color: "#d3c5ad", roughness: 0.95 });
+    const roof = new MeshStandardMaterial({ color: "#33403f", roughness: 0.75 });
+    const walls = new MeshStandardMaterial({ color: "#e0d9cc", roughness: 0.95 });
 
     const nave = new Mesh(new BoxGeometry(5.5, 5.5, 10), walls);
     nave.position.y = 2.75;
@@ -778,67 +818,41 @@ export class ResortEngine {
     return shadowed(chapel);
   }
 
-  private buildLift(): Group {
-    const lift = new Group();
-    const walls = new MeshStandardMaterial({ color: "#cfc1a8", roughness: 0.9 });
-    const roof = new MeshStandardMaterial({ color: "#43352b", roughness: 0.7 });
-    const steel = new MeshStandardMaterial({ color: "#5b5550", roughness: 0.5, metalness: 0.6 });
+  /** The footpath up through the pines, and a small timber shelter at the viewpoint. */
+  private buildTrail(): Group {
+    const path = new Mesh(
+      ribbonGeometry(TRAIL, 0.75, 160),
+      new MeshStandardMaterial({
+        color: "#b8a47f",
+        roughness: 1,
+        side: DoubleSide,
+        polygonOffset: true,
+        polygonOffsetFactor: -2,
+      }),
+    );
+    path.receiveShadow = true;
 
-    const station = (at: Vector3) => {
-      const group = new Group();
-      const body = new Mesh(new BoxGeometry(6, 3.4, 5), walls);
-      body.position.y = 1.7;
-      const cap = new Mesh(gableRoofGeometry(6.6, 5.6, 1.8), roof);
-      cap.position.y = 3.4;
-      group.add(body, cap);
-      group.position.copy(at);
-      group.rotation.y = Math.atan2(LIFT_TO.x - LIFT_FROM.x, LIFT_TO.z - LIFT_FROM.z);
-      return group;
-    };
-    lift.add(station(LIFT_FROM), station(LIFT_TO));
+    const timber = new MeshStandardMaterial({ color: "#7a5a3c", roughness: 0.85 });
+    const slate = new MeshStandardMaterial({ color: "#2e3a3c", roughness: 0.7 });
+    const shelter = new Group();
+    const back = new Mesh(new BoxGeometry(5, 2.6, 0.4), timber);
+    back.position.set(0, 1.3, -1.6);
+    const left = new Mesh(new BoxGeometry(0.4, 2.6, 3.6), timber);
+    left.position.set(-2.3, 1.3, 0);
+    const right = left.clone();
+    right.position.x = 2.3;
+    const bench = new Mesh(new BoxGeometry(3.6, 0.3, 0.9), timber);
+    bench.position.set(0, 0.8, -0.9);
+    const roof = new Mesh(gableRoofGeometry(5.8, 4.4, 1.6), slate);
+    roof.position.y = 2.6;
+    shelter.add(back, left, right, bench, roof);
+    shelter.position.copy(TRAIL_TO);
+    // The open side looks down the valley to the lake.
+    shelter.rotation.y = Math.atan2(LAKE.x - TRAIL_TO.x, LAKE.z - TRAIL_TO.z);
 
-    // Towers and the two cables (up and down), offset either side.
-    const direction = new Vector3().subVectors(LIFT_TO, LIFT_FROM).setY(0).normalize();
-    const side = new Vector3(-direction.z, 0, direction.x).multiplyScalar(1.3);
-    const up: Vector3[] = [LIFT_FROM.clone().setY(LIFT_FROM.y + 4.2)];
-    const towerGeometry = new CylinderGeometry(0.22, 0.34, 7, 6);
-    const armGeometry = new BoxGeometry(3.6, 0.25, 0.25);
-    const towers = 7;
-    for (let i = 1; i <= towers; i++) {
-      const f = i / (towers + 1);
-      const p = new Vector3().lerpVectors(LIFT_FROM, LIFT_TO, f);
-      p.y = heightAt(p.x, p.z);
-      const tower = new Mesh(towerGeometry, steel);
-      tower.position.set(p.x, p.y + 3.5, p.z);
-      const arm = new Mesh(armGeometry, steel);
-      arm.position.set(p.x, p.y + 7, p.z);
-      arm.rotation.y = Math.atan2(side.x, side.z) + Math.PI / 2;
-      lift.add(tower, arm);
-      up.push(new Vector3(p.x, p.y + 7, p.z));
-    }
-    up.push(LIFT_TO.clone().setY(LIFT_TO.y + 4.2));
-
-    const cableMaterial = new LineBasicMaterial({ color: "#3d3833" });
-    const upPath = up.map((p) => p.clone().add(side));
-    const downPath = up.map((p) => p.clone().sub(side)).reverse();
-    for (const path of [upPath, downPath]) {
-      lift.add(new Line(new BufferGeometry().setFromPoints(path), cableMaterial));
-    }
-
-    // Chairs travelling up one cable and down the other.
-    const chairGeometry = new BoxGeometry(1, 0.55, 0.75);
-    const chairMaterial = new MeshStandardMaterial({ color: "#2b2721", roughness: 0.6 });
-    for (const path of [upPath, downPath]) {
-      const lengths = path.slice(1).map((p, i) => p.distanceTo(path[i]));
-      const total = lengths.reduce((a, b) => a + b, 0);
-      const count = 9;
-      for (let i = 0; i < count; i++) {
-        const mesh = new Mesh(chairGeometry, chairMaterial);
-        lift.add(mesh);
-        this.chairs.push({ mesh, path, lengths, total, offset: (i / count) * total });
-      }
-    }
-    return shadowed(lift);
+    const trail = new Group();
+    trail.add(path, shadowed(shelter));
+    return trail;
   }
 
   private buildTrees(): InstancedMesh {
@@ -856,9 +870,6 @@ export class ResortEngine {
     const rotation = new Quaternion();
     const scale = new Vector3();
     const at = new Vector3();
-    const liftLine = new Vector3().subVectors(LIFT_TO, LIFT_FROM).setY(0);
-    const liftLength = liftLine.length();
-    liftLine.normalize();
 
     let placed = 0;
     for (let tries = 0; placed < count && tries < count * 40; tries++) {
@@ -867,9 +878,7 @@ export class ResortEngine {
       const h = heightAt(x, z);
       if (h < WATER_LEVEL + 0.9 || h > 26.5) continue;
       if (isReserved(x, z, 5)) continue;
-      const along = (x - LIFT_FROM.x) * liftLine.x + (z - LIFT_FROM.z) * liftLine.z;
-      const across = Math.abs((x - LIFT_FROM.x) * liftLine.z - (z - LIFT_FROM.z) * liftLine.x);
-      if (along > -4 && along < liftLength + 4 && across < 6) continue;
+      if (TRAIL_SAMPLES.some((p) => (p.x - x) ** 2 + (p.z - z) ** 2 < 9)) continue;
       if (ROAD_SAMPLES.some((p) => (p.x - x) ** 2 + (p.z - z) ** 2 < 20)) continue;
       const slope = Math.abs(heightAt(x + 1, z) - h) + Math.abs(heightAt(x, z + 1) - h);
       if (slope > 2.4) continue;

@@ -1,254 +1,183 @@
 import Link from "next/link";
 
 import { LazyPanoViewer } from "@/components/pano/LazyPanoViewer";
+import { guideMinutes } from "@/components/tour/guide";
 import { Photo } from "@/components/ui/Photo";
+import { PhotoCredit } from "@/components/ui/PhotoCredit";
 import { site } from "@/config/site";
-import { getRoom } from "@/lib/booking/rooms";
 import { contactHref } from "@/lib/contact-link";
 import { cx } from "@/lib/cx";
-import { euro } from "@/lib/format";
+import { plural } from "@/lib/format";
 import ui from "@/styles/ui.module.css";
 
-import { dining, events, locationFacts, offers, reviews, roomTeasers, spa, stats, tourTeaser, trust } from "./content";
+import { duo, intro, locationFacts, reviews, tourTeaser } from "./content";
 import { Gallery } from "./Gallery";
+import { RoomsRail } from "./RoomsRail";
+import { SeasonsTabs } from "./SeasonsTabs";
 import styles from "./sections.module.css";
 
-export function TrustStrip() {
+const NUMBER_WORDS = ["one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"];
+
+/** "two minutes" — spelled out for prose, digits past ten. */
+function minutesInWords(minutes: number): string {
+  return plural(minutes, "minute").replace(/^\d+/, (n) => NUMBER_WORDS[Number(n) - 1] ?? n);
+}
+
+export function Intro() {
   return (
-    <section className={styles.trust} aria-label="Why book with us">
-      <div className={styles.trustGrid}>
-        {trust.map((item) => (
-          <div key={item.label}>
-            <div className={styles.trustLabel}>{item.label}</div>
-            <div className={styles.trustValue}>{item.value}</div>
+    <section id="discover" className={cx(ui.section, styles.intro)}>
+      <div className={cx(ui.container, styles.introGrid)}>
+        <div className={styles.introCopy}>
+          <h2 className={cx(ui.eyebrow, styles.m0)} data-reveal="up">
+            Welcome to Plav
+          </h2>
+          <p className={styles.statement} data-reveal="up" data-delay="80">
+            {intro.statement}
+          </p>
+          <Link href="/experiences" className={cx(ui.linkUnderline, styles.mt32)} data-reveal="up" data-delay="140">
+            What to do here <span aria-hidden="true">→</span>
+          </Link>
+        </div>
+        <div data-reveal="scale">
+          <div className={styles.introPhoto}>
+            <Photo
+              src={intro.image.src}
+              alt={intro.image.alt}
+              position={intro.image.position}
+              sizes="(max-width: 900px) 100vw, 45vw"
+            />
+            <span className={styles.introTag}>
+              <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true">
+                <path d="M7 13s4.5-4.2 4.5-7.4a4.5 4.5 0 0 0-9 0C2.5 8.8 7 13 7 13Z" fill="currentColor" />
+                <circle cx="7" cy="5.6" r="1.6" fill="var(--dark)" />
+              </svg>
+              Lake Plav · 906 m
+            </span>
           </div>
+          <PhotoCredit credit={intro.image.credit} tone="dark" className={styles.introCredit} />
+        </div>
+      </div>
+      <ul className={cx(ui.container, styles.stats)}>
+        {intro.stats.map((stat, i) => (
+          <li key={stat.label} className={styles.stat} data-reveal="up" data-delay={String(i * 70)}>
+            <span className={styles.statValue}>{stat.value}</span>
+            <span className={styles.statLabel}>{stat.label}</span>
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+}
+
+export function Stay() {
+  return (
+    <section id="stay" className={cx(ui.section, styles.stay)}>
+      <div className={cx(ui.container, styles.rowHead)}>
+        <div>
+          <div className={ui.eyebrow} data-reveal="up">
+            Stay
+          </div>
+          <h2 className={cx(ui.h2, styles.mt18)} data-reveal="up" data-delay="80">
+            Rooms made for <em className={styles.accent}>the view</em>
+          </h2>
+        </div>
+        <Link href="/rooms" className={ui.btnOutline} data-reveal="up" data-delay="140">
+          All rooms &amp; rates
+        </Link>
+      </div>
+      <div className={ui.container} data-reveal="up" data-delay="120">
+        <RoomsRail />
+      </div>
+    </section>
+  );
+}
+
+export function Seasons() {
+  return (
+    <section id="seasons" className={cx(ui.section, styles.seasons)}>
+      <div className={ui.container}>
+        <SeasonsTabs />
+      </div>
+    </section>
+  );
+}
+
+export function Duo() {
+  return (
+    <section className={cx(ui.section, styles.duoSection)} aria-label="Spa and dining">
+      <div className={cx(ui.container, styles.duo)}>
+        {duo.map((card, i) => (
+          <Link
+            key={card.href}
+            href={card.href}
+            className={cx(styles.duoCard, i === 1 && styles.duoCardOffset)}
+            data-reveal="up"
+            data-delay={String(i * 100)}
+          >
+            <Photo src={card.image.src} alt={card.image.alt} sizes="(max-width: 900px) 100vw, 50vw" />
+            <div className={styles.duoShade} aria-hidden="true" />
+            <div className={styles.duoBody}>
+              <span className={styles.duoKicker}>{card.kicker}</span>
+              <h2 className={styles.duoTitle}>{card.title}</h2>
+              <p className={styles.duoText}>{card.text}</p>
+              <span className={styles.duoCta}>
+                {card.cta} <span aria-hidden="true">→</span>
+              </span>
+            </div>
+          </Link>
         ))}
       </div>
     </section>
   );
 }
 
-export function Statement() {
+export function TourBand() {
   return (
-    <section className={styles.statement}>
-      <div className={styles.statementInner}>
-        <div data-reveal="up" className={cx(ui.eyebrow, styles.statementEyebrow)}>
-          Welcome to Brezovica
-        </div>
-        <p data-reveal="up" data-delay="80" className={styles.statementText}>
-          Cradled beneath the snow-lit peaks of the Sharr Mountains, Brezovica Hotel is a sanctuary where alpine
-          grandeur meets a warmth that feels, unmistakably, like your own.
-        </p>
-        <div data-reveal="up" data-delay="160" className={styles.stats}>
-          {stats.map((stat) => (
-            <div key={stat.label}>
-              <div className={styles.statValue}>{stat.value}</div>
-              <div className={styles.statLabel}>{stat.label}</div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-export function RoomsTeaser() {
-  return (
-    <section id="rooms" className={cx(ui.section, styles.bgLight)}>
-      <div className={ui.container}>
-        <div className={styles.roomsHead}>
-          <div data-reveal="up">
-            <div className={cx(ui.eyebrow, styles.mb20)}>Rooms &amp; Suites</div>
-            <h2 className={styles.roomsTitle}>Where the day begins slowly</h2>
+    <section id="tour" className={cx(ui.section, styles.tour)}>
+      <div className={styles.tourGlow} aria-hidden="true" />
+      <div className={cx(ui.container, styles.tourGrid)}>
+        <div>
+          <div className={ui.eyebrowLight} data-reveal="up">
+            Virtual tour · 3D &amp; 360°
           </div>
-          <Link href="/rooms" data-reveal="up" className={styles.viewAll}>
-            View all rooms →
-          </Link>
-        </div>
-        <div className={styles.roomsGrid}>
-          {roomTeasers.map((teaser, i) => {
-            const room = getRoom(teaser.id);
-            return (
-              <article key={teaser.id} className={styles.roomCard} data-reveal="up" data-delay={i ? String(i * 80) : undefined}>
-                <div className={styles.roomImage}>
-                  <Photo src={teaser.image} alt={room.name} sizes="(max-width: 640px) 100vw, (max-width: 1200px) 50vw, 25vw" />
-                  {teaser.badge && <span className={styles.badge}>{teaser.badge}</span>}
-                </div>
-                <div className={styles.roomBody}>
-                  <h3 className={styles.roomName}>{room.name}</h3>
-                  <div className={styles.roomMeta}>{teaser.meta}</div>
-                  <div className={styles.priceRow}>
-                    <span className={styles.priceLead}>
-                      from <strong className={styles.price}>{euro(room.baseRate)}</strong> / night
-                    </span>
-                    <Link href="/rooms" className={ui.linkUnderline} aria-label={`Discover the ${room.name}`}>
-                      Discover
-                    </Link>
-                  </div>
-                </div>
-              </article>
-            );
-          })}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-export function DiningTeaser() {
-  return (
-    <section id="dining" className={cx(ui.section, styles.bgDark)}>
-      <div className={styles.split}>
-        <div data-reveal="left">
-          <div className={cx(ui.eyebrowLight, styles.mb24)}>Dining</div>
-          <h2 className={cx(ui.h2Light, styles.mb26)}>
-            A table set by
-            <br />
-            the mountains
+          <h2 className={cx(ui.h2Light, styles.mt18)} data-reveal="up" data-delay="80">
+            Look around <em className={styles.accentLight}>before you arrive</em>
           </h2>
-          <p className={cx(ui.leadLight, styles.copyDark)}>
-            Three restaurants, one philosophy: ingredients gathered within sight of the peaks, plated with quiet
-            precision and served by candlelight. From sunrise breakfast to a chef&rsquo;s tasting under the stars.
+          <p className={cx(ui.leadLight, styles.mt24)} data-reveal="up" data-delay="140">
+            Fly over the hotel and the lake in 3D, then step inside in full 360°. Prefer to sit back? The guided tour
+            shows you everything in about {minutesInWords(guideMinutes)} — with a voice if you like.
           </p>
-          <div className={styles.hours}>
-            {dining.hours.map((item) => (
-              <div key={item.label}>
-                <div className={styles.hoursLabel}>{item.label}</div>
-                <div className={styles.hoursValue}>{item.value}</div>
-              </div>
-            ))}
+          <div className={styles.tourActions} data-reveal="up" data-delay="200">
+            <Link href="/tour#guided-tour" className={ui.btnGold}>
+              <svg width="12" height="12" viewBox="0 0 14 14" aria-hidden="true">
+                <path d="M3.5 1.8v10.4L12 7z" fill="currentColor" />
+              </svg>
+              Start the guided tour
+            </Link>
+            <Link href="/tour" className={ui.btnOutlineLight}>
+              Explore on my own
+            </Link>
           </div>
-          <Link href="/dining#reserve" className={ui.btnGold}>
-            Reserve a table
-          </Link>
-        </div>
-        <div data-reveal="right" className={styles.diningGrid}>
-          {dining.images.map((image, i) => (
-            <div key={image.src} className={cx(styles.diningTile, i === 0 && styles.diningTileTall)}>
-              <Photo src={image.src} alt={image.alt} sizes="(max-width: 700px) 50vw, 25vw" />
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-export function SpaTeaser() {
-  return (
-    <section id="spa" className={cx(ui.section, styles.bgPaper)}>
-      <div className={styles.split}>
-        <div data-reveal="left" className={styles.spaImage}>
-          <Photo src={spa.image.src} alt={spa.image.alt} sizes="(max-width: 700px) 100vw, 50vw" />
-        </div>
-        <div data-reveal="right">
-          <div className={cx(ui.eyebrow, styles.mb24)}>Spa &amp; Wellness</div>
-          <h2 className={cx(ui.h2, styles.mb26)}>
-            The art of
-            <br />
-            letting go
-          </h2>
-          <p className={cx(ui.lead, styles.copyLight)}>
-            Pools, Finnish sauna and alpine steam at 1,100 metres. Our wellness rituals draw on mountain botanicals to
-            restore what the world takes.
-          </p>
-          <ul className={styles.treatments}>
-            {spa.treatments.map((item) => (
-              <li key={item.name} className={styles.treatment}>
-                <span className={styles.treatmentName}>{item.name}</span>
-                <span className={styles.treatmentPrice}>{item.price}</span>
-              </li>
-            ))}
+          <ul className={styles.tourTips} data-reveal="up" data-delay="240">
+            <li>Drag to look around</li>
+            <li>Pinch or double-tap to zoom</li>
+            <li>Works in your phone&rsquo;s browser</li>
           </ul>
-          <Link href="/spa#book" className={cx(ui.btnOutline, styles.mt34)}>
-            Book a treatment
-          </Link>
         </div>
-      </div>
-    </section>
-  );
-}
-
-export function TourTeaser() {
-  return (
-    <section id="tour" className={cx(ui.section, styles.bgDeeper)}>
-      <div className={styles.split}>
-        <div data-reveal="left">
-          <div className={cx(ui.eyebrowLight, styles.mb24)}>360&deg; Virtual Tour</div>
-          <h2 className={cx(ui.h2Light, styles.mb26)}>
-            Walk the halls
-            <br />
-            before you arrive
-          </h2>
-          <p className={cx(ui.leadLight, styles.copyDark)}>
-            Four spaces of the resort, captured in full 360&deg;. Drag the view beside you &mdash; then step into the
-            valley, the suite and the chapel.
-          </p>
-          <div className={styles.tourActions}>
-            <Link href="/tour" className={ui.btnGold}>
-              Launch the full tour
-            </Link>
-            <Link href="/tour#guided-tour" className={styles.guidedLink}>
-              Take the guided 3D tour &rarr;
-            </Link>
+        <div data-reveal="scale">
+          <div className={styles.tourFrame}>
+            <LazyPanoViewer
+              className={styles.tourViewer}
+              src={tourTeaser.src}
+              yaw={tourTeaser.yaw}
+              pitch={tourTeaser.pitch}
+              fov={tourTeaser.fov}
+              autorotate={tourTeaser.autorotate}
+              label={tourTeaser.label}
+              touchAction="pan-y"
+            />
           </div>
-          <p className={styles.tourHint}>Drag to look around &middot; double-tap to zoom</p>
-        </div>
-        <div data-reveal="right" className={styles.tourFrame}>
-          <LazyPanoViewer
-            className={styles.tourViewer}
-            src={tourTeaser.src}
-            yaw={tourTeaser.yaw}
-            pitch={tourTeaser.pitch}
-            fov={tourTeaser.fov}
-            autorotate={tourTeaser.autorotate}
-            label={tourTeaser.label}
-            touchAction="pan-y"
-          />
-        </div>
-      </div>
-    </section>
-  );
-}
-
-export function EventsTeaser() {
-  return (
-    <section id="events" className={cx(ui.section, styles.bgLight)}>
-      <div className={ui.container}>
-        <div data-reveal="up" className={styles.eventsHead}>
-          <div className={cx(ui.eyebrow, styles.mb22)}>Events &amp; Weddings</div>
-          <h2 className={cx(ui.h2, styles.mb22)}>
-            Occasions held
-            <br />
-            at altitude
-          </h2>
-          <p className={ui.lead}>
-            From intimate mountain weddings to boardrooms with a view — our events team choreographs every detail.
-          </p>
-        </div>
-        <div data-reveal="up" className={styles.eventsImage}>
-          <Photo src={events.image.src} alt={events.image.alt} sizes="(max-width: 1300px) 100vw, 1280px" />
-        </div>
-        <div className={styles.eventsGrid}>
-          {events.cards.map((card, i) => (
-            <div key={card.title} data-reveal="up" data-delay={i ? "80" : undefined} className={styles.eventCard}>
-              <h3 className={styles.eventTitle}>{card.title}</h3>
-              <p className={styles.eventText}>{card.text}</p>
-            </div>
-          ))}
-          <div data-reveal="up" data-delay="160" className={styles.capacityCard}>
-            <div>
-              {events.capacities.map((row) => (
-                <div key={row.label} className={styles.capacityRow}>
-                  <span>{row.label}</span>
-                  <span className={styles.capacityValue}>{row.value}</span>
-                </div>
-              ))}
-            </div>
-            <Link href={contactHref({ topic: "events" })} className={styles.enquire}>
-              Enquire →
-            </Link>
-          </div>
+          <PhotoCredit credit={tourTeaser.credit} className={styles.tourCredit} />
         </div>
       </div>
     </section>
@@ -257,11 +186,17 @@ export function EventsTeaser() {
 
 export function GallerySection() {
   return (
-    <section id="gallery" className={cx(ui.section, styles.bgPaper)}>
+    <section id="gallery" className={cx(ui.section, styles.gallery)}>
       <div className={ui.container}>
-        <div data-reveal="up" className={styles.galleryHead}>
-          <div className={cx(ui.eyebrow, styles.mb22)}>Gallery</div>
-          <h2 className={ui.h2}>A closer look</h2>
+        <div className={styles.rowHead}>
+          <div>
+            <div className={ui.eyebrow} data-reveal="up">
+              Gallery
+            </div>
+            <h2 className={cx(ui.h2, styles.mt18)} data-reveal="up" data-delay="80">
+              A look around
+            </h2>
+          </div>
         </div>
         <Gallery />
       </div>
@@ -269,119 +204,198 @@ export function GallerySection() {
   );
 }
 
-export function Offers() {
+function Stars() {
   return (
-    <section id="offers" className={cx(ui.section, styles.bgSand)}>
-      <div className={ui.container}>
-        <div data-reveal="up" className={styles.offersHead}>
-          <div className={cx(styles.offersEyebrow, styles.mb22)}>Offers &amp; Packages</div>
-          <h2 className={ui.h2}>Reasons to linger longer</h2>
-        </div>
-        <div className={styles.offersGrid}>
-          {offers.map((offer, i) => (
-            <article key={offer.title} data-reveal="up" data-delay={i ? String(i * 80) : undefined} className={styles.offer}>
-              <div className={styles.offerImage}>
-                <Photo src={offer.image} alt={offer.title} sizes="(max-width: 700px) 100vw, 33vw" />
-                <span className={styles.offerBadge}>Active</span>
-              </div>
-              <div className={styles.offerBody}>
-                <h3 className={styles.offerTitle}>{offer.title}</h3>
-                <div className={styles.offerDates}>{offer.dates}</div>
-                <p className={styles.offerText}>{offer.text}</p>
-                <div className={styles.offerFoot}>
-                  <span className={styles.priceLead}>
-                    {offer.priceLead} <strong className={styles.price}>{offer.price}</strong>
-                  </span>
-                  <a href="#book" className={ui.linkUnderline} aria-label={`Book ${offer.title}`}>
-                    Book
-                  </a>
-                </div>
-              </div>
-            </article>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function Stars({ className }: { className: string }) {
-  return (
-    <div className={className} role="img" aria-label="Five out of five stars">
-      ★★★★★
-    </div>
+    <span className={styles.stars} aria-hidden="true">
+      {Array.from({ length: 5 }, (_, i) => (
+        <svg key={i} width="16" height="16" viewBox="0 0 16 16">
+          <path d="m8 1.2 2.1 4.3 4.7.7-3.4 3.3.8 4.7L8 12l-4.2 2.2.8-4.7-3.4-3.3 4.7-.7z" fill="currentColor" />
+        </svg>
+      ))}
+    </span>
   );
 }
 
 export function Reviews() {
   return (
-    <section className={cx(ui.section, styles.bgPaper)}>
-      <div className={styles.reviews}>
-        <div data-reveal="up" className={cx(ui.eyebrow, styles.mb26)}>
-          Guest Reviews
-        </div>
-        <div data-reveal="up" className={styles.rating}>
-          <Stars className={styles.ratingStars} />
-          <span className={styles.ratingText}>4.9 · 1,240 reviews</span>
-        </div>
-        <figure className={styles.featured}>
-          <blockquote data-reveal="up" className={styles.quote}>
-            &ldquo;{reviews.featured.quote}&rdquo;
+    <section id="reviews" className={cx(ui.section, styles.reviews)}>
+      <div className={cx(ui.container, styles.reviewsGrid)}>
+        <div>
+          <h2 className={cx(ui.eyebrow, styles.m0)} data-reveal="up">
+            Guest stories
+          </h2>
+          <div className={styles.rating} data-reveal="up" data-delay="80">
+            <span className={styles.ratingValue}>{reviews.rating}</span>
+            <span>
+              <Stars />
+              <span className={styles.ratingCount}>
+                <span className="visually-hidden">Rated {reviews.rating} out of 5 from </span>
+                {reviews.count}
+              </span>
+            </span>
+          </div>
+          <blockquote className={styles.featured} data-reveal="up" data-delay="140">
+            <p>&ldquo;{reviews.featured.quote}&rdquo;</p>
+            <footer>— {reviews.featured.author}</footer>
           </blockquote>
-          <figcaption data-reveal="up" className={styles.quoteBy}>
-            {reviews.featured.author}
-          </figcaption>
-        </figure>
-        <div className={styles.reviewGrid}>
-          {reviews.cards.map((review, i) => (
-            <figure key={review.author} data-reveal="up" data-delay={i ? String(i * 80) : undefined} className={styles.review}>
-              <Stars className={styles.reviewStars} />
-              <blockquote className={styles.reviewText}>&ldquo;{review.quote}&rdquo;</blockquote>
-              <figcaption className={styles.reviewBy}>{review.author}</figcaption>
-            </figure>
-          ))}
         </div>
+        <ul className={styles.reviewCards}>
+          {reviews.cards.map((card, i) => (
+            <li key={card.author} className={styles.reviewCard} data-reveal="up" data-delay={String(i * 80)}>
+              <Stars />
+              <p>&ldquo;{card.quote}&rdquo;</p>
+              <span className={styles.reviewAuthor}>{card.author}</span>
+            </li>
+          ))}
+        </ul>
       </div>
     </section>
   );
 }
 
+/** Illustrative map of the valley — not to scale. */
+function PlavMap() {
+  return (
+    <svg className={styles.mapSvg} viewBox="0 0 520 440" role="img" aria-labelledby="plav-map-title">
+      <title id="plav-map-title">
+        Illustrative map: Plav Hotel on the eastern shore of Lake Plav. The town of Plav lies just north-east, Gusinje
+        to the south-west and the Prokletije mountains to the south. The Lim flows out of the lake to the north;
+        Podgorica airport is about 2½ hours by car.
+      </title>
+      <defs>
+        <linearGradient id="plav-map-lake" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stopColor="#5f9ea3" />
+          <stop offset="1" stopColor="#2f7176" />
+        </linearGradient>
+        <pattern id="plav-map-dots" width="14" height="14" patternUnits="userSpaceOnUse">
+          <circle cx="2" cy="2" r="1" fill="#0f3b3f" opacity="0.08" />
+        </pattern>
+      </defs>
+      <rect width="520" height="440" fill="url(#plav-map-dots)" />
+
+      {/* Prokletije ridges to the south */}
+      <path
+        d="M0 440 L0 372 L40 350 L78 364 L120 322 L160 346 L205 300 L250 338 L292 312 L336 342 L380 296 L424 330 L470 306 L520 330 L520 440 Z"
+        fill="#0f3b3f"
+        opacity="0.12"
+      />
+      <path
+        d="M0 440 L0 398 L56 382 L104 396 L150 370 L200 390 L248 364 L300 388 L352 372 L400 392 L452 368 L520 386 L520 440 Z"
+        fill="#0f3b3f"
+        opacity="0.16"
+      />
+      <text x="512" y="420" textAnchor="end" className={styles.mapMountain}>
+        PROKLETIJE
+      </text>
+
+      {/* Lim river, flowing north out of the lake */}
+      <path
+        d="M262 150 C 270 118, 250 92, 262 64 S 276 20, 268 0"
+        fill="none"
+        stroke="#5f9ea3"
+        strokeWidth="3"
+        strokeLinecap="round"
+      />
+      <text x="276" y="40" className={styles.mapRiver}>
+        Lim
+      </text>
+
+      {/* Roads */}
+      <path
+        d="M318 0 C 320 50, 330 96, 330 132 S 312 196, 322 250"
+        fill="none"
+        stroke="#b8894a"
+        strokeWidth="2.5"
+        strokeDasharray="1 7"
+        strokeLinecap="round"
+      />
+      <path
+        d="M196 232 C 160 262, 120 272, 70 300"
+        fill="none"
+        stroke="#b8894a"
+        strokeWidth="2.5"
+        strokeDasharray="1 7"
+        strokeLinecap="round"
+      />
+
+      {/* Lake Plav */}
+      <path
+        d="M246 150 C 290 140, 318 176, 316 218 C 314 262, 288 292, 250 292 C 208 292, 186 262, 190 222 C 194 182, 210 156, 246 150 Z"
+        fill="url(#plav-map-lake)"
+      />
+      <path d="M216 236 h40 M232 256 h52 M222 214 h30" stroke="#cfe3e6" strokeWidth="1.5" strokeLinecap="round" opacity="0.6" />
+      <text x="230" y="186" className={styles.mapLake}>
+        Lake Plav
+      </text>
+
+      {/* Town */}
+      <g className={styles.mapTown}>
+        <circle cx="352" cy="112" r="5" />
+        <text x="364" y="116">
+          Plav
+        </text>
+      </g>
+      <g className={styles.mapTown}>
+        <circle cx="70" cy="300" r="5" />
+        <text x="54" y="326">
+          Gusinje
+        </text>
+      </g>
+      <text x="508" y="22" textAnchor="end" className={styles.mapRoute}>
+        ↑ Podgorica · 2½ h
+      </text>
+
+      {/* Hotel pin */}
+      <g className={styles.mapPin}>
+        <circle cx="318" cy="236" r="16" className={styles.mapPulse} />
+        <circle cx="318" cy="236" r="9" />
+        <circle cx="318" cy="236" r="3.5" fill="#fff" />
+      </g>
+      <g>
+        <rect x="336" y="220" width="104" height="32" rx="16" fill="#0f3b3f" className={styles.mapHotelPill} />
+        <text x="352" y="241" className={styles.mapHotel}>
+          Plav Hotel
+        </text>
+      </g>
+    </svg>
+  );
+}
+
 export function Location() {
   return (
-    <section id="location" className={cx(ui.section, styles.bgLight)}>
-      <div className={styles.locationGrid}>
-        <div data-reveal="left">
-          <div className={cx(ui.eyebrow, styles.mb24)}>Location</div>
-          <h2 className={cx(ui.h2, styles.mb26)}>
-            Find your way
-            <br />
-            to Brezovica
+    <section id="location" className={cx(ui.section, styles.location)}>
+      <div className={cx(ui.container, styles.locationGrid)}>
+        <div>
+          <div className={ui.eyebrow} data-reveal="up">
+            Getting here
+          </div>
+          <h2 className={cx(ui.h2, styles.mt18)} data-reveal="up" data-delay="80">
+            By the lake in <em className={styles.accent}>eastern Montenegro</em>
           </h2>
-          <dl className={styles.facts}>
+          <p className={cx(ui.lead, styles.mt24)} data-reveal="up" data-delay="120">
+            Plav lies in the Upper Lim valley, close to the borders with Albania and Kosovo, about 2½ hours by car from
+            Podgorica airport.
+          </p>
+          <dl className={styles.facts} data-reveal="up" data-delay="160">
             {locationFacts.map((fact) => (
-              <div key={fact.label}>
-                <dt className={styles.factLabel}>{fact.label}</dt>
-                <dd className={styles.factValue}>
-                  {fact.lines.map((line, i) => (
-                    <span key={line}>
-                      {i > 0 && <br />}
-                      {line}
-                    </span>
-                  ))}
-                </dd>
+              <div key={fact.label} className={styles.fact}>
+                <dt>{fact.label}</dt>
+                <dd>{fact.value}</dd>
               </div>
             ))}
           </dl>
-          <a href={site.directionsUrl} target="_blank" rel="noopener noreferrer" className={ui.btnOutline}>
-            Get directions
-          </a>
+          <div className={styles.locationActions} data-reveal="up" data-delay="200">
+            <a href={site.directionsUrl} target="_blank" rel="noopener noreferrer" className={ui.btnGold}>
+              Get directions
+            </a>
+            <Link href={contactHref({ topic: "reservation" })} className={ui.btnOutline}>
+              Arrange a transfer
+            </Link>
+          </div>
         </div>
-        <div data-reveal="right" className={styles.map} role="img" aria-label="Map: Brezovica in the Sharr Mountains, Kosovo">
-          <div className={styles.mapGrid} />
-          <div className={styles.mapRoadA} />
-          <div className={styles.mapRoadB} />
-          <div className={styles.mapPin} />
-          <div className={styles.mapLabel}>Brezovica</div>
+        <div className={styles.mapCard} data-reveal="scale">
+          <PlavMap />
+          <span className={styles.mapNote}>Illustrative · not to scale</span>
         </div>
       </div>
     </section>
@@ -390,20 +404,29 @@ export function Location() {
 
 export function FinalCta() {
   return (
-    <section className={styles.finalCta}>
-      <div className={styles.glow} aria-hidden="true" />
+    <section className={styles.final}>
+      <svg className={styles.finalRidge} viewBox="0 0 1440 220" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M0 150 L120 110 L210 128 L320 70 L420 112 L520 84 L640 40 L760 96 L880 62 L1000 104 L1120 56 L1240 98 L1340 76 L1440 104 V220 H0 Z" />
+        <path d="M0 184 L140 160 L280 176 L420 148 L560 170 L700 150 L840 174 L980 152 L1120 172 L1260 156 L1440 170 V220 H0 Z" />
+      </svg>
       <div className={styles.finalInner}>
-        <div data-reveal="up" className={styles.finalEyebrow}>
+        <div className={ui.eyebrowLight} data-reveal="up">
           Your stay awaits
         </div>
-        <h2 data-reveal="up" data-delay="80" className={styles.finalTitle}>
-          The mountains are ready.
-          <br />
-          So are we.
+        <h2 className={styles.finalTitle} data-reveal="up" data-delay="80">
+          The lake is <em>waiting.</em>
         </h2>
-        <a href="#book" data-reveal="up" data-delay="160" className={styles.finalButton}>
-          Reserve your stay
-        </a>
+        <p className={styles.finalLead} data-reveal="up" data-delay="140">
+          Book direct for our best rate — no booking fees, free cancellation up to 48 hours before arrival.
+        </p>
+        <div className={styles.finalActions} data-reveal="up" data-delay="200">
+          <a href="#book" className={ui.btnGold}>
+            Check availability
+          </a>
+          <Link href="/contact" className={ui.btnOutlineLight}>
+            Talk to us
+          </Link>
+        </div>
       </div>
     </section>
   );

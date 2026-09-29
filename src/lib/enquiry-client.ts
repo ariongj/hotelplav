@@ -2,7 +2,8 @@
 
 export type EnquiryType = "newsletter" | "contact" | "event" | "table" | "spa" | "stay-hold" | "viewing";
 
-export type EnquiryResponse = { ok: true } | { ok: false; error: string };
+/** `preview`: the static preview has nowhere to send the form, so nothing went out. */
+export type EnquiryResponse = { ok: true; preview?: boolean } | { ok: false; error: string };
 
 /** True for the static export (GitHub Pages preview), which has no /api/enquiry. */
 const STATIC_EXPORT = process.env.NEXT_PUBLIC_STATIC_EXPORT === "true";
@@ -30,7 +31,7 @@ export async function submitEnquiry(
     if (typeof fields.company === "string" && fields.company.trim()) return { ok: true };
     if (!FORM_ENDPOINT) {
       showPreviewNotice();
-      return { ok: true };
+      return { ok: true, preview: true };
     }
     try {
       const res = await fetch(FORM_ENDPOINT, {
@@ -65,7 +66,11 @@ function showPreviewNotice() {
   note.id = id;
   note.className = "preview-toast";
   note.setAttribute("role", "status");
-  note.textContent = "Preview site — this request wasn't sent. On the live site it goes straight to the hotel.";
-  document.body.appendChild(note);
+  (document.fullscreenElement ?? document.body).appendChild(note);
+  // Live regions inserted with their text already set are often not announced:
+  // add the empty region first, then its text on the next frame.
+  requestAnimationFrame(() => {
+    note.textContent = "Preview site — this request wasn't sent. On the live site it goes straight to the hotel.";
+  });
   window.setTimeout(() => note.remove(), 6500);
 }
