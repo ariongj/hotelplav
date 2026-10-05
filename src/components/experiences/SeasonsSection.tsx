@@ -14,7 +14,7 @@ export function SeasonsSection() {
         <div className={styles.header} data-reveal="up">
           <p className={ui.eyebrow}>Things to do</p>
           <h2 id="seasons-title" className={cx(ui.h2, styles.title)}>
-            Pick a season, <em>we&rsquo;ll plan the rest</em>
+            Summer trails, <em>winter quiet</em>
           </h2>
         </div>
         <SeasonSwitcher

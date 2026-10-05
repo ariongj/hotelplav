@@ -1,164 +1,59 @@
 "use client";
 
-import { createContext, useCallback, useContext, useMemo, useRef, useState, type ReactNode } from "react";
+import { createContext, useCallback, useContext, useState, type ReactNode } from "react";
 
-import { fetchAvailability, useStayDates } from "@/lib/booking/client";
-import { DEFAULT_GUESTS, paxFor } from "@/lib/booking/guests";
-import { addDays, checkStay, nightsBetween } from "@/lib/booking/pricing";
-import type { RoomId } from "@/lib/booking/rooms";
-import type { AvailabilityResult, RoomQuote } from "@/lib/booking/types";
-import { submitEnquiry } from "@/lib/enquiry-client";
-import { euro } from "@/lib/format";
+import { checkStay, DEFAULT_GUESTS } from "@/lib/stay/dates";
+import type { PropertyId } from "@/lib/stay/properties";
+import { useStayDates } from "@/lib/stay/useStayDates";
 
-export type Search = Extract<AvailabilityResult, { ok: true }>;
+/** A submitted request: what the results section shows. */
+export type StaySearch = {
+  property: PropertyId;
+  checkin: string;
+  checkout: string;
+  nights: number;
+  guests: number;
+};
 
-const SEARCH_FAILED =
-  "We couldn't reach our reservations system just now — please try again, or call us and we'll price your stay.";
-
-type HomeBookingState = Omit<ReturnType<typeof useStayDates>, "setCheckin"> & {
-  setCheckin: (checkin: string) => void;
-  guests: string;
-  setGuests: (guests: string) => void;
-  promo: string;
-  setPromo: (promo: string) => void;
-  search: Search | null;
-  /** The promo code as typed for the current results ("" when none) — to flag one that wasn't recognised. */
-  searchedPromo: string;
+type HomeBookingState = ReturnType<typeof useStayDates> & {
+  property: PropertyId;
+  setProperty: (property: PropertyId) => void;
+  guests: number;
+  setGuests: (guests: number) => void;
+  search: StaySearch | null;
   error: string;
-  loading: boolean;
-  /** Guest label the current results were priced for. */
-  pricedFor: string;
-  selectedId: RoomId | null;
-  held: boolean;
-  /** Why the last hold couldn't be sent ("" when it went through). */
-  holdError: string;
-  /** Price the stay; resolves true when there are results to show. */
-  runSearch: () => Promise<boolean>;
-  select: (room: RoomQuote) => void;
-  hold: () => Promise<void>;
-  selection: { quote: RoomQuote; search: Search } | null;
+  /** Validates the form; resolves true when there are results to show. */
+  submit: () => boolean;
 };
 
 const HomeBookingContext = createContext<HomeBookingState | null>(null);
 
-/** Booking state shared by the hero's search bar, the results and the sticky bar. */
+/**
+ * State shared by the hero's request bar, the results and the sticky bar.
+ * There is no live inventory: results list the room types that fit, and the
+ * family confirms availability and the price for each request.
+ */
 export function HomeBookingProvider({ children }: { children: ReactNode }) {
   const dates = useStayDates();
+  const [property, setProperty] = useState<PropertyId>("katun");
   const [guests, setGuests] = useState(DEFAULT_GUESTS);
-  const [promo, setPromo] = useState("");
-  const [search, setSearch] = useState<Search | null>(null);
-  const [searchedPromo, setSearchedPromo] = useState("");
+  const [search, setSearch] = useState<StaySearch | null>(null);
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [pricedFor, setPricedFor] = useState(DEFAULT_GUESTS);
-  const [selectedId, setSelectedId] = useState<RoomId | null>(null);
-  const [held, setHeld] = useState(false);
-  const [holdError, setHoldError] = useState("");
-  /** Bumped by every hold, search and selection, so a late reply can't undo a newer choice. */
-  const holdVersion = useRef(0);
 
-  const { checkin, checkout, setCheckin: setCheckinInput, setCheckout } = dates;
+  const { checkin, checkout, today } = dates;
 
-  // Moving check-in onto or past check-out carries check-out along, keeping the stay's length.
-  const setCheckin = useCallback(
-    (next: string) => {
-      setCheckinInput(next);
-      if (next && checkout && checkout <= next) {
-        const nights = checkin ? Math.max(1, nightsBetween(checkin, checkout)) : 1;
-        setCheckout(addDays(next, nights));
-      }
-    },
-    [checkin, checkout, setCheckinInput, setCheckout],
-  );
-
-  const runSearch = useCallback(async () => {
-    const stay = checkStay(checkin, checkout);
+  const submit = useCallback(() => {
+    const stay = checkStay(checkin, checkout, today);
     if (!stay.ok) {
       setError(stay.error);
       return false;
     }
-    setLoading(true);
-    let result: AvailabilityResult;
-    try {
-      result = await fetchAvailability({ checkin, checkout, guests: paxFor(guests), promo });
-    } catch {
-      // e.g. a chunk that no longer exists after a redeploy of the static site.
-      result = { ok: false, error: SEARCH_FAILED };
-    } finally {
-      setLoading(false);
-    }
-    if (!result.ok) {
-      setError(result.error);
-      return false;
-    }
-    const bookable = result.rooms.filter((room) => room.left > 0 && room.fits);
     setError("");
-    setPricedFor(guests);
-    setSearch(result);
-    setSearchedPromo(promo.trim());
-    setSelectedId((current) => (bookable.some((room) => room.id === current) ? current : (bookable[0]?.id ?? null)));
-    holdVersion.current += 1;
-    setHeld(false);
-    setHoldError("");
+    setSearch({ property, checkin, checkout, nights: stay.nights, guests });
     return true;
-  }, [checkin, checkout, guests, promo]);
+  }, [checkin, checkout, today, property, guests]);
 
-  const select = useCallback((room: RoomQuote) => {
-    if (room.left === 0 || !room.fits) return;
-    holdVersion.current += 1;
-    setSelectedId(room.id);
-    setHeld(false);
-    setHoldError("");
-  }, []);
-
-  const selection = useMemo(() => {
-    if (!search || !selectedId) return null;
-    const quote = search.rooms.find((room) => room.id === selectedId);
-    return quote && quote.left > 0 && quote.fits ? { quote, search } : null;
-  }, [search, selectedId]);
-
-  const hold = useCallback(async () => {
-    if (!selection) return;
-    const { quote, search: s } = selection;
-    // Show the hold straight away; take it back if reservations never hear about it.
-    const version = ++holdVersion.current;
-    setHeld(true);
-    setHoldError("");
-    const res = await submitEnquiry("stay-hold", {
-      room: quote.name,
-      checkin: s.checkin,
-      checkout: s.checkout,
-      nights: s.nights,
-      guests: pricedFor,
-      total: euro(quote.direct),
-      promo: s.promo,
-    });
-    if (!res.ok && version === holdVersion.current) {
-      setHeld(false);
-      setHoldError(res.error);
-    }
-  }, [selection, pricedFor]);
-
-  const value: HomeBookingState = {
-    ...dates,
-    setCheckin,
-    guests,
-    setGuests,
-    promo,
-    setPromo,
-    search,
-    searchedPromo,
-    error,
-    loading,
-    pricedFor,
-    selectedId,
-    held,
-    holdError,
-    runSearch,
-    select,
-    hold,
-    selection,
-  };
+  const value: HomeBookingState = { ...dates, property, setProperty, guests, setGuests, search, error, submit };
 
   return <HomeBookingContext.Provider value={value}>{children}</HomeBookingContext.Provider>;
 }

@@ -2,33 +2,31 @@
 
 import { StickyBar } from "@/components/layout/StickyBar";
 import { StickyAction, StickyLabel } from "@/components/layout/StickyParts";
-import { lowestFromRate } from "@/lib/booking/rooms";
-import { euro, plural } from "@/lib/format";
+import { plural, shortDate } from "@/lib/format";
+import { getProperty } from "@/lib/stay/properties";
 
 import { useHomeBooking } from "./HomeBooking";
 
 export function HomeStickyBar() {
-  const { selection, held } = useHomeBooking();
+  const { search } = useHomeBooking();
 
   return (
     <StickyBar>
       <StickyLabel>
-        {selection ? (
+        {search ? (
           <>
-            {selection.quote.name}{" "}
+            {getProperty(search.property).name}{" "}
             <em>
-              · {euro(selection.quote.direct)} for {plural(selection.search.nights, "night")}
+              · {shortDate(search.checkin)}, {plural(search.nights, "night")}
             </em>
           </>
         ) : (
           <>
-            Lakeside rooms <em>· from {euro(lowestFromRate)} / night, booked direct</em>
+            Eko Katun & Hotel ROSI <em>· booked with the family, no fees</em>
           </>
         )}
       </StickyLabel>
-      <StickyAction href={selection ? "#results" : "#book"}>
-        {!selection ? "Check dates" : held ? "Complete reservation" : "Review your stay"}
-      </StickyAction>
+      <StickyAction href={search ? "#results" : "#book"}>{search ? "Your options" : "Check dates"}</StickyAction>
     </StickyBar>
   );
 }

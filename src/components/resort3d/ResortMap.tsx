@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { useEffect, useRef, useState, type KeyboardEvent, type ReactNode } from "react";
 
-import type { SceneId } from "@/components/tour/content";
 import { cx } from "@/lib/cx";
 
 import { getPoi, pois, type PoiId } from "./pois";
@@ -29,15 +28,15 @@ type ResortMapProps = {
   selected?: PoiId | null;
   onSelect?: (id: PoiId) => void;
   onCloseSelected?: () => void;
-  onEnter360?: (scene: SceneId) => void;
   /** Overlays drawn above the map (e.g. the guide card). */
   children?: ReactNode;
   className?: string;
 };
 
 /**
- * Illustrative 3D map of the resort. three.js and the scene are loaded on
- * mount (code-split), so pages without the map never download them.
+ * Illustrative 3D map of the Gusinje–Vusanje valley. three.js and the scene
+ * are loaded on mount (code-split), so pages without the map never download
+ * them.
  */
 const HERO_FOCUS: MapFocus = { id: "hero", nonce: 0 };
 
@@ -49,7 +48,6 @@ export function ResortMap({
   selected = null,
   onSelect,
   onCloseSelected,
-  onEnter360,
   children,
   className,
 }: ResortMapProps) {
@@ -64,13 +62,28 @@ export function ResortMap({
   const heroRef = useRef(hero);
   const [status, setStatus] = useState<"loading" | "ready" | "failed">("loading");
   const [interacted, setInteracted] = useState(false);
+  /** The highlighted place keeps its label when labels would overlap. */
+  const selectedRef = useRef(selected);
+  useEffect(() => {
+    selectedRef.current = selected;
+  }, [selected]);
 
   useEffect(() => {
     let cancelled = false;
     let engine: ResortEngine | null = null;
 
+    /** Label widths, measured once: they never change. */
+    const labelWidths = new Map<PoiId, number>();
+    const rank = (id: PoiId) => (id === selectedRef.current ? -1 : pois.findIndex((p) => p.id === id));
+
     const placePins = (pins: PinPosition[]) => {
-      for (const pin of pins) {
+      const host = hostRef.current;
+      const width = host?.clientWidth ?? 0;
+      const height = host?.clientHeight ?? 0;
+      /** Labels already shown this frame, as screen rectangles. */
+      const shown: [number, number, number, number][] = [];
+      // Most important first (the list order), the highlighted place before all.
+      for (const pin of [...pins].sort((a, b) => rank(a.id) - rank(b.id))) {
         const el = pinRefs.current[pin.id];
         if (!el) continue;
         el.style.setProperty("--px", `${pin.x.toFixed(2)}%`);
@@ -79,6 +92,20 @@ export function ResortMap({
         el.style.setProperty("--pe", pin.visible ? "auto" : "none");
         // Off-screen pins leave the tab order too, so focus never lands on one it can't show.
         el.inert = !pin.visible;
+        if (!pin.visible) continue;
+
+        // A label that would overlap one already shown hides; its dot stays (hover or focus shows it).
+        let w = labelWidths.get(pin.id);
+        if (w === undefined) {
+          w = (el.firstElementChild as HTMLElement | null)?.offsetWidth ?? 120;
+          labelWidths.set(pin.id, w);
+        }
+        const x = (pin.x / 100) * width;
+        const y = (pin.y / 100) * height;
+        const rect: [number, number, number, number] = [x - w / 2 - 4, y - 54, x + w / 2 + 4, y - 16];
+        const clash = shown.some((r) => r[0] < rect[2] && rect[0] < r[2] && r[1] < rect[3] && rect[1] < r[3]);
+        el.style.setProperty("--lo", clash ? "0" : "1");
+        if (!clash) shown.push(rect);
       }
     };
 
@@ -160,7 +187,7 @@ export function ResortMap({
         aria-label={
           hero
             ? undefined
-            : "Illustrated 3D map of Plav Hotel on Lake Plav: the hotel, spa, lake terrace and chapel, with a trail through the pines up to a mountain viewpoint"
+            : "Illustrated 3D map of the valley from Gusinje to Vusanje: Hotel ROSI in town, Ali Pasha's Springs, Eko Katun ROSI and its stone tower, the Grlja waterfall, Oko Skakavice and the Ropojana valley, under Karanfili and Zla Kolata"
         }
         aria-hidden={hero || undefined}
       />
@@ -172,15 +199,10 @@ export function ResortMap({
           <button type="button" className={styles.cardClose} aria-label="Close" onClick={closeCard}>
             &times;
           </button>
-          <div className={styles.cardKicker}>On the map</div>
+          <div className={styles.cardKicker}>{card.kind}</div>
           <h2 className={styles.cardTitle}>{card.name}</h2>
           <p className={styles.cardText}>{card.blurb}</p>
           <div className={styles.cardActions}>
-            {card.scene && (
-              <button type="button" className={styles.cardPrimary} onClick={() => onEnter360?.(card.scene!)}>
-                Step inside &middot; 360&deg;
-              </button>
-            )}
             <Link href={card.link.href} className={styles.cardLink}>
               {card.link.label} &rarr;
             </Link>
@@ -250,19 +272,13 @@ export function ResortMap({
         </div>
       )}
 
-      {/* The hero just keeps its sky-to-lake poster. */}
+      {/* The hero just keeps its sky-to-valley poster. */}
       {status === "failed" && !hero && (
         <div className={styles.failed} role="alert">
           <p>The 3D map needs WebGL, which is switched off in this browser.</p>
-          {onEnter360 ? (
-            <button type="button" className={styles.cardPrimary} onClick={() => onEnter360("hall")}>
-              Open the 360&deg; spaces
-            </button>
-          ) : (
-            <Link href="/tour#hall" className={styles.cardPrimary}>
-              Open the 360&deg; spaces
-            </Link>
-          )}
+          <a href="#places" className={styles.cardPrimary}>
+            See the places instead
+          </a>
         </div>
       )}
 

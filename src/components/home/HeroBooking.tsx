@@ -2,35 +2,50 @@
 
 import type { FormEvent } from "react";
 
-import { GUEST_OPTIONS } from "@/lib/booking/guests";
-import { addDays } from "@/lib/booking/pricing";
-import { plural, shortDate } from "@/lib/format";
+import { cx } from "@/lib/cx";
+import { addDays, GUEST_COUNTS, guestsLabel } from "@/lib/stay/dates";
+import { properties } from "@/lib/stay/properties";
 
 import styles from "./HeroBooking.module.css";
 import { useHomeBooking } from "./HomeBooking";
 
-/** The frosted search bar at the foot of the hero (the page's #book target). */
+/** The frosted request bar at the foot of the hero (the page's #book target). */
 export function HeroBooking() {
   const b = useHomeBooking();
-  const available = b.search ? b.search.rooms.filter((room) => room.left > 0 && room.fits).length : 0;
 
-  async function onSubmit(event: FormEvent<HTMLFormElement>) {
+  function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    // aria-disabled rather than disabled, so the button keeps focus while it checks.
-    if (b.loading) return;
-    if (await b.runSearch()) {
-      // Wait a frame for the results to render, then bring them into view and move focus there.
-      window.setTimeout(() => {
-        const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-        document.getElementById("results")?.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
-        document.getElementById("results-title")?.focus({ preventScroll: true });
-      }, 80);
-    }
+    if (!b.submit()) return;
+    // Wait a frame for the results to render, then bring them into view and move focus there.
+    window.setTimeout(() => {
+      const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      document.getElementById("results")?.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
+      document.getElementById("results-title")?.focus({ preventScroll: true });
+    }, 80);
   }
 
   return (
     <div className={styles.wrap}>
-      <form id="book" className={styles.bar} onSubmit={onSubmit} aria-label="Check availability" noValidate>
+      <form id="book" className={styles.bar} onSubmit={onSubmit} aria-label="Plan your stay" noValidate>
+        <div className={cx(styles.field, styles.where)}>
+          <span id="book-where" className={styles.label}>
+            Where
+          </span>
+          <div className={styles.seg} role="radiogroup" aria-labelledby="book-where">
+            {properties.map((property) => (
+              <label key={property.id} className={cx(styles.segOption, b.property === property.id && styles.segOn)}>
+                <input
+                  type="radio"
+                  name="property"
+                  value={property.id}
+                  checked={b.property === property.id}
+                  onChange={() => b.setProperty(property.id)}
+                />
+                {property.shortName}
+              </label>
+            ))}
+          </div>
+        </div>
         <label className={styles.field}>
           <span className={styles.label}>Check in</span>
           <input
@@ -53,43 +68,27 @@ export function HeroBooking() {
         </label>
         <label className={styles.field}>
           <span className={styles.label}>Guests</span>
-          <select className={styles.input} value={b.guests} onChange={(e) => b.setGuests(e.target.value)}>
-            {GUEST_OPTIONS.map((option) => (
-              <option key={option.label}>{option.label}</option>
+          <select className={styles.input} value={b.guests} onChange={(e) => b.setGuests(Number(e.target.value))}>
+            {GUEST_COUNTS.map((count) => (
+              <option key={count} value={count}>
+                {guestsLabel(count)}
+              </option>
             ))}
           </select>
         </label>
-        <label className={styles.field}>
-          <span className={styles.label}>Promo code</span>
-          <input
-            className={styles.input}
-            type="text"
-            value={b.promo}
-            placeholder="Optional"
-            autoComplete="off"
-            onChange={(e) => b.setPromo(e.target.value)}
-          />
-        </label>
-        <button type="submit" className={styles.submit} aria-disabled={b.loading} aria-busy={b.loading}>
-          {b.loading ? "Checking…" : "Check availability"}
+        <button type="submit" className={styles.submit}>
+          See rooms
         </button>
       </form>
-      {/* Always rendered, so screen readers announce each new result. */}
-      <p className="visually-hidden" role="status" aria-live="polite">
-        {b.search
-          ? `${plural(available, "room type")} available, ${shortDate(b.search.checkin)} to ${shortDate(b.search.checkout)}.` +
-            (!b.search.promo && b.searchedPromo ? " Promo code not recognised." : "")
-          : ""}
-      </p>
       {b.error ? (
         <p className={styles.error} role="alert">
           {b.error}
         </p>
       ) : (
         <p className={styles.perks}>
-          <span>Best rate guaranteed</span>
+          <span>Booked with the family</span>
           <span>No booking fees</span>
-          <span>Free cancellation up to 48 h</span>
+          <span>Cash on arrival</span>
         </p>
       )}
     </div>

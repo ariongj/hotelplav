@@ -1,11 +1,10 @@
 # Publishes a static preview of the site to GitHub Pages on every push to main:
 # https://<owner>.github.io/<repo>/
 #
-# Pages only serves files, so the preview is a static export: the API routes
-# are left out, the booking engine runs in the browser with the mock
-# inventory, and forms show a "not sent" note (or post to
-# NEXT_PUBLIC_ENQUIRY_ENDPOINT if that repository variable is set).
-# For production with the server APIs, deploy the repository to Vercel.
+# Pages only serves files, so the preview is a static export without the API
+# route: the request form offers to send each request by email instead (or
+# posts to NEXT_PUBLIC_ENQUIRY_ENDPOINT if that repository variable is set).
+# For production with the server API, deploy the repository to Vercel.
 
 name: Deploy preview to GitHub Pages
 

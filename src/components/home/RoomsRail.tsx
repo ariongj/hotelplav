@@ -4,16 +4,12 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
 import { Photo } from "@/components/ui/Photo";
-import { PhotoCredit } from "@/components/ui/PhotoCredit";
-import { fromRate } from "@/lib/booking/pricing";
-import { rooms } from "@/lib/booking/rooms";
-import { euro } from "@/lib/format";
+import { getProperty } from "@/lib/stay/properties";
+import { units } from "@/lib/stay/units";
 
 import styles from "./sections.module.css";
 
-const ordered = [...rooms].sort((a, b) => a.rank - b.rank);
-
-/** Swipeable row of room cards, with arrow buttons for mouse users. */
+/** Swipeable row of every room and bungalow type, with arrow buttons for mouse users. */
 export function RoomsRail() {
   const railRef = useRef<HTMLUListElement>(null);
   const [edges, setEdges] = useState({ start: true, end: false });
@@ -46,33 +42,35 @@ export function RoomsRail() {
 
   return (
     <div className={styles.rail}>
-      <ul ref={railRef} className={styles.railTrack} aria-label="Rooms and suites">
-        {ordered.map((room) => (
+      <ul ref={railRef} className={styles.railTrack} aria-label="Rooms and bungalows">
+        {units.map((room) => (
           <li key={room.id} className={styles.railItem}>
             {/* Named by its heading alone; the photo is decorative beside it. */}
-            <Link href="/rooms" className={styles.roomCard} aria-labelledby={`rail-${room.id}`}>
+            <Link href={`/rooms#${room.id}`} className={styles.roomCard} aria-labelledby={`rail-${room.id}`}>
               <div className={styles.roomPhoto}>
-                <Photo
-                  src={room.image.src}
-                  alt=""
-                  position={room.image.position}
-                  sizes="(max-width: 700px) 80vw, 360px"
-                />
+                {room.photo ? (
+                  <Photo
+                    src={room.photo.srcSmall ?? room.photo.src}
+                    alt=""
+                    position={room.photo.position}
+                    sizes="(max-width: 700px) 80vw, 360px"
+                  />
+                ) : (
+                  <span className={styles.roomNoPhoto}>Photos coming soon</span>
+                )}
                 <span className={styles.roomPrice}>
-                  from <strong>{euro(fromRate(room.baseRate))}</strong> / night
+                  {room.sleeps ? <>Sleeps <strong>{room.sleeps}</strong></> : <strong>Bring your tent</strong>}
                 </span>
-                {room.badge && <span className={styles.roomBadge}>{room.badge.label}</span>}
+                <span className={styles.roomBadge}>{getProperty(room.property).shortName}</span>
               </div>
               <div className={styles.roomBody}>
-                <span className={styles.roomCategory}>{room.category.replace(/s$/, "")}</span>
+                <span className={styles.roomCategory}>{room.kind === "camping" ? "Camping" : room.kind === "bungalow" ? "Bungalow" : "Room"} · {getProperty(room.property).place}</span>
                 <h3 id={`rail-${room.id}`} className={styles.roomName}>
                   {room.name}
                 </h3>
-                <p className={styles.roomSummary}>{room.summary}</p>
+                <p className={styles.roomSummary}>{[room.size ? `${room.size} m²` : null, room.beds].filter(Boolean).join(" · ")}</p>
               </div>
             </Link>
-            {/* Outside the card: the credit is a link of its own. */}
-            <PhotoCredit credit={room.image.credit} tone="dark" className={styles.railCredit} />
           </li>
         ))}
       </ul>

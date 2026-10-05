@@ -322,3 +322,61 @@
     font-size: 19px;
   }
 }
+
+/* ---------- request actions (no prices: the family confirms them) ---------- */
+
+.actions {
+  display: grid;
+  gap: 8px;
+  min-width: 180px;
+}
+
+.actions .select {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 0;
+  text-align: center;
+}
+
+.noPhoto {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(160deg, var(--mist), var(--glacier));
+  font: 700 12px/1.2 var(--font-text);
+  color: var(--lake);
+  text-align: center;
+}
+
+.rules {
+  display: grid;
+  gap: 8px;
+  margin: 0 0 4px;
+}
+
+.rules div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font: 600 13px/1.3 var(--font-text);
+}
+
+.rules dt {
+  color: rgba(238, 244, 243, 0.66);
+}
+
+.rules dd {
+  margin: 0;
+}
+
+@media (max-width: 699.98px) {
+  .actions {
+    grid-column: 1 / -1;
+    grid-template-columns: 1fr 1fr;
+    min-width: 0;
+    padding-top: 10px;
+    border-top: 1px solid var(--line);
+  }
+}

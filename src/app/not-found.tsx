@@ -21,12 +21,12 @@ export default function NotFound() {
           <h1 className={styles.title}>
             This path leads
             <br />
-            <em>off the shore.</em>
+            <em>off the trail.</em>
           </h1>
           <p className={styles.text}>The page you were looking for has moved or no longer exists.</p>
           <div className={styles.actions}>
             <Link href="/" className={ui.btnGold}>
-              Back to the hotel
+              Back to ROSI
             </Link>
             <Link href="/contact" className={ui.btnOutlineLight}>
               Contact us

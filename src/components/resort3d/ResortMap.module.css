@@ -12,9 +12,9 @@
   cursor: grab;
 }
 
-/* Home hero: a sky-to-lake poster until the scene is ready, then fade in. */
+/* Home hero: a sky-to-valley poster until the scene is ready, then fade in. */
 .hero {
-  background: linear-gradient(180deg, #8db1c8 0%, #e6eeef 46%, #3f8088 72%, #0a2a2d 100%);
+  background: linear-gradient(180deg, #86aec8 0%, #e4edef 44%, #a7a59c 58%, #62803f 76%, #2c3d2a 100%);
 }
 
 .hero .canvas {
@@ -77,9 +77,18 @@
   font: 600 13px/1 var(--font-text);
   letter-spacing: 0.01em;
   white-space: nowrap;
+  /* --lo: 0 while the label would overlap a more important one (see ResortMap). */
+  opacity: var(--lo, 1);
   transition:
+    opacity 0.25s,
     background-color 0.3s,
     color 0.3s;
+}
+
+.pin:hover .pinLabel,
+.pin:focus-visible .pinLabel,
+.pinActive .pinLabel {
+  opacity: 1;
 }
 
 .pinDot {

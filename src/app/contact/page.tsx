@@ -11,15 +11,15 @@ import { site } from "@/config/site";
 import ui from "@/styles/ui.module.css";
 
 export const metadata: Metadata = {
-  title: "Contact",
-  description: `Reservations, celebrations or a question about the lake — call, email or write to ${site.name} on Lake Plav in Plav, Montenegro. The front desk answers 24 hours a day, and we reply to every message within one working day.`,
+  title: "Contact & requests",
+  description: `Ask about a stay, a table or a transfer — call ${site.phone.display}, email ${site.email.display} or send a request to the family behind Eko Katun ROSI in Vusanje and Hotel ROSI in Gusinje, Montenegro.`,
   alternates: { canonical: "/contact" },
 };
 
 export default function ContactPage() {
   return (
     <>
-      <SiteNav cta={{ label: "Book", href: "/#book" }} menuCta={{ label: "Book your stay", href: "/#book" }} />
+      <SiteNav cta={{ label: "Book", href: "/#book" }} menuCta={{ label: "Check dates", href: "/#book" }} />
       <main>
         <PageHero
           kicker="Contact"
@@ -27,14 +27,14 @@ export default function ContactPage() {
           overlap
           title={
             <>
-              Talk to a person, <em>not a machine</em>
+              Talk to <em>the family</em>
             </>
           }
-          intro="Call any time — the front desk answers 24 hours a day. Write, and we reply within one working day."
+          intro="Bookings go straight to the people who run both places — no middleman and no booking fees. Send your dates, or simply call."
           actions={
             <>
               <a href="#write" className={ui.btnGold}>
-                Write to us
+                Send a request
               </a>
               <a href={site.phone.href} className={ui.btnOutlineLight}>
                 Call {site.phone.display}

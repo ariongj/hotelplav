@@ -57,7 +57,21 @@
   color: inherit;
 }
 
-/* A small lake-and-peak mark before the wordmark. */
+.logoText {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+/* "Hotel & Eko Katun" under the wordmark. */
+.logoSub {
+  font: 700 9px/1 var(--font-text);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  opacity: 0.78;
+}
+
+/* A small peak-and-sun mark before the wordmark. */
 .logo::before {
   content: "";
   width: 22px;
@@ -291,4 +305,15 @@
   .menu {
     animation: none;
   }
+}
+
+/* Phone link under the menu button: the quickest way to book for tonight. */
+.menuPhone {
+  display: block;
+  margin-top: 14px;
+  text-align: center;
+  font: 600 15px/1.4 var(--font-text);
+  color: var(--cream);
+  text-decoration: underline;
+  text-underline-offset: 4px;
 }

@@ -1,8 +1,3 @@
-/** "€1,290" — whole euros, en-US grouping (as in the design). */
-export function euro(amount: number): string {
-  return "€" + Math.round(amount).toLocaleString("en-US");
-}
-
 /** "3 nights" / "1 night". */
 export function plural(count: number, one: string, many = one + "s"): string {
   return `${count} ${count === 1 ? one : many}`;

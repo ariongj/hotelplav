@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 
 import { RevealObserver } from "@/components/ui/RevealObserver";
 import { site } from "@/config/site";
+import { ownerPhotos } from "@/lib/stay/photos";
 
 import "./globals.css";
 
@@ -24,8 +25,8 @@ const manrope = Manrope({
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
   title: {
-    default: `${site.name} — Lakeside hotel & spa in Plav, Montenegro`,
-    template: `%s · ${site.name}`,
+    default: `${site.name} — Gusinje & Vusanje, Montenegro`,
+    template: `%s · ${site.shortName}`,
   },
   description: site.description,
   applicationName: site.name,
@@ -35,13 +36,13 @@ export const metadata: Metadata = {
     type: "website",
     siteName: site.name,
     locale: "en_GB",
-    // Lake Plav, as on the home page (Wikimedia Commons; credited there and on /credits).
+    // The katun from above (the property's own photo).
     images: [
       {
-        url: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c0/Plav_Lake_in_Montenegro_02.jpg/1280px-Plav_Lake_in_Montenegro_02.jpg",
-        width: 1280,
-        height: 964,
-        alt: "Lake Plav perfectly still, the mountains and clouds mirrored in the water",
+        url: ownerPhotos.katunAerial.src,
+        width: ownerPhotos.katunAerial.width,
+        height: ownerPhotos.katunAerial.height,
+        alt: ownerPhotos.katunAerial.alt,
       },
     ],
   },

@@ -1,36 +1,33 @@
 /**
- * Deep links into the contact form, pre-filled with an enquiry — e.g. the
- * "Complete reservation" button after a rate is held. Until the PMS checkout
- * is connected, reservations are completed by the reservations team from
- * this enquiry.
+ * Deep links into the contact form, pre-filled with a request — e.g. "Request
+ * these dates" on a bungalow. The family answers every request personally
+ * (by email or phone) with availability and the price.
  */
 
-export type ContactTopic = "reservation" | "dining" | "events" | "spa" | "press" | "other";
+export type ContactTopic = "katun" | "hotel" | "camping" | "restaurant" | "transfer" | "other";
 
-/** Options of the contact form's topic select, keyed by URL value. */
+/** Options of the contact form's topic choice, keyed by URL value. */
 export const CONTACT_TOPICS: Record<ContactTopic, string> = {
-  reservation: "Reservation enquiry",
-  dining: "Dining & private tables",
-  events: "Events & weddings",
-  spa: "Spa & wellness",
-  press: "Press & partnerships",
+  katun: "Stay at Eko Katun ROSI",
+  hotel: "Stay at Hotel ROSI",
+  camping: "Camping at the katun",
+  restaurant: "Restaurant or group meal",
+  transfer: "Transfer, shuttle or guide",
   other: "Something else",
 };
 
 export type ContactPrefill = {
   topic?: ContactTopic;
-  /** Room or item name, e.g. "Presidential Suite". */
-  room?: string;
+  /** Room or bungalow name, e.g. "Family bungalow". */
+  unit?: string;
   /** ISO dates. */
   checkin?: string;
   checkout?: string;
-  /** Guest label, e.g. "2 Adults". */
+  /** Number of guests, e.g. "4". */
   guests?: string;
-  /** Quoted direct total, e.g. "€1,564". */
-  total?: string;
 };
 
-const KEYS = ["topic", "room", "checkin", "checkout", "guests", "total"] as const;
+const KEYS = ["topic", "unit", "checkin", "checkout", "guests"] as const;
 
 export function contactHref(prefill: ContactPrefill = {}): string {
   const params = new URLSearchParams();
@@ -39,20 +36,18 @@ export function contactHref(prefill: ContactPrefill = {}): string {
     if (value) params.set(key, value);
   }
   const query = params.toString();
-  // Land on the form itself (#write), not the top of the page — the pre-filled stay sits below the hero.
-  return query ? `/contact?${query}#write` : "/contact";
+  return query ? `/contact?${query}` : "/contact";
 }
 
 export function parseContactPrefill(params: URLSearchParams): ContactPrefill {
   const topic = params.get("topic");
   const text = (key: string) => params.get(key)?.slice(0, 120) || undefined;
+  const guests = text("guests");
   return {
-    // Own keys only: `in` would also accept "constructor", "toString" …
-    topic: topic && Object.hasOwn(CONTACT_TOPICS, topic) ? (topic as ContactTopic) : undefined,
-    room: text("room"),
+    topic: topic && topic in CONTACT_TOPICS ? (topic as ContactTopic) : undefined,
+    unit: text("unit"),
     checkin: text("checkin"),
     checkout: text("checkout"),
-    guests: text("guests"),
-    total: text("total"),
+    guests: guests && /^\d{1,2}$/.test(guests) ? guests : undefined,
   };
 }

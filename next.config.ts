@@ -13,14 +13,15 @@ const nextConfig: NextConfig = {
   // /rooms to that folder (a rooms.html beside it would 404).
   ...(staticExport ? { output: "export" as const, basePath, trailingSlash: true } : {}),
   images: {
-    // Static hosting can't optimise images on request; the placeholder
-    // photos are already sized and compressed by their CDN.
+    // Static hosting can't optimise images on request; the photos are
+    // already sized and compressed by their CDNs.
     unoptimized: staticExport,
-    // Placeholder interiors (Wix) and credited Wikimedia Commons photos are
-    // hot-linked from these hosts. Once the hotel's licensed photography lives
-    // in /public (or a CMS), remove the hosts that are no longer used.
+    // The family's own photos are hot-linked from their Booking.com listings
+    // (cf.bstatic.com) until the original files are in /public; landscape
+    // photos are credited Wikimedia Commons images. Remove a host once
+    // nothing loads from it.
     remotePatterns: [
-      { protocol: "https", hostname: "static.wixstatic.com", pathname: "/media/**" },
+      { protocol: "https", hostname: "cf.bstatic.com", pathname: "/xdata/images/hotel/**" },
       { protocol: "https", hostname: "upload.wikimedia.org", pathname: "/wikipedia/commons/**" },
     ],
     formats: ["image/avif", "image/webp"],

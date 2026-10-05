@@ -4,26 +4,26 @@ import ui from "@/styles/ui.module.css";
 import styles from "./LakeIntro.module.css";
 import { lakeStats } from "./content";
 
-const nearby = ["Prokletije National Park", "Gusinje", "Visitor", "River Lim"] as const;
+const nearby = ["Prokletije National Park", "Ali Pasha's Springs", "Grlja", "Ropojana", "Grbaja", "Lake Plav"] as const;
 
-/** Why Plav: the lake in a few words and four big numbers. */
+/** Why Gusinje and Vusanje: the valley in a few words and four big numbers. */
 export function LakeIntro() {
   return (
     <section className={styles.section} aria-labelledby="lake-intro-title">
       <div className={styles.grid}>
         <div className={styles.copy} data-reveal="left">
-          <p className={ui.eyebrow}>Lake Plav</p>
+          <p className={ui.eyebrow}>Gusinje & Vusanje</p>
           <h2 id="lake-intro-title" className={cx(ui.h2, styles.title)}>
-            Carved by ice, <em>ringed by mountains</em>
+            Where the Prokletije <em>begin</em>
           </h2>
           <p className={cx(ui.lead, styles.lead)}>
-            Lake Plav took shape as the glaciers retreated at the end of the last ice age. The Visitor range rises
-            to the west and the Prokletije &mdash; the &ldquo;Accursed Mountains&rdquo; &mdash; to the south,
-            where the river Ljuča flows in from Gusinje; the Lim flows out to the north.
+            Gusinje grew up as a caravan stop between the Adriatic and Peć, where the Vruja and the Grnčar meet to
+            form the Ljuča. South of town the valley climbs past Ali Pasha&rsquo;s Springs to Vusanje, at the foot of
+            the Prokletije &mdash; the &ldquo;Accursed Mountains&rdquo;.
           </p>
           <p className={cx(ui.lead, styles.lead)}>
-            Prokletije National Park, which takes in parts of the Plav and Gusinje municipalities, begins a short
-            drive from the lake.
+            Beyond the village lie the Grlja waterfall, the Ropojana and Grbaja valleys and the highest peaks in
+            Montenegro, inside Prokletije National Park.
           </p>
           <div className={styles.nearby}>
             <span className={styles.nearbyLabel}>On the doorstep</span>

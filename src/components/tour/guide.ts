@@ -1,109 +1,108 @@
 import type { ViewId } from "@/components/resort3d/resortEngine";
+import { contactHref } from "@/lib/contact-link";
 
-import { tourRoom, type SceneId } from "./content";
-
-/** One stop of the guided tour: a place on the 3D map or a 360° space. */
+/** One stop of the guided tour: a view of the 3D valley map. */
 export type GuideStop = {
+  kind: "map";
+  view: ViewId;
   kicker: string;
   title: string;
   /** Narration, shown on the guide card and read aloud when voice is on. */
   text: string;
   link?: { label: string; href: string };
-} & ({ kind: "map"; view: ViewId } | { kind: "space"; scene: SceneId });
+};
 
+/** Facts as in the project fact sheet; see the place list in resort3d/pois.ts. */
 export const guideStops: readonly GuideStop[] = [
   {
     kind: "map",
     view: "overview",
-    kicker: "Lake Plav, Montenegro",
-    title: "Welcome to Plav Hotel",
-    text: "Welcome to Plav Hotel, on the shore of Lake Plav beneath the Prokletije. I’ll show you around — press next whenever you like, or just let the tour play.",
+    kicker: "Gusinje & Vusanje, Montenegro",
+    title: "Welcome to the valley",
+    text: "This is the valley of Gusinje and Vusanje, at the foot of the Prokletije — the Accursed Mountains. I'll show you around: press next whenever you like, or just let the tour play.",
   },
   {
     kind: "map",
-    view: "arrival",
-    kicker: "Arrival",
-    title: "The hotel",
-    text: "Every stay begins at the water’s edge — coats taken, keys presented, and the lake waiting just beyond the doors.",
-    link: { label: "Book your stay", href: "/#book" },
-  },
-  {
-    kind: "space",
-    scene: "hall",
-    kicker: "Step inside · 360°",
-    title: "The Grand Hall",
-    text: "Marble, brass and nine-metre ceilings. Drag to look around, then look up.",
+    view: "hotel",
+    kicker: "Stay in town",
+    title: "Hotel ROSI",
+    text: "The family's hotel stands on the road into Gusinje: a 3-star hotel with Restaurant Rosi — pizza, Italian and local dishes — and a minimarket downstairs.",
+    link: { label: "The hotel", href: "/hotel" },
   },
   {
     kind: "map",
-    view: "rooms",
-    kicker: "Stay",
-    title: "Rooms & suites",
-    text: "Forty-two rooms and suites facing the lake, the peaks or the garden. The suites open onto balconies and terraces.",
-    link: { label: "Rooms & rates", href: "/rooms" },
-  },
-  {
-    kind: "space",
-    scene: "room",
-    kicker: "Step inside · 360°",
-    title: `The ${tourRoom.name}`,
-    text: "Stand in the room before you sleep in it. Turn toward the window — that is the light you wake to.",
-    link: { label: "Check availability", href: "/#book" },
+    view: "gusinje",
+    kicker: "The town",
+    title: "Gusinje",
+    text: "Gusinje lies about 920 metres up, where the Vruja and the Grnčar meet to form the Ljuča. It has been a stop on the old caravan road to Peć since the fourteenth century.",
   },
   {
     kind: "map",
-    view: "spa",
-    kicker: "Wellness",
-    title: "The Lake Spa",
-    text: "Glass-walled pools among the pines, a few steps from the lake, an outdoor pool in summer, and a Finnish sauna and steam room — open to every hotel guest.",
-    link: { label: "Explore the spa", href: "/spa" },
+    view: "springs",
+    kicker: "Half an hour on foot",
+    title: "Ali Pasha's Springs",
+    text: "About two kilometres south of town, karst springs fill a broad, clear pool — named after Ali Pasha of Gusinje. It's around thirty minutes' walk from the hotel or the katun.",
   },
   {
     kind: "map",
-    view: "dining",
-    kicker: "Dining",
-    title: "Dining & the lake terrace",
-    text: "A restaurant, a lounge and a bar: The Lake Room, the Fireside Lounge and the Boathouse Bar. From May to October, dinner moves out onto the lake terrace.",
-    link: { label: "Reserve a table", href: "/dining#reserve" },
+    view: "katun",
+    kicker: "Stay in Vusanje",
+    title: "Eko Katun ROSI",
+    text: "Further up the valley is the katun: wooden bungalows, family rooms and camping on a working mountain farm, with Restaurant ROSI Tradicional and sheep, horses and ponies on the meadow.",
+    link: { label: "The eko katun", href: "/katun" },
   },
   {
     kind: "map",
-    view: "chapel",
-    kicker: "Events & weddings",
-    title: "The chapel",
-    text: "A short, level walk from the hotel: stone arches and long light, with room for two hundred and twenty guests.",
-    link: { label: "Plan an occasion", href: "/events" },
-  },
-  {
-    kind: "space",
-    scene: "chapel",
-    kicker: "Step inside · 360°",
-    title: "Inside the chapel",
-    text: "Stand at the altar and look back down the aisle: twenty-two metres of pale stone.",
+    view: "tower",
+    kicker: "At the katun",
+    title: "The old stone tower",
+    text: "The family's kula has stood for around three centuries and was last restored in 1981. Today it is a small living museum, with the first telephone and radio ever to reach the village.",
+    link: { label: "The tower", href: "/katun#tower" },
   },
   {
     kind: "map",
-    view: "ski",
-    kicker: "On foot",
-    title: "Trails above the lake",
-    text: "A path climbs from the hotel through the pines to a viewpoint high over the lake — a snowshoe walk in winter. For skiing, the slope at Paljevi is half an hour’s drive away.",
-    link: { label: "Seasonal experiences", href: "/experiences#seasons" },
+    view: "grlja",
+    kicker: "1.2 km from the katun",
+    title: "Grlja waterfall",
+    text: "A short walk from the katun, the Skakavica drops about fifteen metres into the Grlja canyon — with three more falls inside, the highest about twenty-five metres.",
   },
   {
     kind: "map",
-    view: "lake",
-    kicker: "Summer",
-    title: "Lake Plav",
-    text: "A glacial lake some ten thousand years old, right in front of the hotel. Kayaks and pedal boats, breakfast by the water and fresh, clear swims — reception can arrange them all.",
-    link: { label: "Plan your days", href: "/experiences" },
+    view: "blueEye",
+    kicker: "The Blue Eye",
+    title: "Oko Skakavice",
+    text: "About a kilometre and a half on from Grlja is Oko Skakavice: the cold, clear spring pool where the Skakavica begins.",
   },
   {
     kind: "map",
-    view: "overview",
+    view: "ropojana",
+    kicker: "Prokletije National Park",
+    title: "The Ropojana valley",
+    text: "Beyond Vusanje the Ropojana runs south to the Albanian border between limestone walls. The Peaks of the Balkans trail follows it towards Theth.",
+    link: { label: "Hikes & routes", href: "/experiences#seasons" },
+  },
+  {
+    kind: "map",
+    view: "karanfili",
+    kicker: "The Dolomites of Montenegro",
+    title: "Karanfili",
+    text: "West of the Ropojana rises Karanfili, a three-peak massif whose wall stands about eight hundred metres above the Grbaja valley.",
+  },
+  {
+    kind: "map",
+    view: "zlaKolata",
+    kicker: "2,534 m",
+    title: "Zla Kolata",
+    text: "On the border to the south-east is Zla Kolata, the highest summit in Montenegro — about six and a half hours up from Vusanje. Go between June and September, with a local guide.",
+    link: { label: "Hikes & routes", href: "/experiences#seasons" },
+  },
+  {
+    kind: "map",
+    view: "hero",
     kicker: "Thank you for visiting",
-    title: "Your stay awaits",
-    text: "That is Plav Hotel. Book direct for our best rate — no booking fees and free cancellation up to 48 hours before arrival.",
-    link: { label: "Check availability", href: "/#book" },
+    title: "See you in the valley",
+    text: "That's the valley. Send your dates to the family — there are no booking fees, and they'll reply with availability and the price.",
+    link: { label: "Send a request", href: `${contactHref()}#write` },
   },
 ];
 

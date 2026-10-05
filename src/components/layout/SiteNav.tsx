@@ -29,12 +29,18 @@ export function SiteNav({ cta, menuCta }: SiteNavProps) {
     <>
       <header className={cx(styles.nav, solid && styles.solid)}>
         {isHome ? (
-          <a href="#top" className={styles.logo}>
-            {site.wordmark}
+          <a href="#top" className={styles.logo} aria-label={`${site.name} — top of the page`}>
+            <span className={styles.logoText}>
+              <span>{site.wordmark}</span>
+              <span className={styles.logoSub}>{site.subtitle}</span>
+            </span>
           </a>
         ) : (
-          <Link href="/" className={styles.logo}>
-            {site.wordmark}
+          <Link href="/" className={styles.logo} aria-label={`${site.name} — home`}>
+            <span className={styles.logoText}>
+              <span>{site.wordmark}</span>
+              <span className={styles.logoSub}>{site.subtitle}</span>
+            </span>
           </Link>
         )}
 
@@ -135,6 +141,9 @@ function MobileMenu({ cta, onClose }: { cta: Cta; onClose: () => void }) {
       <Link href={cta.href} className={styles.menuCta} onClick={onClose}>
         {cta.label}
       </Link>
+      <a href={site.phone.href} className={styles.menuPhone}>
+        Call {site.phone.display}
+      </a>
     </div>
   );
 }

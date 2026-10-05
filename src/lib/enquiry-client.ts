@@ -1,6 +1,6 @@
 "use client";
 
-export type EnquiryType = "newsletter" | "contact" | "event" | "table" | "spa" | "stay-hold" | "viewing";
+export type EnquiryType = "contact";
 
 /** `preview`: the static preview has nowhere to send the form, so nothing went out. */
 export type EnquiryResponse = { ok: true; preview?: boolean } | { ok: false; error: string };
@@ -29,10 +29,8 @@ export async function submitEnquiry(
   if (STATIC_EXPORT) {
     // Bots fill the hidden honeypot; drop those quietly.
     if (typeof fields.company === "string" && fields.company.trim()) return { ok: true };
-    if (!FORM_ENDPOINT) {
-      showPreviewNotice();
-      return { ok: true, preview: true };
-    }
+    // No form service yet: the caller offers to send the request by email instead.
+    if (!FORM_ENDPOINT) return { ok: true, preview: true };
     try {
       const res = await fetch(FORM_ENDPOINT, {
         method: "POST",
@@ -56,21 +54,4 @@ export async function submitEnquiry(
   } catch {
     return { ok: false, error: SEND_FAILED };
   }
-}
-
-/** A short note on the static preview that nothing was actually sent. */
-function showPreviewNotice() {
-  const id = "preview-notice";
-  document.getElementById(id)?.remove();
-  const note = document.createElement("div");
-  note.id = id;
-  note.className = "preview-toast";
-  note.setAttribute("role", "status");
-  (document.fullscreenElement ?? document.body).appendChild(note);
-  // Live regions inserted with their text already set are often not announced:
-  // add the empty region first, then its text on the next frame.
-  requestAnimationFrame(() => {
-    note.textContent = "Preview site — this request wasn't sent. On the live site it goes straight to the hotel.";
-  });
-  window.setTimeout(() => note.remove(), 6500);
 }

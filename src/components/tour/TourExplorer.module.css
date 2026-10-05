@@ -14,7 +14,7 @@
   }
 }
 
-/* ---------- toolbar: view switch + guided tour ---------- */
+/* ---------- toolbar: note + guided tour ---------- */
 
 .toolbar {
   max-width: var(--stage-max);
@@ -24,51 +24,6 @@
   align-items: center;
   gap: 12px 20px;
   padding-bottom: clamp(14px, 1.8vw, 20px);
-}
-
-.modes {
-  display: inline-flex;
-  gap: 4px;
-  padding: 4px;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(207, 227, 230, 0.16);
-  border-radius: var(--r-pill);
-}
-
-.mode {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  min-height: 42px;
-  padding: 0 18px 0 15px;
-  background: transparent;
-  border: none;
-  border-radius: var(--r-pill);
-  color: rgba(238, 244, 243, 0.74);
-  font: 600 14px/1 var(--font-text);
-  letter-spacing: 0.01em;
-  white-space: nowrap;
-  transition:
-    background-color 0.3s,
-    color 0.3s,
-    box-shadow 0.3s;
-}
-
-.mode svg {
-  flex: 0 0 auto;
-}
-
-.mode:hover {
-  color: var(--cream-2);
-  background: rgba(255, 255, 255, 0.06);
-}
-
-.modeOn,
-.modeOn:hover {
-  background: var(--cream-2);
-  color: var(--ink);
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.22);
 }
 
 .toolbarNote {
@@ -134,15 +89,9 @@
 }
 
 @media (max-width: 699.98px) {
-  .modes,
   .guideButton {
     flex: 1 1 100%;
     margin-left: 0;
-  }
-
-  .mode {
-    flex: 1;
-    padding: 0 10px;
   }
 
   .toolbarNote {
@@ -203,191 +152,8 @@
   }
 }
 
-/* The 3D map and the 360° spaces share the stage; `hidden` swaps them. */
+/* The 3D map fills the stage. */
 .layer {
   position: absolute;
   inset: 0;
-}
-
-/* Two classes, to out-rank the viewer's own `position: relative`. */
-.viewer .pano {
-  position: absolute;
-  inset: 0;
-}
-
-/* ---------- hotspots ---------- */
-
-.hotspots {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  pointer-events: none;
-}
-
-/* Placed on every frame through --hx / --hy (position), --ho (opacity) and
-   --hp (pointer-events); hidden until the first frame places it. */
-.hotspot {
-  position: absolute;
-  left: var(--hx, 50%);
-  top: var(--hy, 50%);
-  opacity: var(--ho, 0);
-  pointer-events: var(--hp, none);
-  transform: translate(-50%, -50%);
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  min-height: 46px;
-  padding: 6px 18px 6px 6px;
-  /* Dark enough for the label to stay legible over white walls and bright stone. */
-  background: rgba(8, 36, 39, 0.72);
-  -webkit-backdrop-filter: saturate(150%) blur(10px);
-  backdrop-filter: saturate(150%) blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.28);
-  border-radius: var(--r-pill);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
-  color: var(--cream-2);
-  font: 600 14px/1 var(--font-text);
-  letter-spacing: 0.01em;
-  white-space: nowrap;
-  cursor: pointer;
-  transition:
-    background-color 0.3s,
-    border-color 0.3s,
-    color 0.3s;
-}
-
-/* Hover only where it can end: on touch screens a tapped hotspot would stay
-   lit, and the buttons are reused by the next scene. */
-@media (hover: hover) {
-  .hotspot:hover {
-    background: rgba(251, 250, 247, 0.94);
-    border-color: rgba(255, 255, 255, 0.9);
-    color: var(--ink);
-  }
-}
-
-/* Navigation: cream disc. Info: glacier disc. Booking: brass disc. */
-.hotspotIcon {
-  position: relative;
-  flex: 0 0 auto;
-  width: 34px;
-  height: 34px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  background: var(--cream-2);
-  color: var(--teal);
-  font: 700 15px/1 var(--font-text);
-}
-
-.hotspotInfo .hotspotIcon {
-  background: var(--glacier);
-  font: italic 500 17px/1 var(--font-display);
-}
-
-.hotspotBook .hotspotIcon {
-  background: var(--gold);
-  color: var(--on-gold);
-}
-
-/* A slow ripple that says "tap me". */
-.hotspotIcon::after {
-  content: "";
-  position: absolute;
-  inset: -4px;
-  border: 1.5px solid rgba(255, 255, 255, 0.7);
-  border-radius: 50%;
-  opacity: 0;
-  pointer-events: none;
-}
-
-.hotspotBook .hotspotIcon::after {
-  border-color: var(--gold-light);
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .hotspotIcon::after {
-    animation: ripple 2.6s var(--ease-soft) infinite;
-  }
-}
-
-@keyframes ripple {
-  0% {
-    opacity: 0.85;
-    transform: scale(0.9);
-  }
-  70%,
-  100% {
-    opacity: 0;
-    transform: scale(1.55);
-  }
-}
-
-/* ---------- info caption ---------- */
-
-/* Always rendered (it is the live region); the caption appears inside it.
-   max-content keeps the width at min(90%, 460px) rather than the half-width
-   a left: 50% box would otherwise shrink to. */
-.captionSlot {
-  position: absolute;
-  left: 50%;
-  top: clamp(14px, 3vw, 26px);
-  z-index: 7;
-  width: max-content;
-  max-width: min(90%, 460px);
-  transform: translateX(-50%);
-}
-
-/* Phones: clear the viewer's "360°" label in the top-left corner. */
-@media (max-width: 599.98px) {
-  .captionSlot {
-    top: 56px;
-  }
-}
-
-.caption {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  padding: 14px 20px 14px 14px;
-  background: var(--glass-strong);
-  -webkit-backdrop-filter: saturate(160%) blur(18px);
-  backdrop-filter: saturate(160%) blur(18px);
-  border: 1px solid var(--glass-line);
-  border-radius: var(--r-lg);
-  box-shadow: var(--shadow-lift);
-  color: var(--ink);
-  font: 400 14px/1.6 var(--font-text);
-  text-wrap: pretty;
-  animation: caption-in 0.45s var(--ease-soft);
-}
-
-.caption::before {
-  content: "i";
-  /* Decorative: keep it out of the live region's announcement. */
-  content: "i" / "";
-  flex: 0 0 auto;
-  width: 26px;
-  height: 26px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  background: var(--glacier);
-  color: var(--teal);
-  font: italic 500 15px/1 var(--font-display);
-}
-
-@keyframes caption-in {
-  from {
-    opacity: 0;
-    transform: translateY(-8px);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .caption {
-    animation: none;
-  }
 }

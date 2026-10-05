@@ -1,55 +1,78 @@
-import { site } from "@/config/site";
+import Link from "next/link";
+
+import { ValleyMap } from "@/components/ui/ValleyMap";
 import { cx } from "@/lib/cx";
+import { directionsUrl, mapsUrl } from "@/lib/stay/links";
+import { properties } from "@/lib/stay/properties";
 import ui from "@/styles/ui.module.css";
 
 import styles from "./ContactLocation.module.css";
-import { lakeFacts } from "./content";
-import { LakeMap } from "./LakeMap";
 
+/** Both places on the valley map, each with its address, times and directions. */
 export function ContactLocation() {
   return (
-    <section className={styles.section} aria-labelledby="location-title">
+    <section id="where" className={styles.section} aria-labelledby="location-title">
       <div className={styles.inner}>
         <div className={styles.head} data-reveal="up">
           <div>
             <p className={ui.eyebrow}>Where we are</p>
             <h2 id="location-title" className={cx(ui.h2, styles.title)}>
-              On a glacial lake, <em>906&nbsp;m up</em>
+              Two places, <em>one valley</em>
             </h2>
           </div>
           <p className={cx(ui.lead, styles.lead)}>
-            Plav sits in eastern Montenegro&rsquo;s Upper Lim valley, near the Albanian and Kosovo borders, on the shore
-            of a lake the last ice age left behind &mdash; with the Visitor range to the west and the Prokletije, the
-            &ldquo;Accursed Mountains&rdquo;, rising to the south.
+            Hotel ROSI stands on the road into Gusinje. Eko Katun ROSI is a few kilometres further up the valley, by
+            the bridge on the road to Vusanje &mdash; a short walk from the Grlja waterfall and the Ropojana valley.
           </p>
         </div>
 
         <div className={styles.bento}>
           <figure className={styles.mapCard} data-reveal="up">
-            <LakeMap />
-            <figcaption className={styles.mapFoot}>
-              <span className={styles.mapPlace}>
-                <strong>{site.name}</strong>
-                <span>
-                  {site.address.line1}, {site.address.locality}, {site.address.country}
-                </span>
-              </span>
-              <a href={site.directionsUrl} className={styles.mapLink} target="_blank" rel="noopener noreferrer">
-                Get directions
-                <span className="visually-hidden"> (opens Google Maps in a new tab)</span>
-                <span aria-hidden="true">&nbsp;&#8599;</span>
-              </a>
-            </figcaption>
+            <ValleyMap titleId="contact-valley-map" />
+            <figcaption className={styles.mapNote}>Illustrative map, not to scale.</figcaption>
           </figure>
 
-          <dl className={styles.stats} data-reveal="up" data-delay="120">
-            {lakeFacts.map((fact) => (
-              <div key={fact.value} className={styles.stat}>
-                <dt className={styles.statValue}>{fact.value}</dt>
-                <dd className={styles.statLabel}>{fact.label}</dd>
-              </div>
+          <ul className={styles.places} data-reveal="up" data-delay="120">
+            {properties.map((property) => (
+              <li key={property.id} className={styles.place}>
+                <p className={styles.placeKind}>{property.place}</p>
+                <h3 className={styles.placeName}>
+                  <Link href={property.href}>{property.name}</Link>
+                </h3>
+                <address className={styles.address}>
+                  {property.address.line1}, {property.address.postcode} {property.address.locality},{" "}
+                  {property.address.country}
+                </address>
+                <p className={styles.findUs}>{property.findUs}</p>
+                <dl className={styles.times}>
+                  <div>
+                    <dt>Check-in</dt>
+                    <dd>{property.checkIn}</dd>
+                  </div>
+                  <div>
+                    <dt>Check-out</dt>
+                    <dd>{property.checkOut}</dd>
+                  </div>
+                </dl>
+                <div className={styles.placeActions}>
+                  <a
+                    href={directionsUrl(property)}
+                    className={styles.mapLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Directions
+                    <span className="visually-hidden"> to {property.name} (opens Google Maps in a new tab)</span>
+                    <span aria-hidden="true">&nbsp;&#8599;</span>
+                  </a>
+                  <a href={mapsUrl(property)} className={styles.textLink} target="_blank" rel="noopener noreferrer">
+                    Open in Maps
+                    <span className="visually-hidden"> (new tab)</span>
+                  </a>
+                </div>
+              </li>
             ))}
-          </dl>
+          </ul>
         </div>
       </div>
     </section>

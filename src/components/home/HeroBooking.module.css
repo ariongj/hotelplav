@@ -5,7 +5,7 @@
 /* One frosted pill of fields (Airbnb-style), wrapping into a grid on phones. */
 .bar {
   display: grid;
-  grid-template-columns: 1fr 1fr 1.1fr 0.9fr auto;
+  grid-template-columns: 1.35fr 1fr 1fr 0.85fr auto;
   align-items: stretch;
   gap: 4px;
   padding: 8px;
@@ -138,10 +138,59 @@ select.input {
   color: var(--text);
 }
 
+/* Eko Katun / Hotel switch. */
+.seg {
+  display: flex;
+  gap: 4px;
+  padding: 3px;
+  background: rgba(15, 59, 63, 0.07);
+  border-radius: var(--r-pill);
+}
+
+.segOption {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 36px;
+  padding: 0 12px;
+  border-radius: var(--r-pill);
+  font: 700 14px/1 var(--font-text);
+  color: var(--text);
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color 0.2s,
+    color 0.2s;
+}
+
+.segOption input {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.segOn {
+  background: var(--dark);
+  color: var(--cream-2);
+}
+
+.segOption:has(input:focus-visible) {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+
 @media (max-width: 899.98px) {
   .bar {
     grid-template-columns: 1fr 1fr;
     border-radius: var(--r-lg);
+  }
+
+  .where {
+    grid-column: 1 / -1;
   }
 
   .field + .field::before {

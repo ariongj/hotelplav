@@ -1,52 +1,46 @@
 /**
  * Brand, contact details and navigation shared by every page.
- * Change hotel-wide details here rather than in individual components.
+ * Property-specific details (addresses, check-in times, Booking.com links)
+ * live in src/lib/stay/properties.ts.
  */
 
+const EMAIL = "hotelrosigusinje@hotmail.com";
+
 export const site = {
-  name: "Plav Hotel",
-  wordmark: "PLAV HOTEL",
+  name: "Hotel & Eko Katun ROSI",
+  shortName: "ROSI",
+  wordmark: "ROSI",
+  /** Small line under the wordmark. */
+  subtitle: "Hotel & Eko Katun",
+  region: "Gusinje · Vusanje · Montenegro",
   description:
-    "A lakeside hotel and spa on Lake Plav in eastern Montenegro, beneath the Prokletije mountains — rooms and suites with a view, a restaurant, a lounge and a bar, pools and a Finnish sauna, and direct-booking rates with no fees.",
+    "Two family-run places to stay in the Accursed Mountains of Montenegro: Eko Katun ROSI in Vusanje — wooden bungalows, farm animals and home cooking beside an old stone tower — and Hotel ROSI, a family hotel with a restaurant in Gusinje.",
   tagline:
-    "A lakeside retreat in Plav, Montenegro — where a glacial lake meets the Accursed Mountains, and every stay is shaped around you.",
+    "Two ways to stay in the mountains — a family-run eco katun in Vusanje and a hotel in Gusinje, at the foot of the Prokletije.",
   /** Public URL (no trailing slash), used for canonical URLs, sitemap and structured data. */
-  url: (process.env.NEXT_PUBLIC_SITE_URL ?? "https://plavhotel.com").replace(/\/+$/, ""),
-  address: {
-    line1: "Lake Plav",
-    locality: "Plav",
-    country: "Montenegro",
-    countryCode: "ME",
-  },
-  /** "Get directions" — opens Google Maps routing to Plav. */
-  directionsUrl: "https://www.google.com/maps/dir/?api=1&destination=Lake%20Plav%2C%20Plav%2C%20Montenegro",
-  // TODO(content): placeholders until the hotel's real number and mailboxes are set up.
-  phone: { display: "+382 00 000 000", href: "tel:+38200000000" },
-  email: {
-    stay: "stay@plavhotel.com",
-    dine: "dine@plavhotel.com",
-    spa: "spa@plavhotel.com",
-    events: "events@plavhotel.com",
-  },
-  // TODO(content): real profile URLs. The footer hides links left at "#".
+  url: (process.env.NEXT_PUBLIC_SITE_URL ?? "https://ariongj.github.io/hotelplav").replace(/\/+$/, ""),
+  /** Main number for both properties (Instagram, Facebook, Gusinje Tourism Organisation). */
+  phone: { display: "+382 69 610 999", href: "tel:+38269610999" },
+  /** Further numbers listed on the family's Instagram profile. */
+  otherPhones: [
+    { display: "+382 69 544 177", href: "tel:+38269544177" },
+    { display: "+382 69 634 835", href: "tel:+38269634835" },
+  ],
+  email: { display: EMAIL, href: `mailto:${EMAIL}` },
   social: [
-    { short: "in", label: "LinkedIn", href: "#" },
-    { short: "ig", label: "Instagram", href: "#" },
-    { short: "fb", label: "Facebook", href: "#" },
+    { short: "ig", label: "Instagram", handle: "@rosi_hotel", href: "https://www.instagram.com/rosi_hotel/" },
+    {
+      short: "fb",
+      label: "Facebook",
+      handle: "Hotel-Eko Katun ROSI",
+      href: "https://www.facebook.com/p/Hotel-Eko-Katun-ROSI-100063753782766/",
+    },
   ],
-  // TODO(content): Privacy, Terms, Cancellation and FAQ pages don't exist yet;
-  // the footer hides links left at "#" until they do.
-  legal: [
-    { label: "Privacy", href: "#" },
-    { label: "Terms", href: "#" },
-    { label: "Cancellation", href: "#" },
-    { label: "FAQ", href: "#" },
-    { label: "Photo credits", href: "/credits" },
-  ],
+  legal: [{ label: "Photo credits", href: "/credits" }],
   copyrightYear: 2026,
 } as const;
 
-export type NavKey = "rooms" | "dining" | "spa" | "experiences" | "tour" | "events" | "contact";
+export type NavKey = "katun" | "hotel" | "rooms" | "dining" | "experiences" | "tour" | "contact";
 
 export type NavItem = {
   key: NavKey;
@@ -58,20 +52,19 @@ export type NavItem = {
 };
 
 export const mainNav: readonly NavItem[] = [
-  { key: "rooms", label: "Stay", longLabel: "Rooms & Suites", href: "/rooms" },
-  { key: "dining", label: "Dine", longLabel: "Dining", href: "/dining" },
-  { key: "spa", label: "Spa", longLabel: "Spa & Wellness", href: "/spa" },
-  { key: "experiences", label: "Experiences", longLabel: "Experiences", href: "/experiences" },
-  { key: "tour", label: "Virtual tour", longLabel: "Virtual Tour · 3D & 360°", href: "/tour" },
-  { key: "events", label: "Events", longLabel: "Events & Weddings", href: "/events" },
+  { key: "katun", label: "Eko Katun", longLabel: "Eko Katun ROSI · Vusanje", href: "/katun" },
+  { key: "hotel", label: "Hotel", longLabel: "Hotel ROSI · Gusinje", href: "/hotel" },
+  { key: "rooms", label: "Stay", longLabel: "Rooms & bungalows", href: "/rooms" },
+  { key: "dining", label: "Food", longLabel: "Food & restaurants", href: "/dining" },
+  { key: "experiences", label: "Explore", longLabel: "Explore the Prokletije", href: "/experiences" },
+  { key: "tour", label: "3D valley", longLabel: "3D valley & guided tour", href: "/tour" },
   { key: "contact", label: "Contact", longLabel: "Contact", href: "/contact" },
 ];
 
-/** Mobile menu and footer "Explore" list: main nav plus the home gallery. */
+/** Mobile menu and footer "Explore" list. */
 export const exploreNav: readonly { label: string; href: string }[] = [
-  ...mainNav.slice(0, 6).map((item) => ({ label: item.longLabel, href: item.href })),
+  ...mainNav.map((item) => ({ label: item.longLabel, href: item.href })),
   { label: "Gallery", href: "/#gallery" },
-  { label: "Contact", href: "/contact" },
 ];
 
 export type Cta = { label: string; href: string };

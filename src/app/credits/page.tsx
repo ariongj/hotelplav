@@ -1,24 +1,21 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import * as dining from "@/components/dining/content";
-import * as events from "@/components/events/content";
 import * as experiences from "@/components/experiences/content";
 import * as home from "@/components/home/content";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SiteNav } from "@/components/layout/SiteNav";
-import * as spa from "@/components/spa/content";
-import * as tour from "@/components/tour/content";
+import * as tour from "@/components/resort3d/pois";
 import { PageHero } from "@/components/ui/PageHero";
 import { Photo } from "@/components/ui/Photo";
 import type { Credit } from "@/components/ui/PhotoCredit";
-import * as rooms from "@/lib/booking/rooms";
+import * as photos from "@/lib/stay/photos";
 
 import styles from "./credits.module.css";
 
 export const metadata: Metadata = {
   title: "Photo credits",
-  description: "Credits and licences for the photographs and 360° panoramas used on the Plav Hotel website.",
+  description: "Credits and licences for the landscape photographs used on the Hotel & Eko Katun ROSI website.",
   alternates: { canonical: "/credits" },
 };
 
@@ -27,14 +24,10 @@ type CreditedImage = { src: string; alt: string; credit: Credit; pages: string[]
 /** Where each content module is shown, for the "Used on" line. */
 const SOURCES: { page: string; data: unknown }[] = [
   { page: "Home", data: home },
-  // The home page shows every room in its rooms carousel and search results.
-  { page: "Home", data: rooms },
-  { page: "Rooms", data: rooms },
-  { page: "Dining", data: dining },
-  { page: "Spa", data: spa },
-  { page: "Experiences", data: experiences },
-  { page: "Virtual tour", data: tour },
-  { page: "Events", data: events },
+  { page: "Explore", data: experiences },
+  { page: "3D valley", data: tour },
+  // Every credited photo in the shared library (eko katun, hotel and other pages).
+  { page: "Around the site", data: photos.commonsPhotos },
 ];
 
 function isCredit(value: unknown): value is Credit {

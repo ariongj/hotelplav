@@ -2,44 +2,21 @@ import Link from "next/link";
 
 import { exploreNav, site } from "@/config/site";
 import { cx } from "@/lib/cx";
+import { directionsUrl } from "@/lib/stay/links";
+import { properties } from "@/lib/stay/properties";
 
-import { NewsletterForm } from "./NewsletterForm";
 import styles from "./SiteFooter.module.css";
 
-type FooterAside =
-  | { kind: "newsletter" }
-  | { kind: "text"; title: string; text: string; link?: { label: string; href: string } }
-  | { kind: "list"; title: string; items: readonly string[] };
-
-// Links still at the "#" placeholder in site.ts stay hidden until they point somewhere.
-const socialLinks = site.social.filter((item) => item.href !== "#");
-const legalLinks = site.legal.filter((item) => item.href !== "#");
-
 type SiteFooterProps = {
-  /** Which desk's address to show. */
-  email?: keyof typeof site.email;
-  /** Fourth column. Defaults to the newsletter sign-up. */
-  aside?: FooterAside;
-  /** Social links under the brand statement. */
-  social?: boolean;
   /** Hairline + tighter top padding, for pages whose last section is dark. */
   divider?: boolean;
   /** Home renders the wordmark as text (it is already the home page). */
   isHome?: boolean;
 };
 
-export function SiteFooter({
-  email = "stay",
-  aside = { kind: "newsletter" },
-  social = false,
-  divider = false,
-  isHome = false,
-}: SiteFooterProps) {
-  const address = site.email[email];
-  const showSocial = social && socialLinks.length > 0;
-
+export function SiteFooter({ divider = false, isHome = false }: SiteFooterProps) {
   return (
-    <footer id="contact" className={cx(styles.footer, divider && styles.divider)}>
+    <footer className={cx(styles.footer, divider && styles.divider)}>
       <div className={styles.grid}>
         <div className={styles.brand}>
           {isHome ? (
@@ -49,16 +26,21 @@ export function SiteFooter({
               {site.wordmark}
             </Link>
           )}
-          <p className={cx(styles.tagline, showSocial && styles.taglineSpaced)}>{site.tagline}</p>
-          {showSocial && (
-            <div className={styles.social}>
-              {socialLinks.map((item) => (
-                <a key={item.short} href={item.href} className={styles.socialLink} aria-label={item.label}>
-                  {item.short}
-                </a>
-              ))}
-            </div>
-          )}
+          <p className={cx(styles.tagline, styles.taglineSpaced)}>{site.tagline}</p>
+          <div className={styles.social}>
+            {site.social.map((item) => (
+              <a
+                key={item.short}
+                href={item.href}
+                className={styles.socialLink}
+                aria-label={`${item.label} (${item.handle})`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {item.short}
+              </a>
+            ))}
+          </div>
         </div>
 
         <div>
@@ -73,64 +55,53 @@ export function SiteFooter({
         </div>
 
         <div>
-          <h2 className={styles.heading}>Contact</h2>
-          <address className={styles.contact}>
-            <span>
-              {site.address.line1}
-              <br />
-              {site.address.locality}, {site.address.country}
-            </span>
-            <a href={site.phone.href} className={styles.listLink}>
-              {site.phone.display}
-            </a>
-            <a href={`mailto:${address}`} className={styles.listLink}>
-              {address}
-            </a>
-          </address>
+          <h2 className={styles.heading}>Find us</h2>
+          <div className={styles.contact}>
+            {properties.map((property) => (
+              <address key={property.id} className={styles.place}>
+                <Link href={property.href} className={styles.placeName}>
+                  {property.name}
+                </Link>
+                <span>
+                  {property.address.line1}, {property.address.postcode} {property.address.locality}
+                  <br />
+                  {property.address.country}
+                </span>
+                <a href={directionsUrl(property)} className={styles.listLink} target="_blank" rel="noopener noreferrer">
+                  Directions
+                </a>
+              </address>
+            ))}
+          </div>
         </div>
 
         <div>
-          {aside.kind === "newsletter" && (
-            <>
-              <h2 className={styles.heading}>Newsletter</h2>
-              <p className={styles.note}>Quiet notes from the lake, a few times a year.</p>
-              <NewsletterForm />
-            </>
-          )}
-          {aside.kind === "text" && (
-            <>
-              <h2 className={styles.heading}>{aside.title}</h2>
-              <p className={styles.note}>{aside.text}</p>
-              {aside.link && (
-                <Link href={aside.link.href} className={styles.asideLink}>
-                  {aside.link.label}
-                </Link>
-              )}
-            </>
-          )}
-          {aside.kind === "list" && (
-            <>
-              <h2 className={styles.heading}>{aside.title}</h2>
-              <div className={styles.contact}>
-                {aside.items.map((item) => (
-                  <span key={item}>{item}</span>
-                ))}
-              </div>
-            </>
-          )}
+          <h2 className={styles.heading}>Contact</h2>
+          <address className={styles.contact}>
+            <a href={site.phone.href} className={styles.listLink}>
+              {site.phone.display}
+            </a>
+            <a href={site.email.href} className={styles.listLink}>
+              {site.email.display}
+            </a>
+            <span className={styles.note}>Both places are open 24 hours. Cash payments only.</span>
+            <Link href="/contact" className={styles.asideLink}>
+              Send us a request
+            </Link>
+          </address>
         </div>
       </div>
 
       <div className={styles.mega} aria-hidden="true">
-        {site.name}
+        {site.wordmark}
       </div>
 
       <div className={styles.bottom}>
         <span>
-          &copy; {site.copyrightYear} {site.name}. All rights reserved.
+          &copy; {site.copyrightYear} {site.name} · Gusinje, Montenegro
         </span>
         <div className={styles.legal}>
-          {legalLinks.map((item) => (
+          {site.legal.map((item) => (
             <Link key={item.label} href={item.href}>
               {item.label}
             </Link>

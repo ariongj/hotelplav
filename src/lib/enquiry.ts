@@ -1,9 +1,9 @@
 import "server-only";
 
 /**
- * Every form on the site (newsletter, table and treatment requests, rate
- * holds, event and contact enquiries) posts to /api/enquiry, which validates
- * the payload and hands it to deliverEnquiry().
+ * The contact form (stay requests for the katun and the hotel, restaurant,
+ * transfers, anything else) posts to /api/enquiry, which validates the
+ * payload and hands it to deliverEnquiry().
  *
  * Delivery: set ENQUIRY_WEBHOOK_URL to forward each enquiry as JSON to any
  * webhook (Zapier/Make → email, Slack, CRM, a PMS or booking tool). Without
@@ -11,15 +11,7 @@ import "server-only";
  * going live.
  */
 
-export const ENQUIRY_TYPES = [
-  "newsletter",
-  "contact",
-  "event",
-  "table",
-  "spa",
-  "stay-hold",
-  "viewing",
-] as const;
+export const ENQUIRY_TYPES = ["contact"] as const;
 
 export type EnquiryType = (typeof ENQUIRY_TYPES)[number];
 
@@ -57,8 +49,8 @@ export function parseEnquiry(body: unknown): ParseResult {
   if (clean.email && !EMAIL.test(clean.email)) {
     return { ok: false, error: "Please enter a valid email address." };
   }
-  if ((type === "newsletter" || type === "contact" || type === "event") && !clean.email) {
-    return { ok: false, error: "Please enter your email address." };
+  if (!clean.contact && !clean.email) {
+    return { ok: false, error: "Please give us an email address or a phone number." };
   }
 
   return {

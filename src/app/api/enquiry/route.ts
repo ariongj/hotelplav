@@ -21,8 +21,9 @@ export async function POST(request: Request) {
   if (!parsed.ok) return NextResponse.json(parsed, { status: 422 });
 
   try {
-    await deliverEnquiry(parsed.enquiry);
-    return NextResponse.json({ ok: true });
+    const { delivered } = await deliverEnquiry(parsed.enquiry);
+    // Nowhere to deliver yet (no webhook): the form offers to send it by email instead.
+    return NextResponse.json(delivered ? { ok: true } : { ok: true, preview: true });
   } catch (error) {
     console.error("[enquiry] delivery failed", error);
     return NextResponse.json(

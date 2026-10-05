@@ -6,11 +6,11 @@ import ui from "@/styles/ui.module.css";
 
 import styles from "./ExperienceGrid.module.css";
 import { PhotoCredit } from "@/components/ui/PhotoCredit";
-import { conciergeHref, type Season } from "./content";
+import { askFamilyHref, type Season } from "./content";
 
 /**
  * Bento grid for one season: a large feature card, the rest in a 3-column
- * grid, and a concierge tile that fills whatever is left of the last row.
+ * grid, and an "ask the family" tile that fills whatever is left of the last row.
  * On phones it becomes a swipeable row of cards.
  */
 export function ExperienceGrid({ season }: { season: Season }) {
@@ -62,11 +62,11 @@ export function ExperienceGrid({ season }: { season: Season }) {
         ))}
 
         <li className={cx(styles.plan, planSpan, planFillsTabletRow && styles.planHalf)}>
-          <p className={styles.planKicker}>Concierge</p>
+          <p className={styles.planKicker}>Local advice</p>
           <h3 className={styles.planTitle}>{plan.title}</h3>
           <p className={styles.planText}>{plan.text}</p>
-          <Link href={conciergeHref} className={cx(ui.btnGold, styles.planButton)}>
-            Plan it with our concierge
+          <Link href={askFamilyHref} className={cx(ui.btnGold, styles.planButton)}>
+            Write to the family
           </Link>
         </li>
       </ul>

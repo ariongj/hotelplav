@@ -6,11 +6,14 @@ import { Photo } from "@/components/ui/Photo";
 import { PhotoCredit } from "@/components/ui/PhotoCredit";
 import { cx } from "@/lib/cx";
 
-import { gallery, galleryFilters, type GalleryCategory } from "./content";
+import { gallery, galleryFilters, type GalleryKey } from "./content";
 import styles from "./sections.module.css";
 
+const LABELS: Record<GalleryKey, string> = { katun: "Eko Katun", hotel: "Hotel", valley: "The valley" };
+
 export function Gallery() {
-  const [filter, setFilter] = useState<GalleryCategory | "all">("all");
+  const [filter, setFilter] = useState<GalleryKey | "all">("all");
+  const shown = gallery.filter((item) => filter === "all" || item.category === filter);
 
   return (
     <>
@@ -28,29 +31,25 @@ export function Gallery() {
         ))}
       </div>
       <div className={styles.galleryGrid}>
-        {gallery
-          .filter((item) => filter === "all" || item.category === filter)
-          .map((item) => (
-            <figure key={item.src} className={styles.galleryItem}>
-              <div style={{ aspectRatio: item.ratio }}>
-                <Photo
-                  src={item.src}
-                  alt={item.alt}
-                  position={item.position}
-                  sizes="(max-width: 600px) 50vw, (max-width: 1100px) 33vw, 300px"
-                />
-              </div>
-              <figcaption className={styles.galleryCaption}>
-                {galleryFilters.find((chip) => chip.key === item.category)?.label}
-              </figcaption>
-            </figure>
-          ))}
+        {shown.map((item) => (
+          <figure key={item.image.src} className={styles.galleryItem}>
+            <div style={{ aspectRatio: item.ratio }}>
+              <Photo
+                src={item.image.srcSmall ?? item.image.src}
+                alt={item.image.alt}
+                position={item.image.position}
+                sizes="(max-width: 600px) 50vw, (max-width: 1100px) 33vw, 300px"
+              />
+            </div>
+            <figcaption className={styles.galleryCaption}>{LABELS[item.category]}</figcaption>
+          </figure>
+        ))}
       </div>
       <div className={styles.galleryCredits}>
-        {gallery
-          .filter((item) => item.credit)
+        {shown
+          .filter((item) => item.image.credit)
           .map((item) => (
-            <PhotoCredit key={item.src} credit={item.credit} tone="dark" />
+            <PhotoCredit key={item.image.src} credit={item.image.credit} tone="dark" />
           ))}
       </div>
     </>
